@@ -317,6 +317,47 @@ class ApiClient {
     return this.request('/users/stats/overview')
   }
 
+  // Itinerary endpoints
+  async getItineraries() {
+    return this.request('/itineraries');
+  }
+
+  async getItinerary(id: string) {
+    return this.request(`/itineraries/${id}`);
+  }
+
+  async createItinerary(itineraryData: any) {
+    return this.request('/itineraries', {
+      method: 'POST',
+      body: JSON.stringify(itineraryData),
+    });
+  }
+
+  async updateItinerary(id: string, itineraryData: any) {
+    return this.request(`/itineraries/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(itineraryData),
+    });
+  }
+
+  async deleteItinerary(id: string) {
+    return this.request(`/itineraries/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getAiSuggestion(promptData: {
+    location: string;
+    budget: string;
+    interests: string[];
+    duration: number;
+  }) {
+    return this.request('/itineraries/ai-suggestion', {
+      method: 'POST',
+      body: JSON.stringify(promptData),
+    });
+  }
+
   // Health check
   async healthCheck() {
     return this.request('/health')

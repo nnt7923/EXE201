@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
+import { api } from '@/lib/api'
 
 interface UserProfile {
   _id: string
@@ -75,6 +76,15 @@ export default function ProfilePage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -89,20 +99,13 @@ export default function ProfilePage() {
 
   const fetchUserProfile = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      const data = await response.json()
-      
-      if (data.success) {
-        setUser(data.data.user)
+      const response = await api.getCurrentUser();
+      if (response.data) {
+        setUser(response.data)
         setFormData({
-          name: data.data.user.name,
-          phone: data.data.user.phone || '',
-          address: data.data.user.address || ''
+          name: response.data.name,
+          phone: response.data.phone || '',
+          address: response.data.address || ''
         })
       }
     } catch (error) {
@@ -114,16 +117,9 @@ export default function ProfilePage() {
 
   const fetchUserPlaces = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('/api/users/me/places', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      const data = await response.json()
-      
-      if (data.success) {
-        setUserPlaces(data.data.places)
+      const response = await api.getUserPlaces('me');
+      if (response.data) {
+        setUserPlaces(response.data.places)
       }
     } catch (error) {
       console.error('Fetch user places error:', error)
@@ -132,16 +128,9 @@ export default function ProfilePage() {
 
   const fetchUserReviews = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('/api/users/me/reviews', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      const data = await response.json()
-      
-      if (data.success) {
-        setUserReviews(data.data.reviews)
+      const response = await api.getUserReviews('me');
+      if (response.data) {
+        setUserReviews(response.data.reviews)
       }
     } catch (error) {
       console.error('Fetch user reviews error:', error)
@@ -154,25 +143,14 @@ export default function ProfilePage() {
     setError('')
 
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('/api/auth/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        setUser(data.data.user)
+      const response = await api.updateProfile(formData);
+      if (response.data) {
+        setUser(response.data.user)
         setEditing(false)
         setSuccess('Cập nhật thông tin thành công')
         setTimeout(() => setSuccess(''), 3000)
       } else {
-        setError(data.message || 'Cập nhật thất bại')
+        setError(response.message || 'Cập nhật thất bại')
       }
     } catch (error) {
       setError('Có lỗi xảy ra, vui lòng thử lại')
@@ -180,6 +158,36 @@ export default function ProfilePage() {
       setLoading(false)
     }
   }
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError("Mật khẩu mới không khớp.");
+      return;
+    }
+    if (passwordData.newPassword.length < 6) {
+      setPasswordError("Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      await api.changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+      });
+      setPasswordSuccess('Đổi mật khẩu thành công!');
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setPasswordSuccess(''), 3000);
+    } catch (error: any) {
+      setPasswordError(error.message || 'Đổi mật khẩu thất bại.');
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -227,7 +235,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-muted/40">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
         <div className="max-w-6xl mx-auto px-4 py-4">
@@ -250,45 +258,51 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Profile Sidebar */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <Avatar className="w-20 h-20 mx-auto mb-4">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="text-2xl">
-                      {user.name[0].toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h2 className="text-xl font-bold mb-1">{user.name}</h2>
-                  <p className="text-muted-foreground mb-4">{user.email}</p>
-                  <Badge variant="secondary">
-                    {user.role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
-                  </Badge>
-                </div>
+          <div className="lg:col-span-1 space-y-6">
+            <Card className="overflow-hidden">
+              <div className="relative h-32 bg-cover bg-center" style={{ backgroundImage: "url('/vietnamese-bun-bo-hue-restaurant.png')" }}>
+                <div className="absolute inset-0 bg-black/30" />
+              </div>
+              <CardContent className="p-6 text-center -mt-16">
+                <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-card">
+                  <AvatarImage src={user.avatar} />
+                  <AvatarFallback className="text-3xl">
+                    {user.name[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <h2 className="text-2xl font-bold mb-1">{user.name}</h2>
+                <p className="text-muted-foreground mb-4">{user.email}</p>
+                <Badge variant="secondary">
+                  {user.role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
+                </Badge>
+              </CardContent>
+            </Card>
 
-                <div className="mt-6 space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Thông tin liên hệ</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3 text-sm">
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  <span>{user.email}</span>
+                </div>
+                {user.phone && (
                   <div className="flex items-center gap-3 text-sm">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>{user.email}</span>
+                    <Phone className="w-4 h-4 text-muted-foreground" />
+                    <span>{user.phone}</span>
                   </div>
-                  {user.phone && (
-                    <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span>{user.phone}</span>
-                    </div>
-                  )}
-                  {user.address && (
-                    <div className="flex items-center gap-3 text-sm">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span>{user.address}</span>
-                    </div>
-                  )}
+                )}
+                {user.address && (
                   <div className="flex items-center gap-3 text-sm">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <span>{user.address}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 text-sm">
                     <User className="w-4 h-4 text-muted-foreground" />
                     <span>Tham gia từ {formatDate(user.createdAt)}</span>
                   </div>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -296,10 +310,11 @@ export default function ProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="profile">Thông tin</TabsTrigger>
                 <TabsTrigger value="places">Địa điểm của tôi</TabsTrigger>
                 <TabsTrigger value="reviews">Đánh giá của tôi</TabsTrigger>
+                <TabsTrigger value="security">Bảo mật</TabsTrigger>
               </TabsList>
 
               <TabsContent value="profile" className="space-y-6">
@@ -524,6 +539,65 @@ export default function ProfilePage() {
                   </CardContent>
                 </Card>
               </TabsContent>
+
+              <TabsContent value="security" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Đổi mật khẩu</CardTitle>
+                    <CardDescription>
+                      Thay đổi mật khẩu của bạn. Nên sử dụng mật khẩu mạnh để tăng cường bảo mật.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {passwordSuccess && (
+                      <Alert className="mb-4">
+                        <AlertDescription>{passwordSuccess}</AlertDescription>
+                      </Alert>
+                    )}
+                    {passwordError && (
+                      <Alert variant="destructive" className="mb-4">
+                        <AlertDescription>{passwordError}</AlertDescription>
+                      </Alert>
+                    )}
+                    <form onSubmit={handleChangePassword} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="currentPassword">Mật khẩu hiện tại</Label>
+                        <Input
+                          id="currentPassword"
+                          type="password"
+                          value={passwordData.currentPassword}
+                          onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newPassword">Mật khẩu mới</Label>
+                        <Input
+                          id="newPassword"
+                          type="password"
+                          value={passwordData.newPassword}
+                          onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Xác nhận mật khẩu mới</Label>
+                        <Input
+                          id="confirmPassword"
+                          type="password"
+                          value={passwordData.confirmPassword}
+                          onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <Button type="submit" disabled={passwordLoading}>
+                        {passwordLoading ? 'Đang xử lý...' : 'Đổi mật khẩu'}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
             </Tabs>
           </div>
         </div>

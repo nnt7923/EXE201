@@ -69,6 +69,92 @@ router.get('/', authenticateToken, requireAdmin, validatePagination, async (req,
   }
 });
 
+// @route   GET /api/users/me/places
+// @desc    Get places created by current user
+// @access  Private
+router.get('/me/places', authenticateToken, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const places = await Place.find({ 
+      createdBy: req.user.id, 
+    })
+      .populate('createdBy', 'name avatar')
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    const total = await Place.countDocuments({ 
+      createdBy: req.user.id, 
+    });
+
+    res.json({
+      success: true,
+      data: {
+        places,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(total / parseInt(limit)),
+          total,
+          limit: parseInt(limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get user places error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy địa điểm của user',
+      error: error.message
+    });
+  }
+});
+
+// @route   GET /api/users/me/reviews
+// @desc    Get reviews by current user
+// @access  Private
+router.get('/me/reviews', authenticateToken, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const reviews = await Review.find({ 
+      user: req.user.id, 
+    })
+      .populate('place', 'name category address')
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    const total = await Review.countDocuments({ 
+      user: req.user.id, 
+    });
+
+    res.json({
+      success: true,
+      data: {
+        reviews,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(total / parseInt(limit)),
+          total,
+          limit: parseInt(limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get user reviews error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy đánh giá của user',
+      error: error.message
+    });
+  }
+});
+
 // @route   GET /api/users/:id
 // @desc    Get user by ID
 // @access  Private

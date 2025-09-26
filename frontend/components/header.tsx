@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Menu, User, Bell, LogOut } from "lucide-react";
+import { Search, Menu, User, Bell, LogOut, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -62,6 +62,11 @@ export function Header() {
 
             {isLoggedIn ? (
               <>
+                <Link href="/itineraries">
+                  <Button variant="ghost" size="icon">
+                    <Calendar className="w-5 h-5" />
+                  </Button>
+                </Link>
                 <Link href="/profile">
                   <Button variant="ghost" size="icon">
                     <User className="w-5 h-5" />

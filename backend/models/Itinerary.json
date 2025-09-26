@@ -1,0 +1,101 @@
+[
+  {
+    "_id": {
+      "$oid": "670b8a4f9d8b7c6d5e3f4a1b"
+    },
+    "user": {
+      "$oid": "670b8a1f9d8b7c6d5e3f4a1a"
+    },
+    "title": "Một ngày khám phá Thạch Thất - Hòa Lạc",
+    "date": {
+      "$date": "2025-10-11T00:00:00.000Z"
+    },
+    "description": "Chuyến đi về vùng ngoại ô, thăm các ngôi chùa cổ kính và trải nghiệm không gian yên bình tại Thạch Thất.",
+    "status": "PUBLIC",
+    "activities": [
+      {
+        "customPlace": "Di chuyển từ Hà Nội đến Thạch Thất",
+        "startTime": "08:00",
+        "endTime": "09:00",
+        "activityType": "TRAVEL",
+        "notes": "Đi theo Đại lộ Thăng Long, khoảng 45 phút."
+      },
+      {
+        "customPlace": "Chùa Tây Phương",
+        "startTime": "09:15",
+        "endTime": "11:00",
+        "activityType": "VISIT",
+        "notes": "Tham quan ngôi chùa cổ trên đỉnh đồi Câu Lâu, nổi tiếng với các pho tượng La Hán."
+      },
+      {
+        "customPlace": "Nhà hàng Lá Cọ - Đặc sản Thạch Thất",
+        "startTime": "11:30",
+        "endTime": "13:00",
+        "activityType": "EAT",
+        "notes": "Thưởng thức đặc sản gà đồi, thịt trâu."
+      },
+      {
+        "customPlace": "Chùa Thầy",
+        "startTime": "13:30",
+        "endTime": "15:30",
+        "activityType": "VISIT",
+        "notes": "Khám phá di tích gắn liền với thiền sư Từ Đạo Hạnh, có thủy đình múa rối nước độc đáo."
+      },
+      {
+        "customPlace": "Trở về Hà Nội",
+        "startTime": "16:00",
+        "activityType": "TRAVEL",
+        "notes": "Kết thúc chuyến tham quan."
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-09-25T12:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-09-25T13:15:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "670b8c3f9d8b7c6d5e3f4a1e"
+    },
+    "user": {
+      "$oid": "670b8c4f9d8b7c6d5e3f4a1f"
+    },
+    "title": "Buổi tối thư giãn tại Hòa Lạc",
+    "date": {
+      "$date": "2025-10-12T00:00:00.000Z"
+    },
+    "description": "Lịch trình ăn uống và cà phê, tận hưởng không khí hiện đại và trong lành tại khu công nghệ cao.",
+    "status": "PUBLIC",
+    "activities": [
+      {
+        "customPlace": "Ăn tối tại khu ẩm thực gần Đại học FPT",
+        "startTime": "18:00",
+        "endTime": "19:30",
+        "activityType": "EAT",
+        "notes": "Nhiều quán ăn vặt và lẩu nướng cho sinh viên."
+      },
+      {
+        "customPlace": "The Coffee House - Hòa Lạc",
+        "startTime": "19:45",
+        "endTime": "21:00",
+        "activityType": "ENTERTAINMENT",
+        "notes": "Không gian rộng rãi, phù hợp để trò chuyện và làm việc."
+      },
+      {
+        "customPlace": "Dạo bộ tại khu đô thị Xanh Villas",
+        "startTime": "21:15",
+        "activityType": "VISIT",
+        "notes": "Tận hưởng không khí trong lành, yên tĩnh vào buổi tối."
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-09-26T09:30:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-09-26T10:00:00.000Z"
+    }
+  }
+]
+

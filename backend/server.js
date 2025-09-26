@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const placeRoutes = require('./routes/places');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const itineraryRoutes = require('./routes/itineraries');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -52,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/places', placeRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/itineraries', itineraryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -77,8 +79,8 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 API URL: http://localhost:${PORT}/api`);
-  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`📱 API endpoints available under /api`);
+  console.log(`🏥 Health check available at /api/health`);
 });
 
 module.exports = app;

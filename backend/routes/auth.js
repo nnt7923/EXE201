@@ -5,6 +5,24 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../models/User');
+const { authenticateToken: auth } = require('../middleware/auth');
+
+// @route   GET api/auth/me
+// @desc    Get current user data
+// @access  Private
+router.get('/me', auth, async (req, res) => {
+  try {
+    // req.user is attached by the auth middleware
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    res.json({ success: true, data: user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route   POST api/auth/register
 // @desc    Register a user
