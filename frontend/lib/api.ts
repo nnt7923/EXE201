@@ -358,6 +358,14 @@ class ApiClient {
     });
   }
 
+  // Payment endpoints
+  async getCheckoutDetails(packageId: string) {
+    return this.request('/payments/checkout-details', {
+      method: 'POST',
+      body: JSON.stringify({ packageId }),
+    });
+  }
+
   // Health check
   async healthCheck() {
     return this.request('/health')

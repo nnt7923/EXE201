@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
+import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -19,7 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
+        <Toaster />
         <Analytics />
       </body>
     </html>

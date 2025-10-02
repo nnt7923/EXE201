@@ -43,6 +43,7 @@ router.get('/', validatePagination, optionalAuth, async (req, res) => {
           },
           distanceField: 'distance', // Adds a 'distance' field in meters
           maxDistance: parseFloat(radius) * 1000,
+          key: "location", // Explicitly use the location field for the geo index
           query: { isActive: true }, // Pre-filter in geoNear for efficiency
           spherical: true
         }
@@ -52,7 +53,7 @@ router.get('/', validatePagination, optionalAuth, async (req, res) => {
     // Stage 2: Build the main filter ($match)
     const matchFilter = lat && lng ? {} : { isActive: true }; // If not geo-searched, add isActive here
 
-    if (category) matchFilter.category = category;
+    if (category) matchFilter.category = { $in: category.split(',') };
     if (subcategory) matchFilter.subcategory = subcategory;
     if (rating) matchFilter['rating.average'] = { $gte: parseFloat(rating) };
     if (minPrice) matchFilter['pricing.minPrice'] = { $gte: parseFloat(minPrice) };
@@ -122,6 +123,7 @@ router.get('/', validatePagination, optionalAuth, async (req, res) => {
         category: 1,
         subcategory: 1,
         address: 1,
+        location: 1,
         pricing: 1,
         rating: 1,
         images: 1,
@@ -222,10 +224,18 @@ router.get('/:id', validateObjectId, optionalAuth, async (req, res) => {
 // @access  Private
 router.post('/', authenticateToken, validatePlace, async (req, res) => {
   try {
+    const { lat, lng, ...rest } = req.body;
     const placeData = {
-      ...req.body,
+      ...rest,
       createdBy: req.user._id
     };
+
+    if (lat && lng) {
+      placeData.location = {
+        type: 'Point',
+        coordinates: [parseFloat(lng), parseFloat(lat)]
+      };
+    }
 
     const place = new Place(placeData);
     await place.save();
@@ -269,9 +279,19 @@ router.put('/:id', validateObjectId, authenticateToken, async (req, res) => {
       });
     }
 
+    const { lat, lng, ...rest } = req.body;
+    const updateData = { ...rest };
+
+    if (lat && lng) {
+      updateData.location = {
+        type: 'Point',
+        coordinates: [parseFloat(lng), parseFloat(lat)]
+      };
+    }
+
     const updatedPlace = await Place.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     ).populate('createdBy', 'name avatar');
 
@@ -374,6 +394,7 @@ router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res
     });
   }
 });
+
 
 // @route   GET /api/places/categories/list
 // @desc    Get list of categories and subcategories

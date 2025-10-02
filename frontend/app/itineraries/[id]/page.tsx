@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ export default function ItineraryDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
 
-  const fetchItinerary = async () => {
+  const fetchItinerary = useCallback(async () => {
     try {
       const response = await api.getItinerary(id);
       setItinerary(response as unknown as Itinerary);
@@ -41,13 +41,13 @@ export default function ItineraryDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (id) {
       fetchItinerary();
     }
-  }, [id]);
+  }, [id, fetchItinerary]);
 
   const handleSaveActivity = async (activityToSave: Activity) => {
     if (!itinerary) return;

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MessageCircle, Heart, Share2, TrendingUp } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 const communityPosts = [
   {
@@ -83,9 +84,11 @@ export function CommunitySection() {
 
                       {post.image && (
                         <div className="mb-3">
-                          <img
+                          <Image
                             src={post.image || "/placeholder.svg"}
                             alt="Post image"
+                            width={512}
+                            height={192}
                             className="w-full max-w-md h-48 object-cover rounded-lg"
                           />
                         </div>

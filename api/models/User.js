@@ -19,13 +19,25 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'moderator', 'admin'],
+    enum: ['user', 'owner', 'admin'],
     default: 'user',
   },
   isActive: {
     type: Boolean,
     default: true,
   },
+  credits: {
+    type: Number,
+    default: 0
+  },
+  purchaseHistory: [{
+    packageId: mongoose.Schema.Types.ObjectId,
+    packageName: String,
+    amount: Number,
+    creditsGained: Number,
+    purchaseDate: { type: Date, default: Date.now },
+    stripePaymentId: String
+  }],
   createdAt: {
     type: Date,
     default: Date.now,

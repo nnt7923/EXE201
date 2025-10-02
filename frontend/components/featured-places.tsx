@@ -1,47 +1,58 @@
+import { ElementType, useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Star, MapPin, Wifi } from "lucide-react"
+import { Star, MapPin, Wifi, ParkingCircle, Wind, Dog, Ship, ShoppingBag, CreditCard } from "lucide-react"
+import { api } from "@/lib/api"
+import Image from "next/image"
 
-const featuredPlaces = [
-  {
-    id: 1,
-    name: "Bún Bò Huế Cô Ba",
-    type: "restaurant",
-    image: "/vietnamese-bun-bo-hue-restaurant.png",
-    rating: 4.8,
-    reviews: 124,
-    price: "25k - 35k",
-    distance: "0.5km",
-    tags: ["Bún bò", "Đặc sản Huế", "Giá rẻ"],
-    features: ["Wifi miễn phí", "Chỗ đỗ xe"],
-  },
-  {
-    id: 2,
-    name: "Nhà trọ Hòa Lạc Garden",
-    type: "accommodation",
-    image: "/modern-student-dormitory-room.png",
-    rating: 4.6,
-    reviews: 89,
-    price: "1.2tr - 1.8tr/tháng",
-    distance: "1.2km",
-    tags: ["Phòng đơn", "Có gác", "An ninh tốt"],
-    features: ["Điều hòa", "Nóng lạnh", "Thang máy"],
-  },
-  {
-    id: 3,
-    name: "Cafe Study Hub",
-    type: "cafe",
-    image: "/modern-study-cafe-with-students.png",
-    rating: 4.7,
-    reviews: 156,
-    price: "15k - 45k",
-    distance: "0.8km",
-    tags: ["Học bài", "Yên tĩnh", "Wifi tốt"],
-    features: ["Ổ cắm nhiều", "Không gian rộng"],
-  },
-]
+// This interface should ideally be in a shared types file
+interface Place {
+  _id: string;
+  name: string;
+  images?: { url: string; alt?: string }[];
+  category: string;
+  address: {
+    street: string;
+    ward: string;
+    district: string;
+    coordinates: { lat: number; lng: number };
+  };
+  rating?: { average: number; count: number };
+  features?: { [key: string]: boolean };
+  price?: { min: number; max: number; currency: string };
+}
 
-export function FeaturedPlaces() {
+const featureDisplay: { [key: string]: { name: string; icon: ElementType } } = {
+  wifi: { name: "Wifi", icon: Wifi },
+  parking: { name: "Bãi đỗ xe", icon: ParkingCircle },
+  airConditioning: { name: "Điều hòa", icon: Wind },
+  outdoor: { name: "Ngoài trời", icon: Ship }, // Using Ship as a placeholder, maybe find a better one
+  petFriendly: { name: "Thú cưng", icon: Dog },
+  delivery: { name: "Giao hàng", icon: Ship },
+  takeaway: { name: "Mang về", icon: ShoppingBag },
+  cardPayment: { name: "Thanh toán thẻ", icon: CreditCard },
+};
+
+
+export function FeaturedPlaces({ onPlaceSelect }: { onPlaceSelect: (place: Place) => void }) {
+  const [places, setPlaces] = useState<Place[]>([]);
+
+  useEffect(() => {
+    const fetchFeaturedPlaces = async () => {
+      try {
+        // Fetch top 4 rated places
+                const response = await api.getPlaces({ limit: 4, sort: '-rating.average', category: 'restaurant,cafe' });
+        if (response.data) {
+          const fetchedPlaces = response.data.places || response.data;
+          setPlaces(fetchedPlaces);
+        }
+      } catch (error) {
+        console.error("Failed to fetch featured places:", error);
+      }
+    };
+    fetchFeaturedPlaces();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div>
@@ -50,15 +61,16 @@ export function FeaturedPlaces() {
       </div>
 
       <div className="space-y-4">
-        {featuredPlaces.map((place) => (
-          <Card key={place.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+        {places.map((place) => (
+          <Card key={place._id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => onPlaceSelect(place)}>
             <CardContent className="p-0">
               <div className="flex">
-                <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
-                  <img
-                    src={place.image || "/placeholder.svg"}
+                <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 relative">
+                  <Image
+                    src={place.images?.[0]?.url || "/placeholder.svg"}
                     alt={place.name}
-                    className="w-full h-full object-cover rounded-l-lg"
+                    fill
+                    className="object-cover rounded-l-lg"
                   />
                 </div>
 
@@ -67,46 +79,48 @@ export function FeaturedPlaces() {
                     <h3 className="font-semibold text-foreground text-lg">{place.name}</h3>
                     <Badge
                       variant={
-                        place.type === "restaurant"
+                        place.category === "restaurant"
                           ? "default"
-                          : place.type === "accommodation"
+                          : place.category === "accommodation"
                             ? "secondary"
                             : "outline"
                       }
                     >
-                      {place.type === "restaurant" ? "Quán ăn" : place.type === "accommodation" ? "Nhà trọ" : "Cafe"}
+                      {place.category === "restaurant" ? "Quán ăn" : place.category === "accommodation" ? "Nhà trọ" : "Cafe"}
                     </Badge>
                   </div>
 
                   <div className="flex items-center space-x-4 mb-2 text-sm">
                     <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 text-secondary fill-current" />
-                      <span className="font-medium">{place.rating}</span>
-                      <span className="text-muted-foreground">({place.reviews})</span>
+                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                      <span className="font-medium">{place.rating?.average?.toFixed(1) || 'Mới'}</span>
+                      <span className="text-muted-foreground">({place.rating?.count || 0})</span>
                     </div>
                     <div className="flex items-center space-x-1 text-muted-foreground">
                       <MapPin className="w-4 h-4" />
-                      <span>{place.distance}</span>
+                      <span>{place.address.district}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {place.tags.slice(0, 2).map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-primary">{place.price}</span>
+                     <span className="font-semibold text-primary">
+                      {place.price ? `${place.price.min/1000}k - ${place.price.max/1000}k` : 'N/A'}
+                    </span>
                     <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                      {place.features.slice(0, 2).map((feature, index) => (
-                        <span key={index} className="flex items-center space-x-1">
-                          {feature.includes("Wifi") && <Wifi className="w-3 h-3" />}
-                          <span>{feature}</span>
-                        </span>
-                      ))}
+                      {place.features && Object.entries(place.features)
+                        .filter(([, value]) => value)
+                        .slice(0, 2)
+                        .map(([key], index) => {
+                          const feature = featureDisplay[key];
+                          if (!feature) return null;
+                          const Icon = feature.icon;
+                          return (
+                            <span key={index} className="flex items-center space-x-1">
+                              <Icon className="w-3 h-3" />
+                              {/* <span>{feature.name}</span> */}
+                            </span>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>

@@ -95,7 +95,7 @@ export default function ProfilePage() {
     fetchUserProfile()
     fetchUserPlaces()
     fetchUserReviews()
-  }, [])
+  }, [router])
 
   const fetchUserProfile = async () => {
     try {

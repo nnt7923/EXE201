@@ -135,14 +135,15 @@ export default function PlaceDetailPage() {
 
   useEffect(() => {
     const fetchPlace = async () => {
+      setLoading(true);
       try {
         const res = await api.getPlace(params.id as string)
         if (res?.success && (res as any).data?.place) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setPlace(((res as any).data.place) as Place)
         }
       } catch (error) {
         console.error('Fetch place error:', error)
+        setPlace(null); // Set place to null on error
       } finally {
         setLoading(false)
       }
@@ -165,22 +166,7 @@ export default function PlaceDetailPage() {
     return days[new Date().getDay()]
   }
 
-  const isOpenNow = () => {
-    if (!place?.operatingHours) return null
-    
-    const currentDay = getCurrentDay()
-    const todayHours = place.operatingHours.find(h => h.day === currentDay)
-    
-    if (!todayHours || todayHours.isClosed) return false
-    
-    const now = new Date()
-    const currentTime = now.getHours() * 100 + now.getMinutes()
-    const openTime = parseInt(todayHours.open.replace(':', ''))
-    const closeTime = parseInt(todayHours.close.replace(':', ''))
-    
-    return currentTime >= openTime && currentTime <= closeTime
-  }
-
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -204,6 +190,7 @@ export default function PlaceDetailPage() {
     )
   }
 
+  // Not found state
   if (!place) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -217,8 +204,20 @@ export default function PlaceDetailPage() {
     )
   }
 
+  // Derived state should be calculated only when place exists
   const mainImage = place.images.find(img => img.isMain) || place.images[0]
   const otherImages = place.images.filter(img => !img.isMain)
+  const isOpen = () => {
+    const currentDay = getCurrentDay()
+    const todayHours = place.operatingHours.find(h => h.day === currentDay)
+    if (!todayHours || todayHours.isClosed) return false
+    const now = new Date()
+    const currentTime = now.getHours() * 100 + now.getMinutes()
+    const openTime = parseInt(todayHours.open.replace(':', ''))
+    const closeTime = parseInt(todayHours.close.replace(':', ''))
+    return currentTime >= openTime && currentTime <= closeTime
+  }
+  const isOpenStatus = isOpen();
 
   return (
     <div className="min-h-screen bg-background">
@@ -254,15 +253,13 @@ export default function PlaceDetailPage() {
                   </div>
                   <Badge variant="secondary">{categories[place.category as keyof typeof categories]}</Badge>
                   <Badge variant="outline">{place.subcategory}</Badge>
-                  {isOpenNow() !== null && (
-                    <Badge variant={isOpenNow() ? "default" : "destructive"}>
-                      {isOpenNow() ? "Đang mở" : "Đã đóng"}
-                    </Badge>
-                  )}
+                  <Badge variant={isOpenStatus ? "default" : "destructive"}>
+                    {isOpenStatus ? "Đang mở" : "Đã đóng"}
+                  </Badge>
                 </div>
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <MapPin className="w-4 h-4" />
-                  <span>{place.address.street}, {place.address.ward}, {place.address.district}, {place.address.city}</span>
+                  <span>{`${place.address.street}, ${place.address.ward}, ${place.address.district}, ${place.address.city}`}</span>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -465,7 +462,7 @@ export default function PlaceDetailPage() {
                   <CardTitle>Thông tin liên hệ</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {place.contact.phone && (
+                  {place.contact?.phone && (
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4 text-primary" />
                       <a href={`tel:${place.contact.phone}`} className="text-sm hover:underline">
@@ -473,7 +470,7 @@ export default function PlaceDetailPage() {
                       </a>
                     </div>
                   )}
-                  {place.contact.email && (
+                  {place.contact?.email && (
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4 text-primary" />
                       <a href={`mailto:${place.contact.email}`} className="text-sm hover:underline">
@@ -481,7 +478,7 @@ export default function PlaceDetailPage() {
                       </a>
                     </div>
                   )}
-                  {place.contact.website && (
+                  {place.contact?.website && (
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4 text-primary" />
                       <a href={place.contact.website} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline">
@@ -489,7 +486,7 @@ export default function PlaceDetailPage() {
                       </a>
                     </div>
                   )}
-                  {place.contact.facebook && (
+                  {place.contact?.facebook && (
                     <div className="flex items-center gap-2">
                       <Facebook className="w-4 h-4 text-primary" />
                       <a href={place.contact.facebook} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline">
@@ -497,7 +494,7 @@ export default function PlaceDetailPage() {
                       </a>
                     </div>
                   )}
-                  {place.contact.instagram && (
+                  {place.contact?.instagram && (
                     <div className="flex items-center gap-2">
                       <Instagram className="w-4 h-4 text-primary" />
                       <a href={place.contact.instagram} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline">

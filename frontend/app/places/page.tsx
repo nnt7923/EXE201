@@ -68,7 +68,6 @@ export default function PlacesPage() {
           limit: 12,
         })
         if (res?.success && (res as any).data?.places) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setPlaces(((res as any).data.places) as Place[])
         }
       } catch (error) {

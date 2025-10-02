@@ -68,7 +68,7 @@ export function ActivityForm({ isOpen, onClose, onSave, initialData }: ActivityF
         <DialogHeader>
           <DialogTitle>{initialData ? 'Edit Activity' : 'Add New Activity'}</DialogTitle>
           <DialogDescription>
-            Fill in the details for your activity. Click save when you're done.
+            Fill in the details for your activity. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

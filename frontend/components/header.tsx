@@ -1,30 +1,37 @@
-"use client";
+'use client';
 
-import { Search, Menu, User, Bell, LogOut, Calendar } from "lucide-react";
+import { Search, Menu, User, Bell, LogOut, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCurrentUser, logout } from "@/lib/api"; // Import helpers
+
+// Define a type for the user object for better type safety
+interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'owner' | 'admin';
+  // Add other fields you expect in the user object
+}
 
 export function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      setIsLoggedIn(!!token);
-    }
+    // The user object is now stored in localStorage by setAuthData
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
   }, []);
 
   const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      router.push("/"); // Redirect to homepage after logout
-    }
+    logout(); // Use the centralized logout function
   };
+
+  const isLoggedIn = !!user;
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -56,29 +63,38 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Bell className="w-5 h-5" />
-            </Button>
-
             {isLoggedIn ? (
               <>
+                {/* Admin Dashboard Link */}
+                {user.role === 'admin' && (
+                  <Link href="/admin">
+                    <Button variant="ghost" size="icon" title="Admin Dashboard">
+                      <Shield className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                )}
+
+                <Button variant="ghost" size="icon" className="hidden md:flex">
+                  <Bell className="w-5 h-5" />
+                </Button>
+
                 <Link href="/itineraries">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" title="My Itineraries">
                     <Calendar className="w-5 h-5" />
                   </Button>
                 </Link>
                 <Link href="/profile">
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" title="My Profile">
                     <User className="w-5 h-5" />
                   </Button>
                 </Link>
-                <Button variant="ghost" size="icon" onClick={handleLogout}>
+                <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
                   <LogOut className="w-5 h-5" />
                 </Button>
               </>
             ) : (
               <Link href="/auth/login">
-                <Button>Login</Button>
+                <Button>Đăng nhập</Button>
               </Link>
             )}
 

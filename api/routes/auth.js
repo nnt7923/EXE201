@@ -5,23 +5,15 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../models/User');
-const { authenticateToken: auth } = require('../middleware/auth');
+const { authenticateToken: auth, fetchFullUser } = require('../middleware/auth');
 
 // @route   GET api/auth/me
 // @desc    Get current user data
 // @access  Private
-router.get('/me', auth, async (req, res) => {
-  try {
-    // req.user is attached by the auth middleware
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
-    res.json({ success: true, data: user });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
+router.get('/me', auth, fetchFullUser, async (req, res) => {
+  // By the time we get here, fetchFullUser has already fetched the user object
+  // and attached it to req.user. We can just return it.
+  res.json({ success: true, data: req.user });
 });
 
 // @route   POST api/auth/register
@@ -58,6 +50,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
+          role: user.role // Include role in JWT payload
         },
       };
 
@@ -68,7 +61,13 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          // Return token and user object (without password)
+          const userResponse = user.toObject();
+          delete userResponse.password;
+          res.json({ 
+            success: true, 
+            data: { token, user: userResponse } 
+          });
         }
       );
     } catch (err) {
@@ -107,6 +106,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
+          role: user.role // Include role in JWT payload
         },
       };
 
@@ -117,7 +117,13 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          // Return token and user object (without password)
+          const userResponse = user.toObject();
+          delete userResponse.password;
+          res.json({ 
+            success: true, 
+            data: { token, user: userResponse } 
+          });
         }
       );
     } catch (err) {

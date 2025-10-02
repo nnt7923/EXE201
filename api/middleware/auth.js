@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Verify JWT token
-const authenticateToken = async (req, res, next) => {
+// Verify JWT token and attach lightweight user payload to req.user
+const authenticateToken = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -15,23 +15,10 @@ const authenticateToken = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.user.id).select('-password');
     
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    if (!user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'Account is deactivated'
-      });
-    }
-
-    req.user = user;
+    // The decoded payload (which includes id and role) is attached to the request.
+    req.user = decoded.user;
+    
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -56,26 +43,34 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-// Check if user is admin
-const requireAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({
-      success: false,
-      message: 'Admin access required'
-    });
-  }
-  next();
-};
+// Fetch full user object from DB after authentication
+const fetchFullUser = async (req, res, next) => {
+  try {
+    // req.user should be attached by authenticateToken and contain the user's ID
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ success: false, message: 'Authentication error: User ID not found in token.' });
+    }
 
-// Check if user is admin or moderator
-const requireModerator = (req, res, next) => {
-  if (!['admin', 'moderator'].includes(req.user.role)) {
-    return res.status(403).json({
+    const user = await User.findById(req.user.id).select('-password');
+    
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User not found' });
+    }
+
+    if (!user.isActive) {
+      return res.status(401).json({ success: false, message: 'Account is deactivated' });
+    }
+
+    // Replace the lightweight user object with the full user object
+    req.user = user;
+    next();
+  } catch (error) {
+     return res.status(500).json({
       success: false,
-      message: 'Moderator access required'
+      message: 'Error fetching user data',
+      error: error.message
     });
   }
-  next();
 };
 
 // Optional authentication (doesn't fail if no token)
@@ -86,10 +81,9 @@ const optionalAuth = async (req, res, next) => {
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findById(decoded.user.id).select('-password');
-      
-      if (user && user.isActive) {
-        req.user = user;
+      // Only attach the lightweight user object
+      if (decoded.user) {
+        req.user = decoded.user;
       }
     }
     
@@ -102,8 +96,6 @@ const optionalAuth = async (req, res, next) => {
 
 module.exports = {
   authenticateToken,
-  requireAdmin,
-  requireModerator,
+  fetchFullUser,
   optionalAuth
 };
-

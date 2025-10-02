@@ -150,8 +150,20 @@ const validatePagination = [
     .withMessage('Giới hạn phải từ 1-100'),
   query('sort')
     .optional()
-    .isIn(['createdAt', '-createdAt', 'rating', '-rating', 'name', '-name'])
+    .isIn(['createdAt', '-createdAt', 'rating', '-rating', 'rating.average', '-rating.average', 'name', '-name'])
     .withMessage('Sắp xếp không hợp lệ'),
+  query('category')
+    .optional()
+    .custom((value) => {
+      const allowedCategories = ['restaurant', 'cafe', 'accommodation', 'entertainment', 'study'];
+      const categories = value.split(',');
+      for (const category of categories) {
+        if (!allowedCategories.includes(category.trim())) {
+          throw new Error(`Danh mục không hợp lệ: ${category.trim()}`);
+        }
+      }
+      return true;
+    }),
   handleValidationErrors
 ];
 

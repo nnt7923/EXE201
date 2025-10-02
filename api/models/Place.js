@@ -14,11 +14,7 @@ const placeSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: [true, 'Danh mục là bắt buộc'],
-    enum: {
-      values: ['restaurant', 'cafe', 'accommodation', 'entertainment', 'study'],
-      message: 'Danh mục không hợp lệ'
-    }
+    required: [true, 'Danh mục là bắt buộc']
   },
   subcategory: {
     type: String,
@@ -40,20 +36,17 @@ const placeSchema = new mongoose.Schema({
     city: {
       type: String,
       default: 'Hà Nội'
+    }
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true
     },
     coordinates: {
-      lat: {
-        type: Number,
-        required: [true, 'Vĩ độ là bắt buộc'],
-        min: [-90, 'Vĩ độ không hợp lệ'],
-        max: [90, 'Vĩ độ không hợp lệ']
-      },
-      lng: {
-        type: Number,
-        required: [true, 'Kinh độ là bắt buộc'],
-        min: [-180, 'Kinh độ không hợp lệ'],
-        max: [180, 'Kinh độ không hợp lệ']
-      }
+      type: [Number], // [longitude, latitude]
+      required: true
     }
   },
   contact: {
@@ -158,7 +151,7 @@ const placeSchema = new mongoose.Schema({
 });
 
 // Index for geospatial queries
-placeSchema.index({ 'address.coordinates': '2dsphere' });
+placeSchema.index({ location: '2dsphere' });
 
 // Index for text search
 placeSchema.index({ 
@@ -175,16 +168,6 @@ placeSchema.virtual('fullAddress').get(function() {
   return `${this.address.street}, ${this.address.ward}, ${this.address.district}, ${this.address.city}`;
 });
 
-// Method to calculate distance from a point
-placeSchema.methods.calculateDistance = function(lat, lng) {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = (lat - this.address.coordinates.lat) * Math.PI / 180;
-  const dLng = (lng - this.address.coordinates.lng) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(this.address.coordinates.lat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) *
-    Math.sin(dLng/2) * Math.sin(dLng/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; // Distance in kilometers
-};
+
 
 module.exports = mongoose.model('Place', placeSchema);

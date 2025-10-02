@@ -35,25 +35,16 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      // Step 1: Login to get the token using the centralized API client
-      const loginResponse = await api.login(email, password);
-      const token = (loginResponse as any).token;
+      const response = await api.login(email, password);
 
-      if (token) {
-        // Step 2: Set token in local storage temporarily so the next API call is authenticated
-        localStorage.setItem("token", token);
-
-        // Step 3: Fetch the user data using the new token
-        const userResponse = await api.getCurrentUser();
-        const user = (userResponse as any).data; // The user object is nested in the 'data' property
-
-        // Step 4: Store both token and user data properly using the utility function
-        setAuthData(token, user);
+      if (response.success && response.data) {
+        // The API now returns both token and user, so we can set them directly.
+        setAuthData(response.data.token, response.data.user);
         
-        // Step 5: Redirect to home page and reload to update header state and other parts of the app
+        // Redirect to home page and reload to update header state and other parts of the app
         window.location.href = "/";
       } else {
-        setError("Đăng nhập thất bại: Không nhận được token.");
+        setError(response.message || "Đăng nhập thất bại.");
       }
     } catch (error: any) {
       console.error("Login page error:", error);
