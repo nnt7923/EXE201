@@ -227,7 +227,7 @@ router.post('/', authenticateToken, validatePlace, async (req, res) => {
     const { lat, lng, ...rest } = req.body;
     const placeData = {
       ...rest,
-      createdBy: req.user._id
+      createdBy: req.user.id
     };
 
     if (lat && lng) {
@@ -272,7 +272,7 @@ router.put('/:id', validateObjectId, authenticateToken, async (req, res) => {
     }
 
     // Check if user owns the place or is admin
-    if (place.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (place.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Không có quyền chỉnh sửa địa điểm này'
@@ -325,7 +325,7 @@ router.delete('/:id', validateObjectId, authenticateToken, async (req, res) => {
     }
 
     // Check if user owns the place or is admin
-    if (place.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (place.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Không có quyền xóa địa điểm này'

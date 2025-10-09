@@ -13,9 +13,9 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const itineraryRoutes = require('./routes/itineraries');
 const categoryRoutes = require('./routes/categories');
-const packageRoutes = require('./routes/packages');
-const paymentRoutes = require('./routes/payments');
-const testRoutes = require('./routes/test');
+const planRoutes = require('./routes/plans');
+const subscriptionRoutes = require('./routes/subscriptions');
+const testRoutes = require('./routes/test-endpoint');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -54,8 +54,8 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/categories', categoryRoutes);
-app.use('/api/packages', packageRoutes);
-app.use('/api/payments', paymentRoutes);
+app.use('/api/plans', planRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/test', testRoutes);
 
 // Health check endpoint

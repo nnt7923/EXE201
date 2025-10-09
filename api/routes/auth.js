@@ -21,7 +21,7 @@ router.get('/me', auth, fetchFullUser, async (req, res) => {
 // @access  Public
 router.post(
   '/register',  [    check('name', 'Please add name').not().isEmpty(),    check('email', 'Please include a valid email').isEmail(),    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),  ],
-  async (req, res) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -71,8 +71,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      next(err);
     }
   }
 );
@@ -82,7 +81,7 @@ router.post(
 // @access  Public
 router.post(
   '/login',  [    check('email', 'Please include a valid email').isEmail(),    check('password', 'Password is required').exists(),  ],
-  async (req, res) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -127,8 +126,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      next(err);
     }
   }
 );

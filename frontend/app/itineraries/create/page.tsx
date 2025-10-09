@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,19 @@ import { Wand2, Home } from 'lucide-react';
 import { AiSuggestionForm, AiPrompt } from '@/components/itinerary/ai-suggestion-form';
 import Link from 'next/link';
 
+// Define User type to match the one in ai-suggestion-form
+interface SubscriptionPlan {
+  _id: string;
+  name: string;
+  aiSuggestionLimit: number;
+}
+
+interface User {
+  subscriptionPlan?: SubscriptionPlan;
+  aiSuggestionsUsed?: number;
+  subscriptionEndDate?: string;
+}
+
 export default function CreateItineraryPage() {
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -22,6 +35,25 @@ export default function CreateItineraryPage() {
 
   const [isAiFormOpen, setIsAiFormOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await api.getCurrentUser();
+        if (response.success) {
+          setUser(response.data);
+        } else {
+          // Handle case where user is not logged in or token is invalid
+          setError('Please log in to use this feature.');
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch user data.');
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleSave = async () => {
     if (!title || !date) {
@@ -43,6 +75,10 @@ export default function CreateItineraryPage() {
   };
 
   const handleAiSubmit = async (prompt: AiPrompt) => {
+    if (!user) {
+      setError('User data not loaded. Please wait and try again.');
+      return;
+    }
     if (!date) {
         alert("Please select a date for the itinerary first.");
         return;
@@ -50,22 +86,28 @@ export default function CreateItineraryPage() {
     setIsGenerating(true);
     setError(null);
     try {
-        const suggestion = await api.getAiSuggestion(prompt);
+        const response = await api.getAiSuggestion(prompt);
+
+        if (!response.success) {
+          throw new Error(response.message || 'Failed to get AI suggestion.');
+        }
+        
+        const suggestion = response.data;
         
         // Create a new itinerary with the AI suggestions
-        const newItinerary = await api.createItinerary({
+        const newItineraryResponse = await api.createItinerary({
             title: suggestion.title || `Trip to ${prompt.location}`,
             date: date,
             description: `An AI-generated itinerary for a trip to ${prompt.location} with a ${prompt.budget} budget, focusing on ${prompt.interests.join(', ')}.`,
             activities: suggestion.activities
         });
 
-        const itineraryId = (newItinerary as any)._id;
+        const itineraryId = (newItineraryResponse as any)._id;
         setIsAiFormOpen(false);
         router.push(`/itineraries/${itineraryId}`); // Redirect to the new itinerary
 
-    } catch (err) {
-        setError('Không thể tạo gợi ý từ AI. Vui lòng thử lại.');
+    } catch (err: any) {
+        setError(err.message || 'Không thể tạo gợi ý từ AI. Vui lòng thử lại.');
         console.error(err);
     } finally {
         setIsGenerating(false);
@@ -79,6 +121,7 @@ export default function CreateItineraryPage() {
         onClose={() => setIsAiFormOpen(false)}
         onSubmit={handleAiSubmit}
         isGenerating={isGenerating}
+        user={user}
       />
       <div className="max-w-2xl mx-auto p-4 md:p-8">
         <div className="mb-4">

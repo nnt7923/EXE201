@@ -30,14 +30,17 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  purchaseHistory: [{
-    packageId: mongoose.Schema.Types.ObjectId,
-    packageName: String,
-    amount: Number,
-    creditsGained: Number,
-    purchaseDate: { type: Date, default: Date.now },
-    stripePaymentId: String
-  }],
+  subscriptionPlan: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'SubscriptionPlan',
+  },
+  aiSuggestionsUsed: {
+    type: Number,
+    default: 0,
+  },
+  subscriptionEndDate: {
+    type: Date,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

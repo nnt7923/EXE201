@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,8 +17,11 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { api, setAuthData } from "@/lib/api"; // Import the api client and setAuthData
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,8 +44,8 @@ export default function LoginPage() {
         // The API now returns both token and user, so we can set them directly.
         setAuthData(response.data.token, response.data.user);
         
-        // Redirect to home page and reload to update header state and other parts of the app
-        window.location.href = "/";
+        // Redirect to the redirectUrl if it exists, otherwise to the home page
+        window.location.href = redirectUrl || "/";
       } else {
         setError(response.message || "Đăng nhập thất bại.");
       }
@@ -117,5 +120,13 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -17,6 +17,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  transpilePackages: ['react-leaflet', 'leaflet'],
+  webpack: (config) => {
+    return config;
+  },
 }
 
 export default nextConfig

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
-import { QuickSuggestions } from "@/components/quick-suggestions"
+import { PricingSection } from "@/components/pricing-section"
 import { FeaturedPlaces } from "@/components/featured-places"
 import dynamic from 'next/dynamic'
 const LeafletMap = dynamic(() => import('@/components/simple-map'), { ssr: false })
@@ -94,7 +94,7 @@ export default function HomePage() {
       <Header />
       <main>
         <HeroSection />
-        <QuickSuggestions />
+        <PricingSection />
         <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-12">
           <FeaturedPlaces onPlaceSelect={setSelectedPlace} />
           <LeafletMap 

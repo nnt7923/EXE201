@@ -41,7 +41,7 @@
     "@stripe/stripe-js": "^8.0.0",
     "@types/react-leaflet": "^3.0.0",
     "@vercel/analytics": "1.3.1",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
@@ -62,20 +62,19 @@
     "recharts": "2.15.4",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
     "zod": "3.25.67"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.9",
     "@types/leaflet": "^1.9.20",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "8.57.0",
-    "eslint-config-next": "^15.5.4",
-    "postcss": "^8.5",
-    "tailwindcss": "^4.1.9",
+    "eslint-config-next": "^14.0.4",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
   }

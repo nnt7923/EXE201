@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Itinerary = require('../models/Itinerary');
+const User = require('../models/User');
 const { authenticateToken: auth } = require('../middleware/auth');
 
 // @route   GET api/itineraries
@@ -114,45 +115,49 @@ router.delete('/:id', auth, async (req, res) => {
     }
 });
 
+const { getAiSuggestion } = require('../services/ai');
+
 // @route   POST api/itineraries/ai-suggestion
 // @desc    Generate itinerary suggestions using AI
 // @access  Private
 router.post('/ai-suggestion', auth, async (req, res) => {
-    const { location, budget, interests, duration } = req.body;
-    
-    // In a real scenario, you would call the Gemini API here.
-    // For this example, we'll simulate an AI response.
-    console.log('Generating AI suggestion for:', req.body);
+    try {
+        // 1. Fetch user with subscription plan
+        const user = await User.findById(req.user.id).populate('subscriptionPlan');
 
-    // TODO: Build a more sophisticated suggestion logic
-    const suggestion = {
-        title: `A wonderful day in ${location}`,
-        activities: [
-            {
-                startTime: "09:00",
-                endTime: "11:00",
-                activityType: "VISIT",
-                customPlace: `A famous landmark in ${location}`,
-                notes: "Start your day with some sightseeing."
-            },
-            {
-                startTime: "12:00",
-                endTime: "13:30",
-                activityType: "EAT",
-                customPlace: `A local restaurant known for great ${interests.includes('food') ? 'food' : 'dishes'}`,
-                notes: "Enjoy a delicious lunch."
-            },
-            {
-                startTime: "14:00",
-                endTime: "16:00",
-                activityType: "ENTERTAINMENT",
-                customPlace: `An activity based on your interest in: ${interests.join(', ')}`,
-                notes: "Have some fun!"
-            }
-        ]
-    };
+        if (!user.subscriptionPlan) {
+            return res.status(403).json({ success: false, message: 'You do not have an active subscription. Please subscribe to a plan to use this feature.' });
+        }
 
-    res.json(suggestion);
+        // 2. Check if subscription is expired
+        if (user.subscriptionEndDate && new Date() > user.subscriptionEndDate) {
+            return res.status(403).json({ success: false, message: 'Your subscription has expired. Please renew to continue.' });
+        }
+
+        const plan = user.subscriptionPlan;
+
+        // 3. Check usage limit
+        // -1 means unlimited
+        if (plan.aiSuggestionLimit !== -1 && user.aiSuggestionsUsed >= plan.aiSuggestionLimit) {
+            return res.status(403).json({ success: false, message: `You have reached your limit of ${plan.aiSuggestionLimit} AI suggestions. Please upgrade your plan.` });
+        }
+
+        // 4. If checks pass, proceed with AI suggestion logic
+        console.log('Generating AI suggestion for:', req.body);
+        const suggestion = await getAiSuggestion(req.body);
+
+        // 5. Increment usage counter if the plan is not unlimited
+        if (plan.aiSuggestionLimit !== -1) {
+            user.aiSuggestionsUsed += 1;
+            await user.save();
+        }
+
+        res.json({ success: true, data: suggestion });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ success: false, message: 'Failed to generate AI suggestion.' });
+    }
 });
 
 module.exports = router;

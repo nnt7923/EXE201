@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye, Lock } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye, Lock, Crown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 
@@ -30,6 +31,9 @@ interface UserProfile {
     }
   }
   createdAt: string
+  subscriptionPlan?: SubscriptionPlan;
+  aiSuggestionsUsed?: number;
+  subscriptionEndDate?: string;
 }
 
 interface UserPlace {
@@ -305,6 +309,45 @@ export default function ProfilePage() {
                   </div>
               </CardContent>
             </Card>
+
+            {user.subscriptionPlan && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Crown className="w-5 h-5 mr-2 text-yellow-500" />
+                    Gói Dịch Vụ
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Gói hiện tại</p>
+                    <p className="text-lg font-semibold">{user.subscriptionPlan.name}</p>
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <p className="text-sm font-medium text-muted-foreground">Lượt gợi ý AI</p>
+                      <p className="text-sm font-semibold">
+                        {user.subscriptionPlan.aiSuggestionLimit === -1 
+                          ? 'Không giới hạn' 
+                          : `${user.aiSuggestionsUsed} / ${user.subscriptionPlan.aiSuggestionLimit}`}
+                      </p>
+                    </div>
+                    {user.subscriptionPlan.aiSuggestionLimit !== -1 && (
+                      <Progress value={((user.aiSuggestionsUsed || 0) / user.subscriptionPlan.aiSuggestionLimit) * 100} />
+                    )}
+                  </div>
+                  {user.subscriptionEndDate && (
+                     <div>
+                      <p className="text-sm font-medium text-muted-foreground">Ngày hết hạn</p>
+                      <p className="text-sm">{formatDate(user.subscriptionEndDate)}</p>
+                    </div>
+                  )}
+                  <Link href="/pricing" className="!mt-6 block">
+                    <Button className="w-full">Quản lý gói</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Main Content */}

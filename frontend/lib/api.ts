@@ -33,6 +33,14 @@ class ApiClient {
 
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, config)
+      
+      if (response.status === 401) {
+        // Token is invalid or expired, force logout
+        logout('session_expired');
+        // We throw an error to prevent further processing in the calling function
+        throw new Error('Session expired. Please log in again.');
+      }
+
       const data = await response.json()
 
       if (!response.ok) {
@@ -358,11 +366,19 @@ class ApiClient {
     });
   }
 
-  // Payment endpoints
-  async getCheckoutDetails(packageId: string) {
-    return this.request('/payments/checkout-details', {
+  // Subscription endpoints
+  async getPlans() {
+    return this.request('/plans');
+  }
+
+  async getPlan(planId: string) {
+    return this.request(`/plans/${planId}`);
+  }
+
+  async subscribeToPlan(planId: string) {
+    return this.request('/subscriptions/subscribe', {
       method: 'POST',
-      body: JSON.stringify({ packageId }),
+      body: JSON.stringify({ planId }),
     });
   }
 
@@ -390,11 +406,12 @@ export const getCurrentUser = (): any => {
   return userStr ? JSON.parse(userStr) : null
 }
 
-export const logout = (): void => {
+export const logout = (reason?: string): void => {
   if (typeof window === 'undefined') return
   localStorage.removeItem('token')
   localStorage.removeItem('user')
-  window.location.href = '/'
+  const reasonQuery = reason ? `?reason=${reason}` : ''
+  window.location.href = `/auth/login${reasonQuery}`
 }
 
 export const setAuthData = (token: string, user: any): void => {

@@ -83,13 +83,12 @@ export function CommunitySection() {
                       <p className="text-foreground mb-3">{post.content}</p>
 
                       {post.image && (
-                        <div className="mb-3">
+                        <div className="relative mb-3 w-full max-w-md h-48">
                           <Image
                             src={post.image || "/placeholder.svg"}
                             alt="Post image"
-                            width={512}
-                            height={192}
-                            className="w-full max-w-md h-48 object-cover rounded-lg"
+                            fill
+                            className="object-cover rounded-lg"
                           />
                         </div>
                       )}

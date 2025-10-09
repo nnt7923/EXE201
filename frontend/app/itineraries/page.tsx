@@ -43,11 +43,16 @@ export default function ItinerariesPage() {
     <div className="max-w-7xl mx-auto p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Lịch trình của tôi</h1>
-        <Link href="/itineraries/create">
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" /> Tạo lịch trình mới
-          </Button>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/">
+            <Button variant="outline">Về trang chủ</Button>
+          </Link>
+          <Link href="/itineraries/create">
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" /> Tạo lịch trình mới
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {isLoading && (
