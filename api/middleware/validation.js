@@ -150,7 +150,7 @@ const validatePagination = [
     .withMessage('Giới hạn phải từ 1-100'),
   query('sort')
     .optional()
-    .isIn(['createdAt', '-createdAt', 'rating', '-rating', 'rating.average', '-rating.average', 'name', '-name'])
+    .isIn(['createdAt', '-createdAt', 'updatedAt', '-updatedAt', 'rating', '-rating', 'rating.average', '-rating.average', 'name', '-name'])
     .withMessage('Sắp xếp không hợp lệ'),
   query('category')
     .optional()
@@ -184,4 +184,3 @@ module.exports = {
   validatePagination,
   validateObjectId
 };
-

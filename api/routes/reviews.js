@@ -288,6 +288,51 @@ router.post('/:id/helpful', validateObjectId, authenticateToken, async (req, res
   }
 });
 
+// @route   GET /api/reviews/user/me
+// @desc    Get current user's reviews
+// @access  Private
+router.get('/user/me', authenticateToken, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const reviews = await Review.find({ 
+      user: req.user.id, 
+      isActive: true 
+    })
+      .populate('place', 'name category address')
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    const total = await Review.countDocuments({ 
+      user: req.user.id, 
+      isActive: true 
+    });
+
+    res.json({
+      success: true,
+      data: {
+        reviews,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(total / parseInt(limit)),
+          total,
+          limit: parseInt(limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get current user reviews error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy đánh giá của bạn',
+      error: error.message
+    });
+  }
+});
+
 // @route   GET /api/reviews/user/:userId
 // @desc    Get reviews by user
 // @access  Public

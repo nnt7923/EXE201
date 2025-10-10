@@ -5,7 +5,7 @@ const SubscriptionPlan = require('./models/SubscriptionPlan');
 const plans = [
   {
     name: 'Cơ bản',
-    price: 0,
+    price: 29000,
     description: 'Dành cho người dùng mới bắt đầu',
     features: [
       '3 gợi ý AI mỗi tháng',

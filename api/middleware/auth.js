@@ -51,7 +51,9 @@ const fetchFullUser = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Authentication error: User ID not found in token.' });
     }
 
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id)
+      .select('-password')
+      .populate('subscriptionPlan');
     
     if (!user) {
       return res.status(401).json({ success: false, message: 'User not found' });

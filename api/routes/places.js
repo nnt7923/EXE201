@@ -454,5 +454,99 @@ router.get('/categories/list', async (req, res) => {
   }
 });
 
-module.exports = router;
+// @route   POST /api/places/:id/add-image-by-url
+// @desc    Add image to place by URL
+// @access  Private
+router.post('/:id/add-image-by-url', validateObjectId, authenticateToken, async (req, res) => {
+  try {
+    const place = await Place.findById(req.params.id);
 
+    if (!place) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy địa điểm'
+      });
+    }
+
+    // Check if user owns the place or is admin
+    if (place.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Không có quyền chỉnh sửa địa điểm này'
+      });
+    }
+
+    const { imageUrl } = req.body;
+    
+    if (!imageUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'URL hình ảnh không được để trống'
+      });
+    }
+
+    // Add the new image URL to the images array
+    place.images.push({ url: imageUrl });
+    await place.save();
+
+    res.json({
+      success: true,
+      message: 'Thêm hình ảnh thành công',
+      data: { place }
+    });
+  } catch (error) {
+    console.error('Add image by URL error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi thêm hình ảnh',
+      error: error.message
+    });
+  }
+});
+
+// @route   DELETE /api/places/:id/images/:imageId
+// @desc    Delete an image from a place
+// @access  Private
+router.delete('/:id/images/:imageId', validateObjectId, authenticateToken, async (req, res) => {
+  try {
+    const place = await Place.findById(req.params.id);
+
+    if (!place) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy địa điểm'
+      });
+    }
+
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Không có quyền xóa hình ảnh này'
+      });
+    }
+
+    const imageId = req.params.imageId;
+    
+    // Pull the image from the array
+    place.images.pull({ _id: imageId });
+    
+    await place.save();
+
+    res.json({
+      success: true,
+      message: 'Xóa hình ảnh thành công',
+      data: { place }
+    });
+
+  } catch (error) {
+    console.error('Delete image error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi xóa hình ảnh',
+      error: error.message
+    });
+  }
+});
+
+module.exports = router;

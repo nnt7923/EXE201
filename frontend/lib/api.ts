@@ -154,6 +154,19 @@ class ApiClient {
     })
   }
 
+  async addImageByUrl(id: string, imageUrl: string, alt: string) {
+    return this.request(`/places/${id}/add-image-by-url`, {
+      method: 'POST',
+      body: JSON.stringify({ imageUrl, alt }),
+    })
+  }
+
+  async deletePlaceImage(placeId: string, imageId: string) {
+    return this.request(`/places/${placeId}/images/${imageId}`, {
+      method: 'DELETE',
+    })
+  }
+
   async getPlaceReviews(placeId: string, params: {
     page?: number
     limit?: number
@@ -305,22 +318,6 @@ class ApiClient {
     return this.request(`/users/${userId}/places?${searchParams.toString()}`)
   }
 
-  async getUserReviews(userId: string, params: {
-    page?: number
-    limit?: number
-    sort?: string
-  } = {}) {
-    const searchParams = new URLSearchParams()
-    
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        searchParams.append(key, value.toString())
-      }
-    })
-
-    return this.request(`/users/${userId}/reviews?${searchParams.toString()}`)
-  }
-
   async getUserStats() {
     return this.request('/users/stats/overview')
   }
@@ -380,6 +377,10 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ planId }),
     });
+  }
+
+  async getAllSubscriptions() {
+    return this.request('/subscriptions');
   }
 
   // Health check

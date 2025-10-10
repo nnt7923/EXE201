@@ -65,6 +65,33 @@ interface UserReview {
   createdAt: string
 }
 
+const getAISuggestionDisplay = (user: UserProfile | null) => {
+  if (!user || !user.subscriptionPlan) {
+    return {
+      display: '0 / 0',
+      progress: 0,
+      showProgress: false
+    };
+  }
+
+  const used = user.aiSuggestionsUsed || 0;
+  const limit = user.subscriptionPlan.aiSuggestionLimit;
+
+  if (limit === -1) {
+    return {
+      display: 'Không giới hạn',
+      progress: 100,
+      showProgress: false
+    };
+  }
+
+  return {
+    display: `${used} / ${limit}`,
+    progress: (used / limit) * 100,
+    showProgress: true
+  };
+};
+
 export default function ProfilePage() {
   const router = useRouter()
   const [user, setUser] = useState<UserProfile | null>(null)

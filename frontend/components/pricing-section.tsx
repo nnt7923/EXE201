@@ -85,10 +85,10 @@ export function PricingSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Flexible Plans for Every Explorer
+            Các Gói Linh Hoạt
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Choose a plan that fits your journey and unlock powerful AI-driven itinerary planning.
+            Chọn một gói phù hợp với hành trình của bạn và mở khóa tính năng lập kế hoạch hành trình mạnh mẽ do AI cung cấp.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export function PricingSection() {
                     className="w-full" 
                     onClick={(e) => handleChoosePlan(e, plan.name)}
                   >
-                    Choose Plan
+                    Chọn gói
                   </Button>
                 </Link>
               </CardFooter>

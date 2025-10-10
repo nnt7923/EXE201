@@ -39,11 +39,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">
-                ĂG
-              </span>
-            </div>
+            <img src="/logo.jpg" alt="Ăn Gì Ở Đâu Logo" className="w-8 h-8 rounded-lg" />
             <h1 className="text-xl font-bold text-foreground">Ăn Gì Ở Đâu</h1>
           </Link>
 

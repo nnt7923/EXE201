@@ -48,7 +48,7 @@ export function CommunitySection() {
     <section className="py-12 px-4 bg-card/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Cộng đồng Hòa Lạc</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Cộng đồng Hòa Lạc ngay trên nền tảng (Coming soon)</h2>
           <p className="text-muted-foreground">Chia sẻ kinh nghiệm và kết nối với mọi người</p>
         </div>
 
