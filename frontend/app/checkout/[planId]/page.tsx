@@ -8,6 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Loader2, Check } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface Plan {
   _id: string;
@@ -149,8 +150,15 @@ export default function CheckoutPage() {
                     <CardTitle>Chi tiết thanh toán</CardTitle>
                     <CardDescription>Hoàn tất thanh toán để kích hoạt đăng ký.</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <MockCheckoutForm onSuccess={handleSubscriptionSuccess} />
+                <CardContent className="text-center">
+                    <h3 className="text-lg font-semibold mb-4">Quét mã QR để thanh toán</h3>
+                    <div className="flex justify-center mb-4">
+                        <Image src="/QR1.jpg" alt="QR Code" width={200} height={200} />
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">Sau khi quét mã, hãy nhấn nút bên dưới để xác nhận thanh toán của bạn.</p>
+                    <Button onClick={handleSubscriptionSuccess} disabled={isSubscribing} className="w-full">
+                        {isSubscribing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Đang xử lý...</> : 'Tôi đã thanh toán'}
+                    </Button>
                 </CardContent>
             </Card>
         </div>
