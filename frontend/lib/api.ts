@@ -35,9 +35,7 @@ class ApiClient {
       const response = await fetch(`${this.baseURL}${endpoint}`, config)
       
       if (response.status === 401) {
-        // Token is invalid or expired, force logout
         logout('session_expired');
-        // We throw an error to prevent further processing in the calling function
         throw new Error('Session expired. Please log in again.');
       }
 
@@ -70,23 +68,23 @@ class ApiClient {
     email: string
     password: string
     phone?: string
-  }) {
-    return this.request('/auth/register', {
+  }): Promise<ApiResponse<{ token: string; user: any }>> {
+    return this.request<{ token: string; user: any }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     })
   }
 
-  async getCurrentUser() {
-    return this.request('/auth/me')
+  async getCurrentUser(): Promise<ApiResponse<any>> {
+    return this.request<any>('/auth/me')
   }
 
   async updateProfile(profileData: {
     name?: string
     phone?: string
     address?: string
-  }) {
-    return this.request('/auth/profile', {
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData),
     })
@@ -95,8 +93,8 @@ class ApiClient {
   async changePassword(passwordData: {
     currentPassword: string
     newPassword: string
-  }) {
-    return this.request('/auth/change-password', {
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/auth/change-password', {
       method: 'POST',
       body: JSON.stringify(passwordData),
     })
@@ -117,7 +115,7 @@ class ApiClient {
     radius?: number
     sort?: string
     features?: string[]
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -130,42 +128,42 @@ class ApiClient {
       }
     })
 
-    return this.request(`/places?${searchParams.toString()}`)
+    return this.request<any>(`/places?${searchParams.toString()}`)
   }
 
-  async getPlace(id: string) {
-    return this.request(`/places/${id}`)
+  async getPlace(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/places/${id}`)
   }
 
-  async createPlace(placeData: any) {
-    return this.request('/places', {
+  async createPlace(placeData: any): Promise<ApiResponse<any>> {
+    return this.request<any>('/places', {
       method: 'POST',
       body: JSON.stringify(placeData),
     })
   }
 
-  async updatePlace(id: string, placeData: any) {
-    return this.request(`/places/${id}`, {
+  async updatePlace(id: string, placeData: any): Promise<ApiResponse<any>> {
+    return this.request<any>(`/places/${id}`, {
       method: 'PUT',
       body: JSON.stringify(placeData),
     })
   }
 
-  async deletePlace(id: string) {
-    return this.request(`/places/${id}`, {
+  async deletePlace(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/places/${id}`, {
       method: 'DELETE',
     })
   }
 
-  async addImageByUrl(id: string, imageUrl: string, alt: string) {
-    return this.request(`/places/${id}/add-image-by-url`, {
+  async addImageByUrl(id: string, imageUrl: string, alt: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/places/${id}/add-image-by-url`, {
       method: 'POST',
       body: JSON.stringify({ imageUrl, alt }),
     })
   }
 
-  async deletePlaceImage(placeId: string, imageId: string) {
-    return this.request(`/places/${placeId}/images/${imageId}`, {
+  async deletePlaceImage(placeId: string, imageId: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/places/${placeId}/images/${imageId}`, {
       method: 'DELETE',
     })
   }
@@ -174,7 +172,7 @@ class ApiClient {
     page?: number
     limit?: number
     sort?: string
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -183,11 +181,11 @@ class ApiClient {
       }
     })
 
-    return this.request(`/places/${placeId}/reviews?${searchParams.toString()}`)
+    return this.request<any>(`/places/${placeId}/reviews?${searchParams.toString()}`)
   }
 
-  async getCategories() {
-    return this.request('/places/categories/list')
+  async getCategories(): Promise<ApiResponse<any>> {
+    return this.request<any>('/places/categories/list')
   }
 
   // Reviews endpoints
@@ -198,7 +196,7 @@ class ApiClient {
     user?: string
     rating?: number
     sort?: string
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -207,11 +205,11 @@ class ApiClient {
       }
     })
 
-    return this.request(`/reviews?${searchParams.toString()}`)
+    return this.request<any>(`/reviews?${searchParams.toString()}`)
   }
 
-  async getReview(id: string) {
-    return this.request(`/reviews/${id}`)
+  async getReview(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/reviews/${id}`)
   }
 
   async createReview(reviewData: {
@@ -226,28 +224,28 @@ class ApiClient {
     tags?: string[]
     aspects?: any
     images?: string[]
-  }) {
-    return this.request('/reviews', {
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/reviews', {
       method: 'POST',
       body: JSON.stringify(reviewData),
     })
   }
 
-  async updateReview(id: string, reviewData: any) {
-    return this.request(`/reviews/${id}`, {
+  async updateReview(id: string, reviewData: any): Promise<ApiResponse<any>> {
+    return this.request<any>(`/reviews/${id}`, {
       method: 'PUT',
       body: JSON.stringify(reviewData),
     })
   }
 
-  async deleteReview(id: string) {
-    return this.request(`/reviews/${id}`, {
+  async deleteReview(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/reviews/${id}`, {
       method: 'DELETE',
     })
   }
 
-  async toggleReviewHelpful(id: string) {
-    return this.request(`/reviews/${id}/helpful`, {
+  async toggleReviewHelpful(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/reviews/${id}/helpful`, {
       method: 'POST',
     })
   }
@@ -256,7 +254,7 @@ class ApiClient {
     page?: number
     limit?: number
     sort?: string
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -265,7 +263,7 @@ class ApiClient {
       }
     })
 
-    return this.request(`/reviews/user/${userId}?${searchParams.toString()}`)
+    return this.request<any>(`/reviews/user/${userId}?${searchParams.toString()}`)
   }
 
   // Users endpoints
@@ -276,7 +274,7 @@ class ApiClient {
     isActive?: boolean
     search?: string
     sort?: string
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -285,22 +283,22 @@ class ApiClient {
       }
     })
 
-    return this.request(`/users?${searchParams.toString()}`)
+    return this.request<any>(`/users?${searchParams.toString()}`)
   }
 
-  async getUser(id: string) {
-    return this.request(`/users/${id}`)
+  async getUser(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/users/${id}`)
   }
 
-  async updateUser(id: string, userData: any) {
-    return this.request(`/users/${id}`, {
+  async updateUser(id: string, userData: any): Promise<ApiResponse<any>> {
+    return this.request<any>(`/users/${id}`, {
       method: 'PUT',
       body: JSON.stringify(userData),
     })
   }
 
-  async deleteUser(id: string) {
-    return this.request(`/users/${id}`, {
+  async deleteUser(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/users/${id}`, {
       method: 'DELETE',
     })
   }
@@ -309,7 +307,7 @@ class ApiClient {
     page?: number
     limit?: number
     sort?: string
-  } = {}) {
+  } = {}): Promise<ApiResponse<any>> {
     const searchParams = new URLSearchParams()
     
     Object.entries(params).forEach(([key, value]) => {
@@ -318,38 +316,38 @@ class ApiClient {
       }
     })
 
-    return this.request(`/users/${userId}/places?${searchParams.toString()}`)
+    return this.request<any>(`/users/${userId}/places?${searchParams.toString()}`)
   }
 
-  async getUserStats() {
-    return this.request('/users/stats/overview')
+  async getUserStats(): Promise<ApiResponse<any>> {
+    return this.request<any>('/users/stats/overview')
   }
 
   // Itinerary endpoints
-  async getItineraries() {
-    return this.request('/itineraries');
+  async getItineraries(): Promise<ApiResponse<any>> {
+    return this.request<any>('/itineraries');
   }
 
-  async getItinerary(id: string) {
-    return this.request(`/itineraries/${id}`);
+  async getItinerary(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/itineraries/${id}`);
   }
 
-  async createItinerary(itineraryData: any) {
-    return this.request('/itineraries', {
+  async createItinerary(itineraryData: any): Promise<ApiResponse<any>> {
+    return this.request<any>('/itineraries', {
       method: 'POST',
       body: JSON.stringify(itineraryData),
     });
   }
 
-  async updateItinerary(id: string, itineraryData: any) {
-    return this.request(`/itineraries/${id}`, {
+  async updateItinerary(id: string, itineraryData: any): Promise<ApiResponse<any>> {
+    return this.request<any>(`/itineraries/${id}`, {
       method: 'PUT',
       body: JSON.stringify(itineraryData),
     });
   }
 
-  async deleteItinerary(id: string) {
-    return this.request(`/itineraries/${id}`, {
+  async deleteItinerary(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/itineraries/${id}`, {
       method: 'DELETE',
     });
   }
@@ -359,36 +357,36 @@ class ApiClient {
     budget: string;
     interests: string[];
     duration: number;
-  }) {
-    return this.request('/itineraries/ai-suggestion', {
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/itineraries/ai-suggestion', {
       method: 'POST',
       body: JSON.stringify(promptData),
     });
   }
 
   // Subscription endpoints
-  async getPlans() {
-    return this.request('/plans');
+  async getPlans(): Promise<ApiResponse<any>> {
+    return this.request<any>('/plans');
   }
 
-  async getPlan(planId: string) {
-    return this.request(`/plans/${planId}`);
+  async getPlan(planId: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/plans/${planId}`);
   }
 
-  async subscribeToPlan(planId: string) {
-    return this.request('/subscriptions/subscribe', {
+  async subscribeToPlan(planId: string): Promise<ApiResponse<any>> {
+    return this.request<any>('/subscriptions/subscribe', {
       method: 'POST',
       body: JSON.stringify({ planId }),
     });
   }
 
-  async getAllSubscriptions() {
-    return this.request('/subscriptions');
+  async getAllSubscriptions(): Promise<ApiResponse<any>> {
+    return this.request<any>('/subscriptions');
   }
 
   // Health check
-  async healthCheck() {
-    return this.request('/health')
+  async healthCheck(): Promise<ApiResponse<any>> {
+    return this.request<any>('/health')
   }
 }
 
