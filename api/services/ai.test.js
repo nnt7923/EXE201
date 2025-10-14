@@ -40,9 +40,8 @@ describe('getAiSuggestion', () => {
         { name: 'Test Activity', description: 'Test Description', time: 'Test Time' },
       ],
     };
-    const mockResponseText = `
-${JSON.stringify(mockApiResponse, null, 2)}
-`;
+    // Use string concatenation to avoid nested template literals
+    const mockResponseText = '```json\n' + JSON.stringify(mockApiResponse, null, 2) + '\n```';
     
     mockGenerateContent.mockResolvedValue({
       response: {
@@ -82,16 +81,15 @@ ${JSON.stringify(mockApiResponse, null, 2)}
       },
     });
 
+    // The function should throw an error because it can\'t find the JSON block
     await expect(getAiSuggestion(testPrompt)).rejects.toThrow(
-      'Không thể phân tích cú pháp JSON từ phản hồi của AI.'
+      'Đã xảy ra lỗi khi tạo gợi ý: Phản hồi của AI không chứa khối JSON hợp lệ hoặc có định dạng sai.'
     );
   });
 
   it('should throw an error if the AI response has an invalid structure', async () => {
     const invalidApiResponse = { title: 'Only title' }; // Missing 'activities'
-    const mockResponseText = `
-${JSON.stringify(invalidApiResponse)}
-`;
+    const mockResponseText = '```json\n' + JSON.stringify(invalidApiResponse) + '\n```';
     mockGenerateContent.mockResolvedValue({
       response: {
         text: () => mockResponseText,
@@ -99,7 +97,7 @@ ${JSON.stringify(invalidApiResponse)}
     });
 
     await expect(getAiSuggestion(testPrompt)).rejects.toThrow(
-      'Phản hồi AI không đúng định dạng cấu trúc yêu cầu.'
+      'Đã xảy ra lỗi khi tạo gợi ý: Phản hồi AI không đúng định dạng cấu trúc yêu cầu.'
     );
   });
 
@@ -111,7 +109,7 @@ ${JSON.stringify(invalidApiResponse)}
     });
 
     await expect(getAiSuggestion(testPrompt)).rejects.toThrow(
-      'Phản hồi từ AI không chứa nội dung.'
+      'Đã xảy ra lỗi khi tạo gợi ý: Phản hồi từ AI không chứa nội dung.'
     );
   });
 });
