@@ -68,7 +68,7 @@ export default function CheckoutPage() {
       const response = await api.subscribeToPlan(plan._id);
       if (response.success) {
         // Refresh user data
-        const userResponse = await api.request('/users/me');
+        const userResponse = await api.getCurrentUser();
         if (userResponse.success) {
           // Update user data in localStorage or global state if needed
           localStorage.setItem('user', JSON.stringify(userResponse.data));
