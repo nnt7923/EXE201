@@ -51,7 +51,7 @@ router.get('/', auth, authorize('admin'), async (req, res) => {
       .sort('-subscriptionEndDate')
       .lean();
 
-    res.status(200).json({ success: true, data: { subscriptions: usersWithSubscriptions } });
+    res.status(200).json({ success: true, data: usersWithSubscriptions });
   } catch (error) {
     console.error('Error fetching all subscriptions:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
