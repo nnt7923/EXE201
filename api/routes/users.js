@@ -192,8 +192,77 @@ router.get('/:id', validateObjectId, authenticateToken, fetchFullUser, async (re
 });
 
 // Public routes remain unchanged
-router.get('/:id/places', validateObjectId, validatePagination, async (req, res) => { /* ... */ });
-router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res) => { /* ... */ });
+router.get('/:id/places', validateObjectId, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const places = await Place.find({ createdBy: req.params.id, isActive: true }) // Public view should only show active places
+      .populate('createdBy', 'name avatar')
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    const total = await Place.countDocuments({ createdBy: req.params.id, isActive: true });
+
+    res.json({
+      success: true,
+      data: {
+        places,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(total / parseInt(limit)),
+          total,
+          limit: parseInt(limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get public user places error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy địa điểm của user',
+      error: error.message
+    });
+  }
+});
+router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const reviews = await Review.find({ user: req.params.id, isActive: true }) // Public view should only show active reviews
+      .populate('place', 'name category address')
+      .populate('user', 'name avatar') // Also populate user info for public view
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    const total = await Review.countDocuments({ user: req.params.id, isActive: true });
+
+    res.json({
+      success: true,
+      data: {
+        reviews,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(total / parseInt(limit)),
+          total,
+          limit: parseInt(limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Get public user reviews error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy đánh giá của user',
+      error: error.message
+    });
+  }
+});
 
 // @route   PUT /api/users/:id
 // @desc    Update user

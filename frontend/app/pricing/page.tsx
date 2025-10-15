@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Loader2 } from 'lucide-react';
 import { api, isAuthenticated } from '@/lib/api';
+import { Header } from '@/components/header';
 
 interface Plan {
   _id: string;
@@ -28,13 +29,13 @@ export default function PricingPage() {
       try {
         setLoading(true);
         const response = await api.getPlans();
-        if (response.success) {
+        if (response.success && response.data) {
           setPlans(response.data);
         } else {
           setError(response.message || 'Failed to fetch plans.');
         }
-      } catch (err) {
-        setError('An unexpected error occurred.');
+      } catch (err: any) {
+        setError(err.message || 'An unexpected error occurred.');
         console.error(err);
       } finally {
         setLoading(false);
@@ -62,15 +63,17 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-                  <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-                    Chọn Gói Dịch Vụ Của Bạn
-                  </h1>
-                  <p className="mt-4 max-w-2xl mx-auto text-xl text-muted-foreground">
-                    Khai phá toàn bộ tiềm năng lập kế hoạch du lịch bằng AI quanh khu vực Hòa Lạc.
-                  </p>
-                </div>
+    <>
+      <Header />
+      <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+                    <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+                      Chọn Gói Dịch Vụ Của Bạn
+                    </h1>
+                    <p className="mt-4 max-w-2xl mx-auto text-xl text-muted-foreground">
+                      Khai phá toàn bộ tiềm năng lập kế hoạch du lịch bằng AI quanh khu vực Hòa Lạc.
+                    </p>
+                  </div>
         
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                   {plans.map((plan) => (
@@ -117,6 +120,7 @@ export default function PricingPage() {
                       </CardFooter>
                     </Card>
                   ))}      </div>
-    </div>
-  );
+        </div>
+      </>
+    );
 }

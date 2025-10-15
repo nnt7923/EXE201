@@ -12,7 +12,8 @@ const plans = [
       'Lập kế hoạch hành trình cơ bản',
       'Truy cập cộng đồng'
     ],
-    aiSuggestionLimit: 3
+    aiSuggestionLimit: 3,
+    durationInDays: 30
   },
   {
     name: 'Chuyên nghiệp',
@@ -24,7 +25,8 @@ const plans = [
       'Hỗ trợ ưu tiên',
       'Truy cập cộng đồng'
     ],
-    aiSuggestionLimit: 50
+    aiSuggestionLimit: 50,
+    durationInDays: 30
   },
   {
     name: 'Không giới hạn',
@@ -36,7 +38,8 @@ const plans = [
       'Hỗ trợ ưu tiên 24/7',
       'Truy cập cộng đồng độc quyền'
     ],
-    aiSuggestionLimit: -1 // -1 for unlimited
+    aiSuggestionLimit: -1, // -1 for unlimited
+    durationInDays: 30
   }
 ];
 

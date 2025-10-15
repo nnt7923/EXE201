@@ -3,42 +3,18 @@ const router = express.Router();
 const Itinerary = require('../models/Itinerary');
 const User = require('../models/User');
 const { authenticateToken: auth } = require('../middleware/auth');
+const { checkAIAccess, incrementAIUsage } = require('../middleware/checkAIAccess');
 const { getAiSuggestion } = require('../services/ai');
 
 // @route   POST api/itineraries/ai-suggestion
 // @desc    Generate itinerary suggestions using AI
-// @access  Private
-router.post('/ai-suggestion', auth, async (req, res) => {
+// @access  Private (requires confirmed payment)
+router.post('/ai-suggestion', auth, checkAIAccess, async (req, res) => {
     try {
-        // 1. Fetch user with subscription plan
-        const user = await User.findById(req.user.id).populate('subscriptionPlan');
+        // User access already validated by middleware
+        const user = req.userWithSubscription;
 
-        if (!user.subscriptionPlan) {
-            return res.status(403).json({ 
-                success: false, 
-                message: 'Bạn cần có gói dịch vụ để sử dụng tính năng này.' 
-            });
-        }
-
-        // 2. Check if subscription is expired
-        if (user.subscriptionEndDate && new Date() > new Date(user.subscriptionEndDate)) {
-            return res.status(403).json({ 
-                success: false, 
-                message: 'Gói dịch vụ của bạn đã hết hạn. Vui lòng gia hạn để tiếp tục.' 
-            });
-        }
-
-        const plan = user.subscriptionPlan;
-
-        // 3. Check usage limit (-1 means unlimited)
-        if (plan.aiSuggestionLimit !== -1 && user.aiSuggestionsUsed >= plan.aiSuggestionLimit) {
-            return res.status(403).json({ 
-                success: false, 
-                message: `Bạn đã sử dụng hết ${plan.aiSuggestionLimit} lượt gợi ý AI. Vui lòng nâng cấp gói dịch vụ.` 
-            });
-        }
-
-        // 4. Validate input
+        // Validate input
         const { location, duration, budget, interests } = req.body;
         if (!location || !duration || !budget || !Array.isArray(interests)) {
             return res.status(400).json({ 
@@ -57,16 +33,17 @@ router.post('/ai-suggestion', auth, async (req, res) => {
                 throw new Error('Định dạng gợi ý không hợp lệ');
             }
 
-            // 6. Increment usage counter if the plan is not unlimited
-            if (plan.aiSuggestionLimit !== -1) {
-                user.aiSuggestionsUsed += 1;
-                await user.save();
-            }
+            // 6. Increment usage counter
+            await user.useAISuggestion();
 
             res.json({ 
                 success: true, 
                 data: suggestion,
-                remainingUsage: plan.aiSuggestionLimit === -1 ? 'Không giới hạn' : plan.aiSuggestionLimit - user.aiSuggestionsUsed
+                usage: {
+                    used: user.aiSuggestionsUsed,
+                    limit: user.aiSuggestionsLimit,
+                    remaining: user.aiSuggestionsLimit === -1 ? 'Không giới hạn' : user.aiSuggestionsLimit - user.aiSuggestionsUsed
+                }
             });
 
         } catch (aiError) {

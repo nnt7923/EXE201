@@ -7,15 +7,6 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const { authenticateToken: auth, fetchFullUser } = require('../middleware/auth');
 
-// @route   GET api/auth/me
-// @desc    Get current user data
-// @access  Private
-router.get('/me', auth, fetchFullUser, async (req, res) => {
-  // By the time we get here, fetchFullUser has already fetched the user object
-  // and attached it to req.user. We can just return it.
-  res.json({ success: true, data: req.user });
-});
-
 // @route   POST api/auth/register
 // @desc    Register a user
 // @access  Public

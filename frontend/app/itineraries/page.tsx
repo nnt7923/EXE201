@@ -26,10 +26,13 @@ export default function ItinerariesPage() {
       try {
         setIsLoading(true);
         const response = await api.getItineraries();
-        // Assuming the backend returns an array of itineraries directly
-        setItineraries(response as unknown as Itinerary[]);
-      } catch (err) {
-        setError('Failed to fetch itineraries. Please make sure you are logged in.');
+        if (response.success && response.data) {
+          setItineraries(response.data);
+        } else {
+          setError(response.message || 'Failed to fetch itineraries');
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to fetch itineraries. Please make sure you are logged in.');
         console.error(err);
       } finally {
         setIsLoading(false);

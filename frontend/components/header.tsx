@@ -3,10 +3,13 @@
 import { Search, Menu, User, Bell, LogOut, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, logout } from "@/lib/api"; // Import helpers
+import NotificationCenter, { useNotifications } from "@/components/notification-center";
 
 // Define a type for the user object for better type safety
 interface UserProfile {
@@ -20,6 +23,7 @@ interface UserProfile {
 export function Header() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const router = useRouter();
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     // The user object is now stored in localStorage by setAuthData
@@ -70,9 +74,27 @@ export function Header() {
                   </Link>
                 )}
 
-                <Button variant="ghost" size="icon" className="hidden md:flex">
-                  <Bell className="w-5 h-5" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="hidden md:flex relative">
+                      <Bell className="w-5 h-5" />
+                      {unreadCount > 0 && (
+                        <Badge 
+                          variant="destructive" 
+                          className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center"
+                        >
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </Badge>
+                      )}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Thông báo</DialogTitle>
+                    </DialogHeader>
+                    <NotificationCenter />
+                  </DialogContent>
+                </Dialog>
 
                 <Link href="/itineraries">
                   <Button variant="ghost" size="icon" title="My Itineraries">

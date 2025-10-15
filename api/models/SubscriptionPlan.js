@@ -24,6 +24,14 @@ const SubscriptionPlanSchema = new mongoose.Schema({
     required: true,
     // Use -1 for unlimited
   },
+  durationInDays: {
+    type: Number,
+    required: [true, 'Please specify the plan duration in days'],
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

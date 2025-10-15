@@ -6,7 +6,7 @@ const SubscriptionPlan = require('../models/SubscriptionPlan');
 const User = require('../models/User');
 
 // @desc    Subscribe to a plan
-// @route   POST /api/v1/subscriptions/subscribe
+// @route   POST /api/subscriptions/subscribe
 // @access  Private
 router.post('/subscribe', auth, async (req, res) => {
   const { planId } = req.body;
@@ -14,13 +14,13 @@ router.post('/subscribe', auth, async (req, res) => {
 
   try {
     const plan = await SubscriptionPlan.findById(planId);
-    if (!plan) {
-      return res.status(404).json({ success: false, error: 'Plan not found' });
+    if (!plan || !plan.isActive) {
+      return res.status(404).json({ success: false, message: 'Plan not found or is not active' });
     }
 
-    // For now, we'll set the subscription to be valid for 30 days
+    // Set the subscription end date based on the plan's duration
     const subscriptionEndDate = new Date();
-    subscriptionEndDate.setDate(subscriptionEndDate.getDate() + 30);
+    subscriptionEndDate.setDate(subscriptionEndDate.getDate() + plan.durationInDays);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -32,10 +32,10 @@ router.post('/subscribe', auth, async (req, res) => {
       { new: true }
     ).populate('subscriptionPlan');
 
-    res.status(200).json({ success: true, data: updatedUser });
+    res.status(200).json({ success: true, data: { user: updatedUser } });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: 'Server Error' });
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
 
@@ -47,14 +47,14 @@ router.get('/', auth, authorize('admin'), async (req, res) => {
     // Find all users who have a subscription plan
     const usersWithSubscriptions = await User.find({ subscriptionPlan: { $exists: true, $ne: null } })
       .populate('subscriptionPlan')
-      .select('name email subscriptionEndDate createdAt')
+      .select('name email subscriptionPlan subscriptionEndDate createdAt')
       .sort('-subscriptionEndDate')
       .lean();
 
-    res.status(200).json({ success: true, data: usersWithSubscriptions });
+    res.status(200).json({ success: true, data: { subscriptions: usersWithSubscriptions } });
   } catch (error) {
     console.error('Error fetching all subscriptions:', error);
-    res.status(500).json({ success: false, error: 'Server Error' });
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
 

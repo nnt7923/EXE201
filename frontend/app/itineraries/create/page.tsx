@@ -52,14 +52,14 @@ export default function CreateItineraryPage() {
     const fetchUser = async () => {
       try {
         const response = await api.getCurrentUser();
-        if (response.success) {
+        if (response.success && response.data) {
           setUser(response.data);
         } else {
-          setError('Vui lòng đăng nhập để sử dụng tính năng này.');
+          setError(response.message || 'Vui lòng đăng nhập để sử dụng tính năng này.');
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        setError('Không thể tải dữ liệu người dùng.');
+        setError(err.message || 'Không thể tải dữ liệu người dùng.');
       }
     };
     fetchUser();
@@ -107,8 +107,12 @@ export default function CreateItineraryPage() {
             activities: suggestion.activities
         });
 
-        const itineraryId = (newItineraryResponse as any)._id;
-        router.push(`/itineraries/${itineraryId}`);
+        if (newItineraryResponse.success && newItineraryResponse.data) {
+          const itineraryId = newItineraryResponse.data._id;
+          router.push(`/itineraries/${itineraryId}`);
+        } else {
+          throw new Error(newItineraryResponse.message || 'Không thể tạo lịch trình.');
+        }
 
     } catch (err: any) {
         setError(err.message || 'Không thể tạo gợi ý từ AI. Vui lòng thử lại.');

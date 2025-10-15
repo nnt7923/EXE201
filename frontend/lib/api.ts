@@ -42,7 +42,11 @@ class ApiClient {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Request failed')
+        const error: any = new Error(
+          data.msg || data.message || 'An API error occurred'
+        );
+        error.data = data; // Attach the JSON response from the server
+        throw error;
       }
 
       return data
@@ -76,7 +80,7 @@ class ApiClient {
   }
 
   async getCurrentUser(): Promise<ApiResponse<any>> {
-    return this.request<any>('/auth/me')
+    return this.request<any>('/users/me')
   }
 
   async updateProfile(profileData: {

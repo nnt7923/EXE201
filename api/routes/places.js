@@ -240,8 +240,6 @@ router.post('/', authenticateToken, validatePlace, async (req, res) => {
     const place = new Place(placeData);
     await place.save();
 
-    await place.populate('createdBy', 'name avatar');
-
     res.status(201).json({
       success: true,
       message: 'Tạo địa điểm thành công',
@@ -396,114 +394,6 @@ router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res
 });
 
 
-// @route   GET /api/places/categories/list
-// @desc    Get list of categories and subcategories
-// @access  Public
-router.get('/categories/list', async (req, res) => {
-  try {
-    const categories = {
-      restaurant: {
-        name: 'Nhà hàng',
-        subcategories: [
-          'Cơm tấm', 'Phở', 'Bún bò Huế', 'Bún chả', 'Bánh mì', 'Chả cá',
-          'Lẩu', 'Nướng', 'Hải sản', 'Đồ chay', 'Món Nhật', 'Món Hàn',
-          'Món Thái', 'Món Trung', 'Pizza', 'Burger', 'Món Âu'
-        ]
-      },
-      cafe: {
-        name: 'Cà phê',
-        subcategories: [
-          'Cà phê truyền thống', 'Cà phê hiện đại', 'Trà sữa', 'Sinh tố',
-          'Nước ép', 'Smoothie', 'Cà phê học bài', 'Cà phê làm việc'
-        ]
-      },
-      accommodation: {
-        name: 'Nhà trọ',
-        subcategories: [
-          'Phòng trọ', 'Ký túc xá', 'Homestay', 'Khách sạn mini',
-          'Căn hộ cho thuê', 'Nhà nguyên căn'
-        ]
-      },
-      entertainment: {
-        name: 'Giải trí',
-        subcategories: [
-          'Karaoke', 'Game center', 'Cinema', 'Bowling', 'Billiards',
-          'Escape room', 'VR game', 'Board game cafe'
-        ]
-      },
-      study: {
-        name: 'Học tập',
-        subcategories: [
-          'Thư viện', 'Cà phê học bài', 'Co-working space', 'Lớp học',
-          'Trung tâm ngoại ngữ', 'Luyện thi'
-        ]
-      }
-    };
-
-    res.json({
-      success: true,
-      data: { categories }
-    });
-  } catch (error) {
-    console.error('Get categories error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Lỗi server khi lấy danh mục',
-      error: error.message
-    });
-  }
-});
-
-// @route   POST /api/places/:id/add-image-by-url
-// @desc    Add image to place by URL
-// @access  Private
-router.post('/:id/add-image-by-url', validateObjectId, authenticateToken, async (req, res) => {
-  try {
-    const place = await Place.findById(req.params.id);
-
-    if (!place) {
-      return res.status(404).json({
-        success: false,
-        message: 'Không tìm thấy địa điểm'
-      });
-    }
-
-    // Check if user owns the place or is admin
-    if (place.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Không có quyền chỉnh sửa địa điểm này'
-      });
-    }
-
-    const { imageUrl } = req.body;
-    
-    if (!imageUrl) {
-      return res.status(400).json({
-        success: false,
-        message: 'URL hình ảnh không được để trống'
-      });
-    }
-
-    // Add the new image URL to the images array
-    place.images.push({ url: imageUrl });
-    await place.save();
-
-    res.json({
-      success: true,
-      message: 'Thêm hình ảnh thành công',
-      data: { place }
-    });
-  } catch (error) {
-    console.error('Add image by URL error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Lỗi server khi thêm hình ảnh',
-      error: error.message
-    });
-  }
-});
-
 // @route   DELETE /api/places/:id/images/:imageId
 // @desc    Delete an image from a place
 // @access  Private
@@ -518,8 +408,8 @@ router.delete('/:id/images/:imageId', validateObjectId, authenticateToken, async
       });
     }
 
-    // Check if user is admin
-    if (req.user.role !== 'admin') {
+    // Check if user owns the place or is admin
+    if (place.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Không có quyền xóa hình ảnh này'

@@ -1,0 +1,246 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "Ăn Gì Ở Đâu Logo Ăn Gì Ở Đâu" [ref=e6]:
+            - /url: /
+            - img "Ăn Gì Ở Đâu Logo" [ref=e7]
+            - heading "Ăn Gì Ở Đâu" [level=1] [ref=e8]
+          - generic [ref=e9]:
+            - link "Đăng nhập" [ref=e10]:
+              - /url: /auth/login
+              - button "Đăng nhập" [ref=e11] [cursor=pointer]
+            - button [ref=e12] [cursor=pointer]:
+              - img
+        - generic [ref=e14]:
+          - img [ref=e15]
+          - link [ref=e18]:
+            - /url: /search
+            - textbox "Tìm quán ăn, nhà trọ..." [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - generic [ref=e26]: Trợ lý thông minh cho Hòa Lạc
+        - heading "Khám phá Hòa Lạc cùng AI" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Tìm kiếm quán ăn ngon, nhà trọ tốt và địa điểm vui chơi với sự hỗ trợ của trí tuệ nhân tạo. Đơn giản, nhanh chóng và chính xác.
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - img [ref=e32]
+            - img [ref=e35]
+          - link [ref=e38]:
+            - /url: /search
+            - 'textbox "Ví dụ: ''quán ăn ngon dưới 50k gần FPTU'' hoặc ''nhà trọ yên tĩnh cho 2 người''" [ref=e39] [cursor=pointer]'
+          - link "Tìm kiếm":
+            - /url: /search
+            - button "Tìm kiếm" [ref=e40] [cursor=pointer]
+        - generic [ref=e41]:
+          - link "🍜 Quán ăn gần đây" [ref=e42]:
+            - /url: /search?category=restaurant
+            - button "🍜 Quán ăn gần đây" [ref=e43] [cursor=pointer]
+          - link "🏠 Nhà trọ giá rẻ" [ref=e44]:
+            - /url: /search?category=accommodation&maxPrice=2000000
+            - button "🏠 Nhà trọ giá rẻ" [ref=e45] [cursor=pointer]
+          - link "☕ Cafe học bài" [ref=e46]:
+            - /url: /search?category=cafe&subcategory=C%C3%A0%20ph%C3%AA%20hi%E1%BB%87n%20%C4%91%E1%BA%A1i&features=wifi
+            - button "☕ Cafe học bài" [ref=e47] [cursor=pointer]
+          - link "🎉 Địa điểm vui chơi" [ref=e48]:
+            - /url: /search?category=entertainment
+            - button "🎉 Địa điểm vui chơi" [ref=e49] [cursor=pointer]
+      - generic [ref=e52]:
+        - heading "Các Gói Linh Hoạt" [level=2] [ref=e53]
+        - paragraph [ref=e54]: Chọn một gói phù hợp với hành trình của bạn và mở khóa tính năng lập kế hoạch hành trình mạnh mẽ do AI cung cấp.
+      - generic [ref=e55]:
+        - generic [ref=e57]:
+          - heading "Nổi bật hôm nay" [level=2] [ref=e58]
+          - paragraph [ref=e59]: Những địa điểm được yêu thích nhất
+        - generic:
+          - generic:
+            - generic:
+              - generic [ref=e60]:
+                - button "Zoom in" [ref=e61] [cursor=pointer]: +
+                - button "Zoom out" [ref=e62] [cursor=pointer]: −
+              - generic [ref=e63]:
+                - link "Leaflet" [ref=e64]:
+                  - /url: https://leafletjs.com
+                  - img [ref=e65]
+                  - text: Leaflet
+                - text: "| ©"
+                - link "OpenStreetMap" [ref=e69]:
+                  - /url: https://www.openstreetmap.org/copyright
+                - text: contributors
+          - generic [ref=e71]:
+            - textbox "Tìm kiếm vị trí..." [ref=e72]
+            - button [ref=e73] [cursor=pointer]:
+              - img
+            - button [ref=e75] [cursor=pointer]:
+              - img
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - heading "Cộng đồng Hòa Lạc ngay trên nền tảng (Coming soon)" [level=2] [ref=e79]
+          - paragraph [ref=e80]: Chia sẻ kinh nghiệm và kết nối với mọi người
+        - generic [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - heading "Bài viết mới nhất" [level=3] [ref=e84]
+              - link "Xem tất cả" [ref=e85]:
+                - /url: /community
+                - button "Xem tất cả" [ref=e86] [cursor=pointer]
+            - generic [ref=e89]:
+              - img "Minh Anh" [ref=e91]
+              - generic [ref=e92]:
+                - generic [ref=e93]:
+                  - generic [ref=e94]: Minh Anh
+                  - generic [ref=e95]: Local Guide
+                  - generic [ref=e96]: • 2 giờ trước
+                - paragraph [ref=e97]: Vừa thử quán bún chả mới mở gần FPTU, ngon lắm mọi người ơi! Giá chỉ 30k thôi 😍
+                - img "Post image" [ref=e99]
+                - generic [ref=e100]:
+                  - generic [ref=e101]: "#Bún chả"
+                  - generic [ref=e102]: "#FPTU"
+                  - generic [ref=e103]: "#Giá rẻ"
+                - generic [ref=e104]:
+                  - button "24" [ref=e105] [cursor=pointer]:
+                    - img [ref=e106]
+                    - generic [ref=e108]: "24"
+                  - button "8" [ref=e109] [cursor=pointer]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: "8"
+                  - button "Chia sẻ" [ref=e113] [cursor=pointer]:
+                    - img [ref=e114]
+                    - generic [ref=e120]: Chia sẻ
+            - generic [ref=e123]:
+              - img "Hoàng Nam" [ref=e125]
+              - generic [ref=e126]:
+                - generic [ref=e127]:
+                  - generic [ref=e128]: Hoàng Nam
+                  - generic [ref=e129]: Foodie
+                  - generic [ref=e130]: • 4 giờ trước
+                - paragraph [ref=e131]: Tìm bạn cùng phòng trọ gần khu công nghệ cao, phòng 2 người, có điều hòa. DM mình nhé!
+                - generic [ref=e132]:
+                  - generic [ref=e133]: "#Tìm bạn cùng phòng"
+                  - generic [ref=e134]: "#Hòa Lạc"
+                  - generic [ref=e135]: "#Sinh viên"
+                - generic [ref=e136]:
+                  - button "15" [ref=e137] [cursor=pointer]:
+                    - img [ref=e138]
+                    - generic [ref=e140]: "15"
+                  - button "12" [ref=e141] [cursor=pointer]:
+                    - img [ref=e142]
+                    - generic [ref=e144]: "12"
+                  - button "Chia sẻ" [ref=e145] [cursor=pointer]:
+                    - img [ref=e146]
+                    - generic [ref=e152]: Chia sẻ
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - generic [ref=e156]:
+                - img [ref=e157]
+                - generic [ref=e160]: Chủ đề hot
+              - generic [ref=e161]:
+                - link "#Review quán ăn mới 45 bài viết 1" [ref=e162]:
+                  - /url: /community
+                  - generic [ref=e163] [cursor=pointer]:
+                    - generic [ref=e164]:
+                      - paragraph [ref=e165]: "#Review quán ăn mới"
+                      - paragraph [ref=e166]: 45 bài viết
+                    - generic [ref=e167]: "1"
+                - link "#Tìm nhà trọ giá rẻ 32 bài viết 2" [ref=e168]:
+                  - /url: /community
+                  - generic [ref=e169] [cursor=pointer]:
+                    - generic [ref=e170]:
+                      - paragraph [ref=e171]: "#Tìm nhà trọ giá rẻ"
+                      - paragraph [ref=e172]: 32 bài viết
+                    - generic [ref=e173]: "2"
+                - link "#Cafe học bài 28 bài viết 3" [ref=e174]:
+                  - /url: /community
+                  - generic [ref=e175] [cursor=pointer]:
+                    - generic [ref=e176]:
+                      - paragraph [ref=e177]: "#Cafe học bài"
+                      - paragraph [ref=e178]: 28 bài viết
+                    - generic [ref=e179]: "3"
+                - link "#Chia sẻ kinh nghiệm 19 bài viết 4" [ref=e180]:
+                  - /url: /community
+                  - generic [ref=e181] [cursor=pointer]:
+                    - generic [ref=e182]:
+                      - paragraph [ref=e183]: "#Chia sẻ kinh nghiệm"
+                      - paragraph [ref=e184]: 19 bài viết
+                    - generic [ref=e185]: "4"
+            - generic [ref=e186]:
+              - generic [ref=e188]: Tham gia cộng đồng
+              - generic [ref=e189]:
+                - paragraph [ref=e190]: Chia sẻ kinh nghiệm, đánh giá địa điểm và kết nối với cộng đồng Hòa Lạc
+                - link "Đăng bài viết" [ref=e191]:
+                  - /url: /community
+                  - button "Đăng bài viết" [ref=e192] [cursor=pointer]
+                - link "Tham gia nhóm" [ref=e193]:
+                  - /url: /community
+                  - button "Tham gia nhóm" [ref=e194] [cursor=pointer]
+    - contentinfo [ref=e195]:
+      - generic [ref=e196]:
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - img "Ăn Gì Ở Đâu Logo" [ref=e200]
+              - heading "Ăn Gì Ở Đâu" [level=3] [ref=e201]
+            - paragraph [ref=e202]: Nền tảng khám phá địa điểm ăn uống và lưu trú thông minh cho khu vực Hòa Lạc
+            - generic [ref=e203]:
+              - button [ref=e204] [cursor=pointer]:
+                - img
+              - button [ref=e205] [cursor=pointer]:
+                - img
+              - button [ref=e206] [cursor=pointer]:
+                - img
+          - generic [ref=e207]:
+            - heading "Liên kết nhanh" [level=4] [ref=e208]
+            - list [ref=e209]:
+              - listitem [ref=e210]:
+                - link "Tìm quán ăn" [ref=e211]:
+                  - /url: "#"
+              - listitem [ref=e212]:
+                - link "Tìm nhà trọ" [ref=e213]:
+                  - /url: "#"
+              - listitem [ref=e214]:
+                - link "Bản đồ" [ref=e215]:
+                  - /url: "#"
+              - listitem [ref=e216]:
+                - link "Cộng đồng" [ref=e217]:
+                  - /url: "#"
+              - listitem [ref=e218]:
+                - link "Đăng tin" [ref=e219]:
+                  - /url: "#"
+          - generic [ref=e220]:
+            - heading "Hỗ trợ" [level=4] [ref=e221]
+            - list [ref=e222]:
+              - listitem [ref=e223]:
+                - link "Trung tâm trợ giúp" [ref=e224]:
+                  - /url: "#"
+              - listitem [ref=e225]:
+                - link "Điều khoản sử dụng" [ref=e226]:
+                  - /url: "#"
+              - listitem [ref=e227]:
+                - link "Chính sách bảo mật" [ref=e228]:
+                  - /url: "#"
+              - listitem [ref=e229]:
+                - link "Liên hệ" [ref=e230]:
+                  - /url: "#"
+          - generic [ref=e231]:
+            - heading "Liên hệ" [level=4] [ref=e232]
+            - generic [ref=e233]:
+              - generic [ref=e234]:
+                - img [ref=e235]
+                - generic [ref=e238]: Khu Công nghệ cao Hòa Lạc
+              - generic [ref=e239]:
+                - img [ref=e240]
+                - generic [ref=e242]: 0123 456 789
+              - generic [ref=e243]:
+                - img [ref=e244]
+                - generic [ref=e247]: hello@angiodau.com
+        - paragraph [ref=e249]: © 2024 Ăn Gì Ở Đâu. Tất cả quyền được bảo lưu.
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e250]
+```

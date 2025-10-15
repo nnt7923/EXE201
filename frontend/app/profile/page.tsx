@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye, Lock, Crown } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Settings, LogOut, Edit, Star, MessageCircle, Heart, Eye, Lock, Crown, Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { api } from '@/lib/api'
+import NotificationCenter from '@/components/notification-center'
 
 interface UserProfile {
   _id: string
@@ -131,12 +132,12 @@ export default function ProfilePage() {
   const fetchUserProfile = async () => {
     try {
       const response = await api.getCurrentUser();
-      if (response.data) {
-        setUser(response.data)
+      if (response.data && response.data.user) {
+        setUser(response.data.user)
         setFormData({
-          name: response.data.name,
-          phone: response.data.phone || '',
-          address: response.data.address || ''
+          name: response.data.user.name,
+          phone: response.data.user.phone || '',
+          address: response.data.user.address || ''
         })
       }
     } catch (error) {
@@ -380,10 +381,11 @@ export default function ProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="profile">Thông tin</TabsTrigger>
                 <TabsTrigger value="places">Địa điểm của tôi</TabsTrigger>
                 <TabsTrigger value="reviews">Đánh giá của tôi</TabsTrigger>
+                <TabsTrigger value="notifications">Thông báo</TabsTrigger>
                 <TabsTrigger value="security">Bảo mật</TabsTrigger>
               </TabsList>
 
@@ -606,6 +608,23 @@ export default function ProfilePage() {
                         ))}
                       </div>
                     )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="notifications" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Bell className="w-5 h-5 mr-2" />
+                      Thông báo của tôi
+                    </CardTitle>
+                    <CardDescription>
+                      Xem tất cả thông báo về thanh toán và gói dịch vụ
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <NotificationCenter />
                   </CardContent>
                 </Card>
               </TabsContent>

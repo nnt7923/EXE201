@@ -51,7 +51,28 @@ function LoginForm() {
       }
     } catch (error: any) {
       console.error("Login page error:", error);
-      setError(error.message || "Email hoặc mật khẩu không hợp lệ.");
+      const apiError = error?.data;
+
+      if (apiError) {
+        // Handle express-validator errors array, e.g., [{ msg: "Password is required" }]
+        if (apiError.errors && Array.isArray(apiError.errors) && apiError.errors.length > 0) {
+          setError(apiError.errors[0].msg);
+        } 
+        // Handle simple message errors, e.g., { msg: "Invalid Credentials" }
+        else if (apiError.msg) {
+          setError(apiError.msg);
+        } 
+        // Fallback for other structured errors with a message property
+        else if (apiError.message) {
+          setError(apiError.message);
+        }
+        else {
+          setError("Đã xảy ra lỗi không xác định từ máy chủ.");
+        }
+      } else {
+        // Fallback for network errors or other unexpected errors where error.data is not available
+        setError(error.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại.");
+      }
     } finally {
       setIsLoading(false);
     }

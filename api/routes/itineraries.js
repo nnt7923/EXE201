@@ -3,17 +3,18 @@ const router = express.Router();
 const Itinerary = require('../models/Itinerary');
 const User = require('../models/User');
 const { authenticateToken: auth } = require('../middleware/auth');
+const { getAiSuggestion } = require('../services/ai');
 
 // @route   GET api/itineraries
 // @desc    Get all itineraries for the current user
 // @access  Private
 router.get('/', auth, async (req, res) => {
     try {
-        const itineraries = await Itinerary.find({ user: req.user.id }).sort({ date: -1 });
-        res.json(itineraries);
+        const itineraries = await Itinerary.find({ user: req.user.id, isActive: true }).sort({ date: -1 });
+        res.json({ success: true, data: { itineraries } });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 
@@ -32,10 +33,10 @@ router.post('/', auth, async (req, res) => {
             activities
         });
         const itinerary = await newItinerary.save();
-        res.status(201).json(itinerary);
+        res.status(201).json({ success: true, data: { itinerary } });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 
@@ -44,18 +45,18 @@ router.post('/', auth, async (req, res) => {
 // @access  Private
 router.get('/:id', auth, async (req, res) => {
     try {
-        const itinerary = await Itinerary.findById(req.params.id).populate('activities.place');
+        const itinerary = await Itinerary.findOne({ _id: req.params.id, isActive: true }).populate('activities.place');
         if (!itinerary) {
-            return res.status(404).json({ msg: 'Itinerary not found' });
+            return res.status(404).json({ success: false, message: 'Itinerary not found' });
         }
         // Check if the user owns the itinerary
         if (itinerary.user.toString() !== req.user.id) {
-            return res.status(401).json({ msg: 'Not authorized' });
+            return res.status(403).json({ success: false, message: 'Not authorized' });
         }
-        res.json(itinerary);
+        res.json({ success: true, data: { itinerary } });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 
@@ -68,54 +69,53 @@ router.put('/:id', auth, async (req, res) => {
     try {
         let itinerary = await Itinerary.findById(req.params.id);
 
-        if (!itinerary) {
-            return res.status(404).json({ msg: 'Itinerary not found' });
+        if (!itinerary || !itinerary.isActive) {
+            return res.status(404).json({ success: false, message: 'Itinerary not found' });
         }
 
         // Check if user owns the itinerary
         if (itinerary.user.toString() !== req.user.id) {
-            return res.status(401).json({ msg: 'Not authorized' });
+            return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
-        itinerary = await Itinerary.findByIdAndUpdate(
+        const updatedItinerary = await Itinerary.findByIdAndUpdate(
             req.params.id,
             { $set: { title, date, description, status, activities } },
             { new: true }
         ).populate('activities.place');
 
-        res.json(itinerary);
+        res.json({ success: true, data: { itinerary: updatedItinerary } });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 
 // @route   DELETE api/itineraries/:id
-// @desc    Delete an itinerary
+// @desc    Delete an itinerary (soft delete)
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
     try {
         const itinerary = await Itinerary.findById(req.params.id);
 
-        if (!itinerary) {
-            return res.status(404).json({ msg: 'Itinerary not found' });
+        if (!itinerary || !itinerary.isActive) {
+            return res.status(404).json({ success: false, message: 'Itinerary not found' });
         }
 
         // Check if user owns the itinerary
         if (itinerary.user.toString() !== req.user.id) {
-            return res.status(401).json({ msg: 'Not authorized' });
+            return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
-        await Itinerary.findByIdAndRemove(req.params.id);
+        itinerary.isActive = false;
+        await itinerary.save();
 
-        res.json({ msg: 'Itinerary removed' });
+        res.json({ success: true, message: 'Itinerary removed successfully' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
-
-const { getAiSuggestion } = require('../services/ai');
 
 // @route   POST api/itineraries/ai-suggestion
 // @desc    Generate itinerary suggestions using AI
@@ -182,4 +182,5 @@ router.post('/ai-suggestion', auth, async (req, res) => {
         });
     }
 });
+
 module.exports = router;

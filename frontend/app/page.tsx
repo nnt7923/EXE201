@@ -38,8 +38,10 @@ export default function HomePage() {
     const fetchPlaces = async () => {
       try {
         const response = await api.getPlaces({ limit: 100 }); // Fetch up to 100 places
-        if (response.data) {
+        if (response.success && response.data) {
           setPlaces(response.data.places || response.data);
+        } else {
+          console.error("Failed to fetch places:", response.error || response.message);
         }
       } catch (error) {
         console.error("Failed to fetch places:", error);

@@ -79,10 +79,10 @@ const validatePlace = [
     .trim()
     .notEmpty()
     .withMessage('Quận/huyện là bắt buộc'),
-  body('address.coordinates.lat')
+  body('lat')
     .isFloat({ min: -90, max: 90 })
     .withMessage('Vĩ độ phải từ -90 đến 90'),
-  body('address.coordinates.lng')
+  body('lng')
     .isFloat({ min: -180, max: 180 })
     .withMessage('Kinh độ phải từ -180 đến 180'),
   body('pricing.minPrice')

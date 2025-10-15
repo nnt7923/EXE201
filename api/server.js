@@ -15,6 +15,8 @@ const itineraryRoutes = require('./routes/itineraries');
 const categoryRoutes = require('./routes/categories');
 const planRoutes = require('./routes/plans');
 const subscriptionRoutes = require('./routes/subscriptions');
+const paymentRoutes = require('./routes/payments');
+const notificationRoutes = require('./routes/notifications');
 const testRoutes = require('./routes/test-endpoint');
 const uploadRoutes = require('./routes/uploads');
 
@@ -30,11 +32,13 @@ app.use(cors());
 app.use(helmet());
 app.use(compression());
 
-// Rate limiting
+// Rate limiting - More lenient for development and production
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  max: process.env.NODE_ENV === 'production' ? 500 : 1000, // 500 requests for production, 1000 for dev
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 app.use('/api/', limiter);
 
@@ -57,6 +61,8 @@ app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/upload', uploadRoutes);
 
