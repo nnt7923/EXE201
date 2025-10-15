@@ -53,17 +53,27 @@ Make sure these environment variables are set:
 1. Go to [Render Dashboard](https://dashboard.render.com)
 2. Select the backend service: `an-gi-o-dau-api-64eh`
 3. Go to **Environment** tab
-4. Add these CRITICAL environment variables:
+4. Add these EXACT environment variables:
 
 ```
-JWT_SECRET=your_strong_jwt_secret_here_minimum_32_characters
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database_name
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-GEMINI_API_KEY=your_gemini_api_key
+JWT_SECRET=fvTycNzegJVNOpWS78Nuqlz6vsLTfafR
+MONGODB_URI=mongodb+srv://truongnnhe172873_db_user:0000asdAtashigi@exe201.1ooncox.mongodb.net/?retryWrites=true&w=majority&appName=EXE201
+CLOUDINARY_CLOUD_NAME=de1qbntsb
+CLOUDINARY_API_KEY=535225398921237
+CLOUDINARY_API_SECRET=gTO_mWJOknO_SUI7NLKmczw5PIs
+GEMINI_API_KEY=AIzaSyAsefM5pDTcaFV379lFzpzDG_4iQLWlDJQ
 NODE_ENV=production
 FRONTEND_URL=https://an-gi-o-dau-frontend-64eh.onrender.com
+PORT=10000
+```
+
+### Additional Gemini Configuration (if needed)
+```
+GEMINI_API_SECRET=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
+GEMINI_REFRESH_TOKEN=1//04i0qX3H2b8b
+GEMINI_REDIRECT_URI=https://an-gi-o-dau-api-64eh.onrender.com/api/auth/google/callback
+GEMINI_CLIENT_ID=535225398921237-4g8v3u1qv1q6j0j4b5ku1u5j3u5j3u5.apps.googleusercontent.com
+GEMINI_CLIENT_SECRET=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
 ```
 
 5. Click **Save Changes**

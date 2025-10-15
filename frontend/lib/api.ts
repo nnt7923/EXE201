@@ -388,6 +388,17 @@ class ApiClient {
     return this.request<any>('/subscriptions');
   }
 
+  async updateSubscription(userId: string, updateData: {
+    subscriptionStatus?: string;
+    subscriptionEndDate?: string;
+    paymentStatus?: string;
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>(`/subscriptions/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updateData),
+    });
+  }
+
   // Notifications
   async getNotifications(): Promise<ApiResponse<any>> {
     return this.request<any>('/notifications')

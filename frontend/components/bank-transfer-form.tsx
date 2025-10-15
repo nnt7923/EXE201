@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Upload, CreditCard, Calendar, User, Building, FileText, Camera } from 'lucide-react';
+import { Loader2, Upload, CreditCard, Calendar, User, Building, FileText, Camera, DollarSign } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface Plan {
@@ -158,189 +158,264 @@ export default function BankTransferForm({ plan, onSuccess }: BankTransferFormPr
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CreditCard className="w-5 h-5" />
+    <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50">
+      <CardHeader className="pb-6">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <CreditCard className="w-5 h-5 text-blue-600" />
+          </div>
           Thông tin chuyển khoản
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-base">
           Vui lòng điền thông tin chuyển khoản và tải lên ảnh chứng minh thanh toán
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Alert className="mb-6">
-          <Building className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Thông tin tài khoản nhận:</strong><br />
-            Ngân hàng: Vietcombank<br />
-            Số tài khoản: 1234567890<br />
-            Chủ tài khoản: CÔNG TY TNHH AN GI Ở ĐÂU<br />
-            Nội dung: {plan.name} - [Tên của bạn]
-          </AlertDescription>
-        </Alert>
+      <CardContent className="space-y-8">
+        {/* Bank Account Info - Highlighted Section */}
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Building className="h-5 w-5 text-blue-600" />
+            <h3 className="font-semibold text-blue-900">Thông tin tài khoản nhận</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="font-medium text-gray-700">Ngân hàng:</span>
+              <p className="text-gray-900 font-semibold">Vietcombank</p>
+            </div>
+            <div>
+              <span className="font-medium text-gray-700">Số tài khoản:</span>
+              <p className="text-gray-900 font-semibold font-mono">1234567890</p>
+            </div>
+            <div>
+              <span className="font-medium text-gray-700">Chủ tài khoản:</span>
+              <p className="text-gray-900 font-semibold">CÔNG TY TNHH AN GI Ở ĐÂU</p>
+            </div>
+            <div>
+              <span className="font-medium text-gray-700">Nội dung:</span>
+              <p className="text-gray-900 font-semibold">{plan.name} - [Tên của bạn]</p>
+            </div>
+          </div>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="bankName">Ngân hàng chuyển *</Label>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Sender Information Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+              <User className="w-4 h-4 text-gray-600" />
+              <h3 className="font-semibold text-gray-900">Thông tin người chuyển</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="bankName" className="text-sm font-medium text-gray-700">
+                  Ngân hàng chuyển *
+                </Label>
+                <Input
+                  id="bankName"
+                  name="bankName"
+                  value={formData.bankName}
+                  onChange={handleInputChange}
+                  placeholder="VD: Vietcombank, BIDV, Techcombank..."
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="accountNumber" className="text-sm font-medium text-gray-700">
+                  Số tài khoản *
+                </Label>
+                <Input
+                  id="accountNumber"
+                  name="accountNumber"
+                  value={formData.accountNumber}
+                  onChange={handleInputChange}
+                  placeholder="Số tài khoản của bạn"
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="accountHolder" className="text-sm font-medium text-gray-700">
+                Chủ tài khoản *
+              </Label>
               <Input
-                id="bankName"
-                name="bankName"
-                value={formData.bankName}
+                id="accountHolder"
+                name="accountHolder"
+                value={formData.accountHolder}
                 onChange={handleInputChange}
-                placeholder="VD: Vietcombank, BIDV, Techcombank..."
+                placeholder="Tên chủ tài khoản (như trên thẻ ngân hàng)"
+                className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="accountNumber">Số tài khoản *</Label>
-              <Input
-                id="accountNumber"
-                name="accountNumber"
-                value={formData.accountNumber}
-                onChange={handleInputChange}
-                placeholder="Số tài khoản của bạn"
-                required
-              />
+          </div>
+
+          {/* Transfer Details Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+              <DollarSign className="w-4 h-4 text-gray-600" />
+              <h3 className="font-semibold text-gray-900">Chi tiết giao dịch</h3>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="transferAmount" className="text-sm font-medium text-gray-700">
+                  Số tiền chuyển *
+                </Label>
+                <Input
+                  id="transferAmount"
+                  name="transferAmount"
+                  type="number"
+                  value={formData.transferAmount}
+                  onChange={handleInputChange}
+                  min={plan.price}
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono text-lg"
+                  required
+                />
+                <p className="text-sm text-green-600 font-medium">
+                  Tối thiểu: {formatCurrency(plan.price)}
+                </p>
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="transferDate" className="text-sm font-medium text-gray-700">
+                  Ngày & giờ chuyển *
+                </Label>
+                <Input
+                  id="transferDate"
+                  name="transferDate"
+                  type="datetime-local"
+                  value={formData.transferDate}
+                  onChange={handleInputChange}
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="transferNote" className="text-sm font-medium text-gray-700">
+                  Nội dung chuyển khoản
+                </Label>
+                <Input
+                  id="transferNote"
+                  name="transferNote"
+                  value={formData.transferNote}
+                  onChange={handleInputChange}
+                  placeholder={`${plan.name} - ${formData.accountHolder || '[Tên của bạn]'}`}
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="transferReference" className="text-sm font-medium text-gray-700">
+                  Mã tham chiếu (nếu có)
+                </Label>
+                <Input
+                  id="transferReference"
+                  name="transferReference"
+                  value={formData.transferReference}
+                  onChange={handleInputChange}
+                  placeholder="Mã giao dịch từ ngân hàng"
+                  className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="accountHolder">Chủ tài khoản *</Label>
-            <Input
-              id="accountHolder"
-              name="accountHolder"
-              value={formData.accountHolder}
-              onChange={handleInputChange}
-              placeholder="Tên chủ tài khoản (như trên thẻ ngân hàng)"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="transferAmount">Số tiền chuyển *</Label>
-              <Input
-                id="transferAmount"
-                name="transferAmount"
-                type="number"
-                value={formData.transferAmount}
-                onChange={handleInputChange}
-                min={plan.price}
-                required
-              />
-              <p className="text-sm text-muted-foreground">
-                Tối thiểu: {formatCurrency(plan.price)}
-              </p>
+          {/* Proof of Payment Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+              <Camera className="w-4 h-4 text-gray-600" />
+              <h3 className="font-semibold text-gray-900">Chứng minh thanh toán</h3>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="transferDate">Ngày chuyển *</Label>
-              <Input
-                id="transferDate"
-                name="transferDate"
-                type="datetime-local"
-                value={formData.transferDate}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="transferNote">Nội dung chuyển khoản</Label>
-            <Input
-              id="transferNote"
-              name="transferNote"
-              value={formData.transferNote}
-              onChange={handleInputChange}
-              placeholder={`${plan.name} - ${formData.accountHolder || '[Tên của bạn]'}`}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="transferReference">Mã tham chiếu (nếu có)</Label>
-            <Input
-              id="transferReference"
-              name="transferReference"
-              value={formData.transferReference}
-              onChange={handleInputChange}
-              placeholder="Mã giao dịch từ ngân hàng"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="proofOfPayment">Ảnh chứng minh thanh toán *</Label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              {previewUrl ? (
-                <div className="space-y-4">
-                  <img 
-                    src={previewUrl} 
-                    alt="Proof of payment preview" 
-                    className="max-w-full h-48 object-contain mx-auto rounded-lg"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setProofFile(null);
-                      setPreviewUrl(null);
-                    }}
-                  >
-                    Thay đổi ảnh
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <Camera className="w-12 h-12 text-gray-400 mx-auto" />
-                  <div>
-                    <Label htmlFor="proofOfPayment" className="cursor-pointer">
-                      <span className="text-blue-600 hover:text-blue-500">Chọn ảnh</span>
-                      <span className="text-gray-500"> hoặc kéo thả vào đây</span>
-                    </Label>
-                    <Input
-                      id="proofOfPayment"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                      required
-                    />
+            <div className="space-y-3">
+              <Label htmlFor="proofOfPayment" className="text-sm font-medium text-gray-700">
+                Ảnh chứng minh thanh toán *
+              </Label>
+              <div className="border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-xl p-8 text-center transition-colors bg-gray-50/50">
+                {previewUrl ? (
+                  <div className="space-y-6">
+                    <div className="relative inline-block">
+                      <img 
+                        src={previewUrl} 
+                        alt="Proof of payment preview" 
+                        className="max-w-full h-64 object-contain mx-auto rounded-lg shadow-md border"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setProofFile(null);
+                        setPreviewUrl(null);
+                      }}
+                      className="border-gray-300 hover:border-blue-500 hover:text-blue-600"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Thay đổi ảnh
+                    </Button>
                   </div>
-                  <p className="text-sm text-gray-500">
-                    Hỗ trợ: JPG, PNG, WEBP (tối đa 5MB)
-                  </p>
-                </div>
-              )}
+                ) : (
+                  <div className="space-y-6">
+                    <div className="p-4 bg-blue-50 rounded-full w-fit mx-auto">
+                      <Camera className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <div>
+                      <Label htmlFor="proofOfPayment" className="cursor-pointer">
+                        <span className="text-blue-600 hover:text-blue-700 font-semibold text-lg">Chọn ảnh</span>
+                        <span className="text-gray-500 ml-2">hoặc kéo thả vào đây</span>
+                      </Label>
+                      <Input
+                        id="proofOfPayment"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        required
+                      />
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      Hỗ trợ: JPG, PNG, WEBP (tối đa 5MB)
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <Alert>
-            <FileText className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Lưu ý:</strong> Sau khi gửi thông tin, bạn cần chờ admin xác nhận thanh toán. 
+          {/* Important Notice */}
+          <Alert className="border-amber-200 bg-amber-50">
+            <FileText className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="text-amber-800">
+              <strong>Lưu ý quan trọng:</strong> Sau khi gửi thông tin, bạn cần chờ admin xác nhận thanh toán. 
               Quá trình này thường mất 1-24 giờ trong giờ làm việc. 
               Bạn sẽ nhận được thông báo khi thanh toán được xác nhận.
             </AlertDescription>
           </Alert>
 
-          <Button 
-            type="submit" 
-            className="w-full" 
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Đang gửi...
-              </>
-            ) : (
-              <>
-                <Upload className="mr-2 h-4 w-4" />
-                Gửi thông tin thanh toán
-              </>
-            )}
-          </Button>
+          {/* Submit Button */}
+          <div className="pt-4">
+            <Button 
+              type="submit" 
+              className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                  Đang gửi thông tin...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-3 h-5 w-5" />
+                  Gửi thông tin thanh toán
+                </>
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

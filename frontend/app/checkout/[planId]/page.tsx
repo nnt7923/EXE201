@@ -82,43 +82,81 @@ export default function CheckoutPage() {
   return (
     <>
       <Header />
-      <div className="container mx-auto max-w-2xl py-12 px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Thanh toán</h1>
-              <p className="mt-4 text-xl text-muted-foreground">Bạn chỉ còn một bước nữa để mở khóa các tính năng mới.</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+        <div className="container mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
+          {/* Header Section */}
+          <div className="text-center mb-12">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              Thanh toán
+            </h1>
+            <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+              Bạn chỉ còn một bước nữa để mở khóa các tính năng mới.
+            </p>
           </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Plan Details Card */}
-            <Card className="flex flex-col bg-secondary/50">
-                <CardHeader>
-                    <CardTitle className="text-2xl">Gói của bạn: {plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                    <div className="mb-6">
-                        <span className="text-5xl font-extrabold">{plan.price.toLocaleString('vi-VN')}</span>
-                        <span className="text-lg font-medium text-muted-foreground ml-1">VND/tháng</span>
-                    </div>
-                    <h4 className="font-semibold mb-3">Các tính năng bao gồm:</h4>
-                    <ul className="space-y-3">
-                        {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-start">
-                            <Check className="h-5 w-5 text-green-500 mr-2.5 flex-shrink-0 mt-1" />
-                            <span className="text-muted-foreground">{feature}</span>
-                        </li>
-                        ))}
-                    </ul>
-                </CardContent>
-                 <CardFooter>
-                    <Button variant="link" onClick={() => router.push('/pricing')}>Thay đổi gói</Button>
-                </CardFooter>
-            </Card>
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-8 lg:gap-12">
+            {/* Plan Details Card - Sticky on desktop */}
+            <div className="xl:col-span-2">
+              <div className="xl:sticky xl:top-24 z-10">
+                <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-600 to-blue-700 text-white overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-blue-800/90"></div>
+                  <div className="relative">
+                    <CardHeader className="pb-6">
+                      <CardTitle className="text-2xl lg:text-3xl font-bold">
+                        {plan.name}
+                      </CardTitle>
+                      <CardDescription className="text-blue-100 text-base">
+                        {plan.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {/* Price Display */}
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center">
+                        <div className="flex items-baseline justify-center gap-2">
+                          <span className="text-4xl lg:text-5xl font-extrabold">
+                            {plan.price.toLocaleString('vi-VN')}
+                          </span>
+                          <span className="text-lg font-medium text-blue-100">VND</span>
+                        </div>
+                        <p className="text-blue-100 mt-2">mỗi tháng</p>
+                      </div>
+
+                      {/* Features List */}
+                      <div>
+                        <h4 className="font-semibold mb-4 text-lg">Các tính năng bao gồm:</h4>
+                        <ul className="space-y-3">
+                          {plan.features.map((feature, index) => (
+                            <li key={index} className="flex items-start">
+                              <div className="p-1 bg-green-500 rounded-full mr-3 mt-0.5 flex-shrink-0">
+                                <Check className="h-3 w-3 text-white" />
+                              </div>
+                              <span className="text-blue-50 leading-relaxed">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="pt-0">
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => router.push('/pricing')}
+                        className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+                      >
+                        Thay đổi gói
+                      </Button>
+                    </CardFooter>
+                  </div>
+                </Card>
+              </div>
+            </div>
 
             {/* Bank Transfer Form */}
-            <BankTransferForm plan={plan} onSuccess={handlePaymentSuccess} />
+            <div className="xl:col-span-3">
+              <BankTransferForm plan={plan} onSuccess={handlePaymentSuccess} />
+            </div>
           </div>
         </div>
-      </>
-    );
+      </div>
+    </>
+  );
 }
