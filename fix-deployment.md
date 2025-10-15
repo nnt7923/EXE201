@@ -1,7 +1,12 @@
-# Fix Deployment Issue - CORS Configuration
+# Fix Deployment Issue - Frontend & Backend Configuration
 
 ## Problem Identified
-The API service was suspended/blocked due to improper CORS configuration. The original configuration used `app.use(cors())` which allows all origins, but doesn't properly handle preflight requests in production.
+1. ✅ **FIXED**: Frontend was trying to connect to `localhost:5000` instead of production API
+2. ❌ **CURRENT**: Backend returning "Internal Server Error" (HTTP 500)
+
+## Root Causes
+1. ✅ **FIXED**: Missing `NEXT_PUBLIC_API_URL` environment variable in frontend
+2. ❌ **CURRENT**: Missing critical environment variables in backend service, especially `MONGODB_URI`
 
 ## Solution Applied
 Updated the CORS configuration in `api/server.js` to:
@@ -37,11 +42,32 @@ Make sure these environment variables are set:
 - `NODE_ENV=production`
 - Other required variables from `.env.example`
 
-#### Frontend Service (`an-gi-o-dau-frontend-64eh`)
+#### Frontend Service (`an-gi-o-dau-frontend-64eh`) ✅ COMPLETED
 **CRITICAL**: Make sure this environment variable is set:
 - `NEXT_PUBLIC_API_URL=https://an-gi-o-dau-api-64eh.onrender.com/api`
 
-**This is the root cause of the "Failed to fetch" error!** The frontend was trying to connect to `localhost:5000` instead of the production API.
+**This was the root cause of the "Failed to fetch" error!** The frontend was trying to connect to `localhost:5000` instead of the production API.
+
+### ⚠️ URGENT: Set Backend Environment Variables
+
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Select the backend service: `an-gi-o-dau-api-64eh`
+3. Go to **Environment** tab
+4. Add these CRITICAL environment variables:
+
+```
+JWT_SECRET=your_strong_jwt_secret_here_minimum_32_characters
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database_name
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+GEMINI_API_KEY=your_gemini_api_key
+NODE_ENV=production
+FRONTEND_URL=https://an-gi-o-dau-frontend-64eh.onrender.com
+```
+
+5. Click **Save Changes**
+6. **Manual Redeploy**: Click "Manual Deploy" → "Deploy latest commit"
 
 ## Testing After Deployment
 1. Check API health: `https://an-gi-o-dau-api-64eh.onrender.com/api/health`
