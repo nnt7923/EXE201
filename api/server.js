@@ -25,6 +25,11 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+// Trust proxy configuration for production deployment (Render, Heroku, etc.)
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Trust first proxy
+}
+
 // CORS configuration - MUST be one of the first middleware
 const corsOptions = {
   origin: function (origin, callback) {
