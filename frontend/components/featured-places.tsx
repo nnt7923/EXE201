@@ -49,12 +49,12 @@ export function FeaturedPlaces({ onPlaceSelect }: { onPlaceSelect: (place: Place
           <Card key={place._id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => onPlaceSelect(place)}>
             <CardContent className="p-0">
               <div className="flex">
-                <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 relative">
+                <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 relative aspect-square rounded-l-lg overflow-hidden">
                   <Image
                     src={place.images?.[0]?.url || "/placeholder.svg"}
                     alt={place.name}
                     fill
-                    className="object-cover rounded-l-lg"
+                    className="object-cover"
                   />
                 </div>
 

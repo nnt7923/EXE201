@@ -1,0 +1,2134 @@
+[{
+  "_id": {
+    "$oid": "68d6a1004f7a382ba5784427"
+  },
+  "name": "siêu thị Big Trend",
+  "description": "Một siêu thị lớn gần khu vực công nghệ cao Hòa Lạc, cung cấp nhiều mặt hàng đa dạng.",
+  "category": "entertainment",
+  "subcategory": "Siêu thị",
+  "address": {
+    "street": "Đại lộ Thăng Long",
+    "ward": "An Khánh",
+    "district": "Hoài Đức",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.51793093460209,
+      21.009601983317488
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 2,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nov61Z6HXvWOWfve0tgW-6956hxfnaVVInLx0NvdhpifM3wGxXwb2Da6qWYQPJdeTIf5VK_hUarZ_lavQjOgvT2nFiLcXm3BYEZy1MOaW_rskR5pYbpqL_FChg3Mg7nYV_ZAj61=w426-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82c0cb42ac561c2aaa35d"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T14:19:44.490Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:41:32.336Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6a755fd8dc39a6027bd68"
+  },
+  "name": "hồ câu minh duy 2",
+  "description": "Hồ câu giải trí.",
+  "category": "entertainment",
+  "subcategory": "Hồ câu",
+  "address": {
+    "street": "Đường mẫu 4",
+    "ward": "Phường mẫu 4",
+    "district": "Quận mẫu 4",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52622186523219,
+      21.00901249226722
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqNFSlxzIVB2HIfI5DX-VJPbIY8sXdgkLmKVZv0XTOvBKZOvCvR19g8V-hPanl-hFNGiznkgLJnIqQ0z1-bcxmYuOVflD-epa3m4AGz4X6b_l1SvBk08F32lKQggwJPDd9HkH7z=w408-h725-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82bfcb42ac561c2aaa35a"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T14:46:45.697Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:41:16.618Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6a7550f1571316cbfff1a"
+  },
+  "name": "hồ câu lure trường sơn",
+  "description": "Hồ câu giải trí.",
+  "category": "entertainment",
+  "subcategory": "Hồ câu",
+  "address": {
+    "street": "Đường mẫu 3",
+    "ward": "Phường mẫu 3",
+    "district": "Quận mẫu 3",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52939760061835,
+      21.021691736292222
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrq4HNWl5S9PL37TpxopNNWoakRGYjOewystGIWagt7YzX63fKNClDWN73g264RBM9KEygTlKNvooBgmjfbeMKtLaTtybEjpU6DUtzij3495Sdfo1Hyd0esbFAQUGM16s_HlSC_Kw=w408-h544-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82bc8b42ac561c2aaa357"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T14:46:45.701Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:40:24.109Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6a755bf50655f14a1e01b"
+  },
+  "name": "bánh cuốn, bún chả A Hoàng",
+  "description": "Quán ăn chuyên bánh cuốn và bún chả.",
+  "category": "restaurant",
+  "subcategory": "Bún chả",
+  "address": {
+    "street": "Đường mẫu 5",
+    "ward": "Phường mẫu 5",
+    "district": "Quận mẫu 5",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.5195699870118,
+      21.006668817250116
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 16,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipOSceyAMDJZNQNzyeN10brPvp8HCnx5nhnrYJt1=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82bbbb42ac561c2aaa354"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T14:46:45.703Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:40:11.584Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6ad3c7a298a626318fc72"
+  },
+  "name": "Vua Gà Quang Thọ",
+  "description": "Mô tả cho Vua Gà Quang Thọ",
+  "category": "restaurant",
+  "subcategory": "Khác",
+  "address": {
+    "street": "QL21",
+    "ward": "Thạch Hoà",
+    "district": "Thạch Thất",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.51901208757118,
+      21.00769042367644
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 10,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipPb-LoILd6zIPd9NQaIiiA8OSp385vRZCODwsn3=w533-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82badb42ac561c2aaa351"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T15:11:56.714Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:39:57.065Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6af6abbf2c8ffa2a88713"
+  },
+  "name": "Memory PTB",
+  "description": "Mô tả cho Memory PTB",
+  "category": "entertainment",
+  "subcategory": "Khác",
+  "address": {
+    "street": "77 Cụm 1, Thôn 3",
+    "ward": "Thạch Hoà",
+    "district": "Thạch Thất",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.519950886277,
+      21.012661589441276
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 2,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipM0sTKM15_6ac80urHOaRPc7_ErvlOFglTvTf2v=w408-h543-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82b9cb42ac561c2aaa34e"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T15:21:14.211Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T22:04:48.237Z"
+  },
+  "__v": 3
+},
+{
+  "_id": {
+    "$oid": "68d6b0585f55dddc4c9363fd"
+  },
+  "name": "Beta FPT Building",
+  "description": "Mô tả cho Beta FPT Building",
+  "category": "study",
+  "subcategory": "Khác",
+  "address": {
+    "street": "Khu Công nghệ cao Hòa Lạc",
+    "ward": "Thạch Hoà",
+    "district": "Thạch Thất",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.5273297770831,
+      21.014202346798257
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 2,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no_QP2cYTKhqUkMjvQ4dPtVGVP8q4NZRjzQrKB9bNGuYDjpl0yZamKQXbi-7B7OpZtbHKvfdBHnKveOF4O0coPpaQZ1QYC3vce_Tha4jHpLa5ZsKiM_iod49XT9H5bNRzweO8j2=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82b28b42ac561c2aaa347"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T15:25:12.568Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:37:44.026Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6b0eb911b0cbfd86e6c87"
+  },
+  "name": "Twitter Beans Coffee Hòa Lạc",
+  "description": "Mô tả cho Twitter Beans Coffee Hòa Lạc",
+  "category": "cafe",
+  "subcategory": "Khác",
+  "address": {
+    "street": "Khu Công nghệ cao Hòa Lạc",
+    "ward": "Thạch Hoà",
+    "district": "Thạch Thất",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.53874120296807,
+      21.001221142996908
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noqPgWjpIAXW58VtyqDeagMhtYxlt-2IT0MwFinTpbA_9YpjbK14Sod-B01ttpUWoj5BCmVZfeg-n_sDzogn-52kNxhO2FLb4F82s4OMCILYZClYAx96hgmaaaodUIv8de0Iqk15A=w426-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82b12b42ac561c2aaa344"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T15:27:39.195Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:37:22.376Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68d6b20f316fe3fde98d5e21"
+  },
+  "name": "Mixue Tân Xã",
+  "description": "Mô tả cho Mixue Tân Xã",
+  "category": "cafe",
+  "subcategory": "Khác",
+  "address": {
+    "street": "Đầu ĐT419",
+    "ward": "Mục Quyên",
+    "district": "Thạch Thất",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.55059246611829,
+      21.022898891386973
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 6,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noadSxB6bSEEHTFiYieIphMITHLmuIO18JfuJfL95jjdoqtywnj1Ewmf7TtQJ1vyb217aUinOSW4i6pZmRkqNEC18bwKfg_Nu07bvVdwmXjsw6xbw1aMGvzQyVBUpcKkw_zFlofEw=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82af8b42ac561c2aaa341"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-26T15:32:31.482Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-10T09:47:33.095Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da78eff9acab72fdeae267"
+  },
+  "name": "Nhà trọ Phúc Hậu",
+  "description": "Mô tả cho Nhà trọ Phúc Hậu",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54807375577192,
+      21.027541572623793
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr8BJLDNrTaha1i9moPy153IT0ZwN14W3Tz4e59VdF5acEMeu3hvBECzAfUsxb6o35q6JfSYiP73DqEkjXvEkz9rQfTZFtfhtMV396OfmtRt2TqdtTXFPHxv0pLbgz8AGXVFBdubwNxBKyv=w408-h408-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82ae2b42ac561c2aaa33e"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:17:51.697Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:36:34.933Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79562b760d807b4f44cd"
+  },
+  "name": "Nhà trọ Quỳnh Hải",
+  "description": "Mô tả cho Nhà trọ Quỳnh Hải",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52474375408913,
+      21.024243561355114
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no3O_S33p7dqwIqHb0P9qyYo82xxU8X-wYsmBcXf02ifbygYZy6cgNW4S6wNjdcKkrJ2TXumxuBulqjc6JCyNWk46re0rPkN18t1AUjT8KxcPYJx_73O8OBRsM_h_vHyHwkdlpf=w426-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82aceb42ac561c2aaa33b"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:34.723Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:36:14.829Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795793590feb55344773"
+  },
+  "name": "Nhà trọ Hoàng Linh",
+  "description": "Mô tả cho Nhà trọ Hoàng Linh",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.5505971422575,
+      21.01960539843061
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npQE6R_xCUoyJj88nBdsSQXv2_bFIjHMz5bue78lrjINXRLgzqjcwqEY4waXuRrKv1kz_e74OvF3mN4I_wfYNAH7mjWYebl1uiTHi9ZGqZQJ1wGo4XyhEQDJatqqMvvRyV-mHM=w408-h544-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a9eb42ac561c2aaa338"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.320Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:35:26.890Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7957f081de2d5ff26e58"
+  },
+  "name": "Nhà trọ Hoà Lạc",
+  "description": "Mô tả cho Nhà trọ Hoà Lạc",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52199399136732,
+      20.998598983336766
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no1TBsb44qhsu-7LfkJN9tT9lxWEWBQM3zguNT9mN4iIxAkep8TIF-TCtDYPpdbh17Np_dFuZln5421oGlOcqUb3MQ6lCe6L33KtsXcEARxpz3jbC5rSvxaeu2nkaHVPXF78tqL=w408-h544-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a86b42ac561c2aaa335"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.371Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:35:02.477Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79575a1aa0769271033a"
+  },
+  "name": "Nhà trọ Happy House",
+  "description": "Mô tả cho Nhà trọ Happy House",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52277199992902,
+      20.997317395503586
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=fWZfZCQWb9LA3tifodwRoQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=254.68907&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a50b42ac561c2aaa332"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.431Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:34:08.364Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7957784080b5f5bf2810"
+  },
+  "name": "Nhà trọ Thiên Ngân",
+  "description": "Mô tả cho Nhà trọ Thiên Ngân",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.5207625847291,
+      21.000421671355596
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=6Gwk64mHFUBXlwaHBlankg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=24.843737&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a3fb42ac561c2aaa32f"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.458Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:33:51.788Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795779ffc30798db826c"
+  },
+  "name": "Nhà trọ Minh Nhi",
+  "description": "Mô tả cho Nhà trọ Minh Nhi",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.55078808044512,
+      21.0260246751229
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipPXYJnp6_WGQU0nB4LX5ZLLWuz9qE3CqgAWoC1Y=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a2fb42ac561c2aaa32c"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.472Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:33:35.785Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7957fad326f74c6bc281"
+  },
+  "name": "Nhà trọ Hùng Hoa",
+  "description": "Mô tả cho Nhà trọ Hùng Hoa",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54802990178702,
+      21.0290739428211
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=YVzyrDiRK0576wcpG74gUA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=7.94761&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a15b42ac561c2aaa329"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:35.736Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:33:09.579Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79585bdd3c0d9d27ae89"
+  },
+  "name": "Home Sweet Home",
+  "description": "Mô tả cho Home Sweet Home",
+  "category": "accommodation",
+  "subcategory": "accommodation",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.55249309509941,
+      21.02738459268207
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npdpRhsD_gZ1f6Gexp02HAxJOhoV4QvObDL6x7BR-cP5voSHzsXNP1vmVOX8lQHgadVm5iGTCOPZU66fMKmJzBb5g1U_g3xbPQBY_LlCDEwqq3i2DDIjBH7rWwsrhtH-kIPxf_Y=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82a02b42ac561c2aaa326"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:36.548Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:32:50.122Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7958ca82da2c7e708aa0"
+  },
+  "name": "Nhà trọ Minh Anh",
+  "description": "Mô tả cho Nhà trọ Minh Anh",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52089587109988,
+      20.999908789885804
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipM6EBq1TFscBKcbjg5xQ0zQESL-wmDkpG13sc80=w493-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e829eab42ac561c2aaa323"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:36.644Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:32:26.756Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79582cbf35348675e2fa"
+  },
+  "name": "Nhà trọ Kim Cúc",
+  "description": "Mô tả cho Nhà trọ Kim Cúc",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.55005267885568,
+      21.028093246309094
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqC_t00MJRr8TqaKHwpT4WIh2fGUve9zIcex7AQwkOUJ4iTAZb5zXT4ZqCaRY_V0Lw3Lf7NLk_RgVtgX0ddNsEmZaM4UUX6ADkNCjmbVNxgZ0zfl0GyG2KH0dDFk3hpcjlk4YTN=w408-h543-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e829d7b42ac561c2aaa320"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:36.690Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:32:07.923Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79595eedfe4dcf33da3e"
+  },
+  "name": "Nhà trọ Nhật Anh",
+  "description": "Mô tả cho Nhà trọ Nhật Anh",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54920957293405,
+      21.027492503041827
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npDJFiFW6NmJvhIEtMfCqgiedvdHx8tx33G_qXgcDWO05Vq3PAYPEgQ8IthyVGIjFUzJaxypfFSilxeZ8Frk3aCHJxv10ACSKk748jslwUvlKWjFqflVcgMagO2aEZ4a6rKnMQ=w408-h291-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e829c5b42ac561c2aaa31d"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:37.696Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:31:49.253Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795a6adef4f02a59647e"
+  },
+  "name": "Nhà trọ Happy",
+  "description": "Mô tả cho Nhà trọ Happy",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường mẫu (lỗi geocode)",
+    "ward": "Phường mẫu",
+    "district": "Quận mẫu",
+    "city": "Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.51061391760584,
+      21.024652486310593
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq53Jxd2UDiA1n10-ImB2BcGtRh9rBhxqRtyY6cZcrPqdd7nXNWT340j6dUfrS0QfZsTeqy-8Sd9IIub5vn7f3jkJBsg-xXUijrDRwx0HzEv5ZS7ai1ZWnoNgWPk0T1pr_3XBU_gQ=w408-h544-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e829b2b42ac561c2aaa31a"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:38.618Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:31:30.361Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795a60f5e1e7a9980604"
+  },
+  "name": "Nhà trọ Anh Toàn",
+  "description": "Mô tả cho Nhà trọ Anh Toàn",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54770917106974,
+      21.027444645510112
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=SiNEyC8-UmsgxrhE2Y8-GA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=296.77737&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82987b42ac561c2aaa317"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:38.702Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:30:47.603Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795b6b17fc6050cc2d40"
+  },
+  "name": "Nhà trọ Đồi Sim",
+  "description": "Mô tả cho Nhà trọ Đồi Sim",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54980145087248,
+      21.02482893311561
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npF-eEYuCC2ConIwY6hEqaU2NQPg8Ou0XD0MAmw5nKnaThUtW_UmKkbvcyEMj-W6-p2bUzZHNnJnsmBKBxpL4RGcLc_1Fv-7dATRJbpQDhkOqzKqq0hdSzdFg2FFSuScWsdXLwLQw=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e8296bb42ac561c2aaa314"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:39.698Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:30:19.234Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795c8ccdb412e76e0b11"
+  },
+  "name": "Nhà trọ Tuấn Anh",
+  "description": "Mô tả cho Nhà trọ Tuấn Anh",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54975267109607,
+      21.026802759870012
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 2,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=D4186FrhHTk80fj7By4sng&cb_client=search.gws-prod.gps&w=408&h=240&yaw=11.436455&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e8293bb42ac561c2aaa311"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:40.738Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:42:43.132Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795db926460f71f4d0c3"
+  },
+  "name": "Nhà trọ SV Tân Xã",
+  "description": "Mô tả cho Nhà trọ SV Tân Xã",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54635984226246,
+      21.028944114788953
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 4,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq9D3xfsiffa836abLJa6FVIB49Ty4ae6DJ1I-pQ2MMjB99iwNLtzj-caENXGY_CFOPRGtfpYkPNe-IpMSwz0vFnKOalViKEDqFaM7u4RVPmKxga1ojcVjNnFFXun0JbEcmwlVb=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e8291fb42ac561c2aaa30e"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:41.725Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:29:03.777Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da795eb9ab10f229202ddb"
+  },
+  "name": "Nhà trọ Thắm",
+  "description": "Mô tả cho Nhà trọ Thắm",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52133663892796,
+      20.997449056417818
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:42.697Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-29T12:19:42.697Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68da795fea8bd989a4b5a2fe"
+  },
+  "name": "Nhà trọ Hồng Nhàn",
+  "description": "Mô tả cho Nhà trọ Hồng Nhàn",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.55054363555088,
+      21.025962181152263
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nr4V25blK6xNcv0s3t1L29RXUP941-n3dMLJjde0xgfL2gEVzDbwvHr9H5R-M2OiIN7TFhISPfEWwGzhlCz2LZht5SAzacmoI-xbIyZms7Wo2nKpyN0zj7m74ybBdQd4VzT0QmK=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e828deb42ac561c2aaa30b"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:43.707Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:27:58.922Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7960b9815c308cc3f0d4"
+  },
+  "name": "Nhà trọ Minh Phương",
+  "description": "Mô tả cho Nhà trọ Minh Phương",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Quốc lộ 21",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52277594771232,
+      20.99670238127841
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noUUM9FB-B-5GICShbGU-NshijNQegzkpTJ6pb47H__waDDurS8V8m4ppp8WW5fY9GHNVyHCy5udxVH4XoixhZ1ui4TjDMi4F_8gUmAyGGDqHdC2t9KzO6tcUzVu5Jp0IVVSqnoCYYqSIk=w408-h306-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e828c2b42ac561c2aaa308"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:44.692Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:27:30.181Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7961d478ea34760f31bd"
+  },
+  "name": "Nhà trọ Minh Khôi",
+  "description": "Mô tả cho Nhà trọ Minh Khôi",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hạ Bằng",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.54972685945604,
+      21.024951391253527
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noFky1_nP-zyqI570Ml0rcm71ZthENrjE2Ipca1V__Z8j2Q96QJZJTQKgwsdgKyWY1l0vRIhbJ9CbI1110bammeP1ZjG_Krv9lXHwjDC5uAiSK2rdwAc_SC03JLDRw1TZ2_7Hg=w425-h240-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82893b42ac561c2aaa305"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:45.699Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:26:43.511Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da7962d817adbf47b161b1"
+  },
+  "name": "Nhà trọ Ngọc Long",
+  "description": "Mô tả cho Nhà trọ Ngọc Long",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Đường N12",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52219902074562,
+      21.00223468051864
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrnhRh3HfHxHLgUnk_4LrvduKuiKP0cm9WZuuBHZwIAlRDnG8wXt_R-czuAZrJhladtn4ZqNh5Qtl3-ukSPCgWNjjBQR_nFLFKtl6UfZ2CVEquK14HIVUzwcYbLDxY2mVXh9Eg=w408-h305-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e82871b42ac561c2aaa302"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:46.690Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:26:09.744Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79635d9b2a511f13be38"
+  },
+  "name": "Nhà trọ Toán Tươi",
+  "description": "Mô tả cho Nhà trọ Toán Tươi",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.51614999701005,
+      21.026895734497046
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq1V8k72msEG-WYKpWq1h4VZK93a4F9e3CD5IGJ51pR775bqwZCokIQWRkygsD1wheUA9Tb2LagRDaOIbN_mF8Od7UvS-KsM1SJO3HdnyL4WvjjB0WG9UQQTbJyeYs2s1ywqvDHvA=w408-h544-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e8284eb42ac561c2aaa2ff"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:47.713Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:25:34.966Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79643fc8a6171ee85777"
+  },
+  "name": "Nhà trọ An House",
+  "description": "Mô tả cho Nhà trọ An House",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Quốc lộ 21",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52233784220098,
+      20.998052058395594
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 0,
+  "images": [
+    {
+      "url": "https://lh3.googleusercontent.com/p/AF1QipMlPnR0UA2jR5PRQeP1sUnAwxPmWVHAac-ZCs_r=w408-h440-k-no",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e8282cb42ac561c2aaa2fc"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:48.698Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:25:00.923Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68da79658d4fac1457fc190b"
+  },
+  "name": "Nhà trọ Tuấn Cường",
+  "description": "Mô tả cho Nhà trọ Tuấn Cường",
+  "category": "accommodation",
+  "subcategory": "Nhà trọ",
+  "address": {
+    "street": "Không rõ tên đường",
+    "ward": "Không rõ phường/xã",
+    "district": "Xã Hòa Lạc",
+    "city": "Thành phố Hà Nội"
+  },
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      105.52040204225308,
+      21.00086362649726
+    ]
+  },
+  "pricing": {
+    "currency": "VND"
+  },
+  "features": {
+    "wifi": false,
+    "parking": false,
+    "airConditioning": false,
+    "outdoor": false,
+    "petFriendly": false,
+    "delivery": false,
+    "takeaway": false,
+    "cardPayment": false
+  },
+  "rating": {
+    "average": 0,
+    "count": 0
+  },
+  "tags": [],
+  "isVerified": true,
+  "isActive": true,
+  "createdBy": {
+    "$oid": "68d52cc64ca4f94c0e2e2f80"
+  },
+  "viewCount": 8,
+  "images": [
+    {
+      "url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=4ApFi2XkRHWx-NMbkb1Uag&cb_client=search.gws-prod.gps&w=408&h=240&yaw=87.49695&pitch=0&thumbfov=100",
+      "isMain": false,
+      "_id": {
+        "$oid": "68e827fbb42ac561c2aaa2f9"
+      }
+    }
+  ],
+  "operatingHours": [],
+  "createdAt": {
+    "$date": "2025-09-29T12:19:49.699Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T21:24:11.946Z"
+  },
+  "__v": 1
+}]

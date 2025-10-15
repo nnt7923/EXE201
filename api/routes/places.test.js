@@ -63,12 +63,30 @@ describe('Places API', () => {
   // --- Test Suite for GET /api/places ---
   describe('GET /api/places', () => {
     it('should return a list of active places', async () => {
-      // Create some sample places
-      await Place.create([
-        { ...validPlaceData, name: 'Place 1', createdBy: regularUserId, isActive: true },
-        { ...validPlaceData, name: 'Place 2', category: 'restaurant', subcategory: 'Phở', createdBy: regularUserId, isActive: true },
-        { ...validPlaceData, name: 'Place 3 (Inactive)', createdBy: regularUserId, isActive: false },
-      ]);
+      // Create some sample places with explicit timestamps
+      const now = new Date();
+      const place1 = await Place.create({ 
+        ...validPlaceData, 
+        name: 'Place 1', 
+        createdBy: regularUserId, 
+        isActive: true,
+        createdAt: new Date(now.getTime() - 1000) // 1 second earlier
+      });
+      const place2 = await Place.create({ 
+        ...validPlaceData, 
+        name: 'Place 2', 
+        category: 'restaurant', 
+        subcategory: 'Phở', 
+        createdBy: regularUserId, 
+        isActive: true,
+        createdAt: now // later timestamp
+      });
+      await Place.create({ 
+        ...validPlaceData, 
+        name: 'Place 3 (Inactive)', 
+        createdBy: regularUserId, 
+        isActive: false 
+      });
 
       const res = await request(app).get('/api/places');
 

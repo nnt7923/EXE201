@@ -50,6 +50,10 @@ const itinerarySchema = new Schema({
         enum: ['DRAFT', 'PUBLIC'],
         default: 'DRAFT'
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
     activities: [activitySchema]
 }, {
     timestamps: true

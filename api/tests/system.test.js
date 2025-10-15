@@ -1,12 +1,14 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const app = require('../server');
 const User = require('../models/User');
 const Place = require('../models/Place');
 const Review = require('../models/Review');
 const Itinerary = require('../models/Itinerary');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
+const Category = require('../models/Category');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/an-gi-o-dau-test';
 
@@ -17,11 +19,15 @@ describe('System Tests - Complete API Flow', () => {
   beforeAll(async () => {
     await mongoose.connect(mongoUri, {});
     
+    // Hash password for test users
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('password123', salt);
+    
     // Create test users
     const adminUser = await User.create({
       name: 'System Test Admin',
       email: 'admin@systemtest.com',
-      password: 'password123',
+      password: hashedPassword,
       role: 'admin'
     });
     adminUserId = adminUser._id;
@@ -34,7 +40,7 @@ describe('System Tests - Complete API Flow', () => {
     const regularUser = await User.create({
       name: 'System Test User',
       email: 'user@systemtest.com',
-      password: 'password123',
+      password: hashedPassword,
       role: 'user'
     });
     userId = regularUser._id;
@@ -49,9 +55,24 @@ describe('System Tests - Complete API Flow', () => {
       name: 'Test Plan',
       description: 'Test subscription plan',
       price: 99000,
-      duration: 30,
+      durationInDays: 30,
+      aiSuggestionLimit: 100,
       features: ['AI suggestions', 'Premium support']
     });
+
+    // Create test categories
+    await Category.create([
+      {
+        key: 'restaurant',
+        name: 'Nhà hàng',
+        subcategories: ['Cơm tấm', 'Phở', 'Bún bò Huế']
+      },
+      {
+        key: 'cafe',
+        name: 'Cà phê',
+        subcategories: ['Cà phê truyền thống', 'Cà phê hiện đại']
+      }
+    ]);
   });
 
   afterAll(async () => {
@@ -61,6 +82,7 @@ describe('System Tests - Complete API Flow', () => {
     await Review.deleteMany({});
     await Itinerary.deleteMany({ title: { $regex: 'System Test' } });
     await SubscriptionPlan.deleteMany({ name: 'Test Plan' });
+    await Category.deleteMany({ key: { $in: ['restaurant', 'cafe'] } });
     await mongoose.connection.close();
   });
 
@@ -106,12 +128,12 @@ describe('System Tests - Complete API Flow', () => {
 
     it('should get current user profile', async () => {
       const res = await request(app)
-        .get('/api/auth/me')
+        .get('/api/users/me')
         .set('Authorization', `Bearer ${userToken}`)
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.email).toBe('user@systemtest.com');
+      expect(res.body.data.user.email).toBe('user@systemtest.com');
     });
   });
 
@@ -128,10 +150,8 @@ describe('System Tests - Complete API Flow', () => {
           district: 'Quận Test',
           city: 'Hà Nội'
         },
-        location: {
-          type: 'Point',
-          coordinates: [105.8, 21.0]
-        },
+        lat: 21.0,
+        lng: 105.8,
         priceRange: { min: 20000, max: 50000 },
         openingHours: {
           monday: { open: '07:00', close: '22:00' },
@@ -146,8 +166,8 @@ describe('System Tests - Complete API Flow', () => {
         .expect(201);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.name).toBe('System Test Cafe');
-      testPlace = res.body.data;
+      expect(res.body.data.place.name).toBe('System Test Cafe');
+      testPlace = res.body.data.place;
     });
 
     it('should get all places', async () => {
@@ -166,7 +186,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data._id).toBe(testPlace._id);
+      expect(res.body.data.place._id).toBe(testPlace._id);
     });
 
     it('should update place (admin)', async () => {
@@ -181,7 +201,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.description).toBe(updateData.description);
+      expect(res.body.data.place.description).toBe(updateData.description);
     });
   });
 
@@ -193,7 +213,7 @@ describe('System Tests - Complete API Flow', () => {
         title: 'System Test Review',
         content: 'This is a test review for system testing',
         visitDate: new Date().toISOString(),
-        visitType: 'dine_in',
+        visitType: 'dine-in',
         pricePaid: 35000,
         groupSize: 2
       };
@@ -205,8 +225,8 @@ describe('System Tests - Complete API Flow', () => {
         .expect(201);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.title).toBe('System Test Review');
-      expect(res.body.data.rating).toBe(4);
+      expect(res.body.data.review.title).toBe('System Test Review');
+      expect(res.body.data.review.rating).toBe(4);
     });
 
     it('should get reviews for place', async () => {
@@ -224,16 +244,16 @@ describe('System Tests - Complete API Flow', () => {
       const itineraryData = {
         title: 'System Test Itinerary',
         description: 'Test itinerary for system testing',
-        duration: 1,
+        date: new Date(),
         activities: [
           {
-            name: 'Visit Test Cafe',
-            description: 'Test the system test cafe',
-            time: '09:00',
-            place: testPlace._id
+            place: testPlace._id,
+            startTime: '09:00',
+            endTime: '11:00',
+            activityType: 'VISIT',
+            notes: 'Visit Test Cafe'
           }
-        ],
-        estimatedBudget: { min: 50000, max: 100000 }
+        ]
       };
 
       const res = await request(app)
@@ -243,8 +263,8 @@ describe('System Tests - Complete API Flow', () => {
         .expect(201);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.title).toBe('System Test Itinerary');
-      testItinerary = res.body.data;
+      expect(res.body.data.itinerary.title).toBe('System Test Itinerary');
+      testItinerary = res.body.data.itinerary;
     });
 
     it('should get all itineraries', async () => {
@@ -254,7 +274,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(Array.isArray(res.body.data.itineraries)).toBe(true);
     });
 
     it('should get itinerary by ID', async () => {
@@ -264,7 +284,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data._id).toBe(testItinerary._id);
+      expect(res.body.data.itinerary._id).toBe(testItinerary._id);
     });
   });
 
@@ -290,12 +310,13 @@ describe('System Tests - Complete API Flow', () => {
 
     it('should subscribe to plan', async () => {
       const res = await request(app)
-        .post(`/api/subscriptions/${testPlan._id}`)
+        .post('/api/subscriptions/subscribe')
         .set('Authorization', `Bearer ${userToken}`)
+        .send({ planId: testPlan._id })
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.message).toContain('subscription');
+      expect(res.body.data.user.subscriptionPlan._id).toBe(testPlan._id.toString());
     });
   });
 
@@ -317,7 +338,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data._id).toBe(userId.toString());
+      expect(res.body.data.user._id).toBe(userId.toString());
     });
   });
 
@@ -328,7 +349,7 @@ describe('System Tests - Complete API Flow', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(Array.isArray(res.body.data.categories)).toBe(true);
     });
   });
 

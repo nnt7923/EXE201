@@ -221,6 +221,13 @@ export function useNotifications() {
 
   const fetchUnreadCount = async () => {
     try {
+      // Check if user is authenticated before making API call
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setUnreadCount(0);
+        return;
+      }
+
       const { api } = await import('@/lib/api');
       const result = await api.getUnreadNotificationCount();
 
@@ -228,7 +235,12 @@ export function useNotifications() {
         setUnreadCount(result.data.count || 0);
       }
     } catch (error) {
-      console.error('Error fetching unread count:', error);
+      // Only log error if it's not an authentication issue
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (!errorMessage.includes('Session expired') && !errorMessage.includes('401')) {
+        console.error('Error fetching unread count:', error);
+      }
+      setUnreadCount(0);
     }
   };
 
