@@ -388,6 +388,33 @@ class ApiClient {
     return this.request<any>('/subscriptions');
   }
 
+  // Notifications
+  async getNotifications(): Promise<ApiResponse<any>> {
+    return this.request<any>('/notifications')
+  }
+
+  async getUnreadNotificationCount(): Promise<ApiResponse<any>> {
+    return this.request<any>('/notifications/unread-count')
+  }
+
+  async markNotificationAsRead(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/notifications/${id}/read`, {
+      method: 'POST'
+    })
+  }
+
+  async markAllNotificationsAsRead(): Promise<ApiResponse<any>> {
+    return this.request<any>('/notifications/mark-all-read', {
+      method: 'POST'
+    })
+  }
+
+  async deleteNotification(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/notifications/${id}`, {
+      method: 'DELETE'
+    })
+  }
+
   // Health check
   async healthCheck(): Promise<ApiResponse<any>> {
     return this.request<any>('/health')

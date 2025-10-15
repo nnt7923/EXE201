@@ -37,18 +37,14 @@ export default function NotificationCenter() {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/notifications', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (response.ok) {
-        const result = await response.json();
+      const { api } = await import('@/lib/api');
+      const result = await api.getNotifications();
+      
+      if (result.success) {
         setNotifications(result.data || []);
         setUnreadCount(result.data?.filter((n: Notification) => !n.read).length || 0);
       } else {
-        console.error('Failed to fetch notifications');
+        console.error('Failed to fetch notifications:', result.message);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -59,14 +55,10 @@ export default function NotificationCenter() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const response = await fetch(`/api/notifications/${notificationId}/read`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const { api } = await import('@/lib/api');
+      const result = await api.markNotificationAsRead(notificationId);
 
-      if (response.ok) {
+      if (result.success) {
         setNotifications(prev => 
           prev.map(n => 
             n._id === notificationId ? { ...n, read: true } : n
@@ -81,14 +73,10 @@ export default function NotificationCenter() {
 
   const markAllAsRead = async () => {
     try {
-      const response = await fetch('/api/notifications/mark-all-read', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const { api } = await import('@/lib/api');
+      const result = await api.markAllNotificationsAsRead();
 
-      if (response.ok) {
+      if (result.success) {
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
         setUnreadCount(0);
         toast({
@@ -233,14 +221,10 @@ export function useNotifications() {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await fetch('/api/notifications/unread-count', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const { api } = await import('@/lib/api');
+      const result = await api.getUnreadNotificationCount();
 
-      if (response.ok) {
-        const result = await response.json();
+      if (result.success) {
         setUnreadCount(result.data.count || 0);
       }
     } catch (error) {
