@@ -28,12 +28,20 @@ If your Render service is connected to GitHub:
 3. Click "Manual Deploy" → "Deploy latest commit"
 
 ### Option 3: Environment Variables Check
-Make sure these environment variables are set in your Render API service:
-- `FRONTEND_URL=https://an-gi-o-dau-frontend-64eh.onrender.com`
-- `NODE_ENV=production`
+
+#### API Service (`an-gi-o-dau-api-64eh`)
+Make sure these environment variables are set:
 - `MONGODB_URI=your_mongodb_atlas_connection_string`
 - `JWT_SECRET=your_jwt_secret`
+- `FRONTEND_URL=https://an-gi-o-dau-frontend-64eh.onrender.com`
+- `NODE_ENV=production`
 - Other required variables from `.env.example`
+
+#### Frontend Service (`an-gi-o-dau-frontend-64eh`)
+**CRITICAL**: Make sure this environment variable is set:
+- `NEXT_PUBLIC_API_URL=https://an-gi-o-dau-api-64eh.onrender.com/api`
+
+**This is the root cause of the "Failed to fetch" error!** The frontend was trying to connect to `localhost:5000` instead of the production API.
 
 ## Testing After Deployment
 1. Check API health: `https://an-gi-o-dau-api-64eh.onrender.com/api/health`
