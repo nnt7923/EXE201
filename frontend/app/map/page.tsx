@@ -12,46 +12,13 @@ import { api } from '@/lib/api'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useToast } from '@/components/ui/use-toast'
+import { Place } from '@/types'
 
 // Dynamically import the map component to prevent SSR issues
 const SimpleMap = dynamic(() => import('@/components/simple-map'), { 
   ssr: false,
   loading: () => <div className="w-full h-full flex items-center justify-center bg-muted"><p>Đang tải bản đồ...</p></div>
 });
-
-// Define the Place interface
-interface Place {
-  _id: string
-  name: string
-  description: string
-  category: string
-  subcategory: string
-  address: {
-    street: string
-    ward: string
-    district: string
-    city: string
-    coordinates: {
-      lat: number
-      lng: number
-    }
-  }
-  pricing: {
-    minPrice: number
-    maxPrice: number
-    currency: string
-  }
-  rating: {
-    average: number
-    count: number
-  }
-  images: Array<{
-    url: string
-    alt: string
-    isMain: boolean
-  }>
-  tags: string[]
-}
 
 export default function MapPage() {
   const [allPlaces, setAllPlaces] = useState<Place[]>([])
@@ -125,8 +92,10 @@ export default function MapPage() {
       setFilteredPlaces(clientSideResults);
       // Center map on the first result
       const firstResult = clientSideResults[0];
-      setMapCenter([firstResult.address.coordinates.lat, firstResult.address.coordinates.lng]);
-      setMapZoom(15);
+      if (firstResult.address.coordinates) {
+        setMapCenter([firstResult.address.coordinates.lat, firstResult.address.coordinates.lng]);
+        setMapZoom(15);
+      }
       toast({ title: "Đã tìm thấy", description: `Tìm thấy ${clientSideResults.length} địa điểm có sẵn trên bản đồ.` });
       return;
     }
@@ -149,8 +118,10 @@ export default function MapPage() {
 
         // Center map on the first new result
         const firstResult = dbPlaces[0];
-        setMapCenter([firstResult.address.coordinates.lat, firstResult.address.coordinates.lng]);
-        setMapZoom(15);
+        if (firstResult.address.coordinates) {
+          setMapCenter([firstResult.address.coordinates.lat, firstResult.address.coordinates.lng]);
+          setMapZoom(15);
+        }
       } else {
         // 4. If not found in DB either
         toast({ title: "Không tìm thấy", description: "Không có địa điểm nào khớp với tìm kiếm của bạn.", variant: "destructive" });
@@ -170,8 +141,28 @@ export default function MapPage() {
 
   const handleListItemClick = (place: Place) => {
     setSelectedPlace(place);
-    setMapCenter([place.address.coordinates.lat, place.address.coordinates.lng]);
-    setMapZoom(15);
+    if (place.address.coordinates) {
+      setMapCenter([place.address.coordinates.lat, place.address.coordinates.lng]);
+      setMapZoom(15);
+    }
+  };
+
+  const handleMyLocationClick = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setMapCenter([latitude, longitude]);
+          setMapZoom(15);
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+          toast({ title: "Lỗi", description: "Không thể lấy vị trí của bạn. Vui lòng kiểm tra cài đặt trình duyệt.", variant: "destructive" });
+        }
+      );
+    } else {
+      toast({ title: "Lỗi", description: "Trình duyệt của bạn không hỗ trợ định vị.", variant: "destructive" });
+    }
   };
 
   const formatPrice = (price: number) => {
@@ -293,11 +284,11 @@ export default function MapPage() {
                             <div className="flex items-center gap-2 mt-1">
                               <div className="flex items-center gap-1">
                                 <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-xs font-medium">{place.rating.average.toFixed(1)}</span>
+                                <span className="text-xs font-medium">{place.rating?.average ? place.rating.average.toFixed(1) : 'N/A'}</span>
                               </div>
                               <div className="flex items-center gap-1">
                                 <DollarSign className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-xs text-muted-foreground">{place.pricing.minPrice > 0 && formatPrice(place.pricing.minPrice)}</span>
+                                <span className="text-xs text-muted-foreground">{place.pricing?.minPrice && place.pricing.minPrice > 0 ? formatPrice(place.pricing.minPrice) : 'N/A'}</span>
                               </div>
                             </div>
                           </div>
@@ -318,6 +309,10 @@ export default function MapPage() {
             onMarkerClick={handleMarkerClick}
             mapCenter={mapCenter}
             zoomLevel={mapZoom}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearch={handleSearch}
+            onMyLocationClick={handleMyLocationClick}
           />
         </div>
       </div>

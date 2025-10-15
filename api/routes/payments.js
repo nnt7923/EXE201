@@ -4,7 +4,7 @@ const Payment = require('../models/Payment');
 const User = require('../models/User');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
 const Notification = require('../models/Notification');
-const auth = require('../middleware/auth');
+const { authenticateToken: auth } = require('../middleware/auth');
 const authorize = require('../middleware/authorize');
 const upload = require('../middleware/upload');
 

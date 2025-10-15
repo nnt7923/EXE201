@@ -14,57 +14,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import dynamic from 'next/dynamic'
+import { Place } from '@/types'
 
 // Dynamically import the map component
 const SimpleMap = dynamic(() => import('@/components/simple-map'), { 
   ssr: false,
   loading: () => <div className="w-full h-full bg-muted flex items-center justify-center"><Loader2 className="animate-spin"/></div>
 })
-
-// --- TYPE DEFINITIONS ---
-interface Place {
-  _id: string
-  name: string
-  description: string
-  category: string
-  subcategory: string
-  address: {
-    street: string
-    ward: string
-    district: string
-    city: string
-    coordinates: {
-      lat: number
-      lng: number
-    }
-  }
-  pricing: {
-    minPrice: number
-    maxPrice: number
-    currency: string
-  }
-  rating: {
-    average: number
-    count: number
-  }
-  images: Array<{
-    url: string
-    alt: string
-    isMain: boolean
-  }>
-  features: {
-    wifi: boolean
-    parking: boolean
-    airConditioning: boolean
-    outdoor: boolean
-    petFriendly: boolean
-    delivery: boolean
-    takeaway: boolean
-    cardPayment: boolean
-  }
-  tags: string[]
-  distance?: number
-}
 
 interface NominatimResult {
   place_id: number;
@@ -416,7 +372,7 @@ export default function SearchPage() {
                         <h3 className="font-semibold text-lg mb-1">{place.name}</h3>
                         <p className="text-muted-foreground text-sm mb-2 line-clamp-1">{place.address.street}, {place.address.ward}, {place.address.district}</p>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /><span>{place.rating.average.toFixed(1)} ({place.rating.count})</span></div>
+                          <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /><span>{place.rating?.average ? `${place.rating.average.toFixed(1)} (${place.rating.count})` : 'Chưa có đánh giá'}</span></div>
                           {place.distance && <div className="flex items-center gap-1"><Clock className="w-3 h-3" /><span>{place.distance.toFixed(1)}km</span></div>}
                         </div>
                         <div className="flex items-center justify-between mt-2">

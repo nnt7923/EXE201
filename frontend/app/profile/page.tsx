@@ -15,6 +15,7 @@ import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import NotificationCenter from '@/components/notification-center'
+import { SubscriptionPlan } from '@/types'
 
 interface UserProfile {
   _id: string

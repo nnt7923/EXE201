@@ -10,21 +10,7 @@ const LeafletMap = dynamic(() => import('@/components/simple-map'), { ssr: false
 import { CommunitySection } from "@/components/community-section"
 import { Footer } from "@/components/footer"
 import { api } from "@/lib/api"
-
-// Define a simple type for Place for state management
-interface Place {
-  _id: string;
-  name: string;
-  address: {
-    street?: string;
-    ward?: string;
-    district?: string;
-  };
-  location?: {
-    coordinates: [number, number]; // [lng, lat]
-  };
-  rating?: { average: number; count: number };
-}
+import { Place } from "@/types"
 
 export default function HomePage() {
   // Default center, e.g., Hoa Lac, Hanoi
@@ -98,7 +84,7 @@ export default function HomePage() {
         <HeroSection />
         <PricingSection />
         <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto px-4 py-12">
-          <FeaturedPlaces onPlaceSelect={setSelectedPlace} />
+          <FeaturedPlaces onPlaceSelect={handleMarkerClick} />
           <LeafletMap 
             mapCenter={mapCenter}
             places={places}

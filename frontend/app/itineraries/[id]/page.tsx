@@ -195,8 +195,17 @@ export default function ItineraryDetailPage() {
                           </AlertDialog>
                       </div>
                       <p className="font-semibold text-md text-primary">{activity.startTime}{activity.endTime ? ` - ${activity.endTime}` : ''}</p>
-                      <h3 className="text-xl font-bold mt-1">{activity.place?.name || activity.customPlace}</h3>
-                      {activity.place?.address && <p className="text-sm text-muted-foreground">{activity.place.address}</p>}
+                      <h3 className="text-xl font-bold mt-1">{
+                        (typeof activity.place === 'object' && activity.place?.name) || activity.customPlace
+                      }</h3>
+                      {typeof activity.place === 'object' && activity.place?.address && (
+                        <p className="text-sm text-muted-foreground">
+                          {typeof activity.place.address === 'string' 
+                            ? activity.place.address 
+                            : `${activity.place.address.street}, ${activity.place.address.ward}, ${activity.place.address.district}, ${activity.place.address.city}`
+                          }
+                        </p>
+                      )}
                       {activity.notes && <p className="mt-2 text-sm bg-gray-100 dark:bg-gray-800 p-3 rounded-md">{activity.notes}</p>}
                   </div>
               )) : (

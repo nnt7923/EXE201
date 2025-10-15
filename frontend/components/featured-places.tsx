@@ -4,23 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, MapPin, Wifi, ParkingCircle, Wind, Dog, Ship, ShoppingBag, CreditCard } from "lucide-react"
 import { api } from "@/lib/api"
 import Image from "next/image"
-
-// This interface should ideally be in a shared types file
-interface Place {
-  _id: string;
-  name: string;
-  images?: { url: string; alt?: string }[];
-  category: string;
-  address: {
-    street: string;
-    ward: string;
-    district: string;
-    coordinates: { lat: number; lng: number };
-  };
-  rating?: { average: number; count: number };
-  features?: { [key: string]: boolean };
-  price?: { min: number; max: number; currency: string };
-}
+import { Place } from "@/types"
 
 const featureDisplay: { [key: string]: { name: string; icon: ElementType } } = {
   wifi: { name: "Wifi", icon: Wifi },
@@ -104,7 +88,7 @@ export function FeaturedPlaces({ onPlaceSelect }: { onPlaceSelect: (place: Place
 
                   <div className="flex items-center justify-between">
                      <span className="font-semibold text-primary">
-                      {place.price ? `${place.price.min/1000}k - ${place.price.max/1000}k` : 'N/A'}
+                      {place.pricing ? `${place.pricing.minPrice/1000}k - ${place.pricing.maxPrice/1000}k` : 'N/A'}
                     </span>
                     <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                       {place.features && Object.entries(place.features)

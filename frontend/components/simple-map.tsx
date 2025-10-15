@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search, LocateFixed } from 'lucide-react'
+import { Place } from '@/types'
 
 // Fix for default icon issue with webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -25,20 +26,6 @@ const userLocationIcon = new L.Icon({
     popupAnchor: [0, -12],
     className: 'user-location-marker'
 });
-
-interface Place {
-  _id: string;
-  name: string;
-  address: {
-    street?: string;
-    ward?: string;
-    district?: string;
-  };
-  location?: {
-    coordinates: [number, number]; // [lng, lat]
-  };
-  rating?: { average: number; count: number };
-}
 
 interface SimpleMapProps {
   places: Place[];
@@ -74,7 +61,9 @@ function PlaceMarkers({ places, onMarkerClick, selectedPlace }: Pick<SimpleMapPr
     }, [selectedPlace]);
 
     const validPlaces = places.filter(place => {
-        const coords = place.location?.coordinates;
+        // Handle both location.coordinates and address.coordinates structures
+        const coords = place.location?.coordinates || 
+                      (place.address?.coordinates ? [place.address.coordinates.lng, place.address.coordinates.lat] : null);
         if (!coords || coords.length !== 2) {
             console.error("Invalid or missing coordinates for place:", place);
             return false;
@@ -90,7 +79,11 @@ function PlaceMarkers({ places, onMarkerClick, selectedPlace }: Pick<SimpleMapPr
   return (
     <>
       {validPlaces.map((place) => {
-        const [lng, lat] = place.location.coordinates;
+        // Handle both coordinate structures
+        const coords = place.location?.coordinates || 
+                      (place.address?.coordinates ? [place.address.coordinates.lng, place.address.coordinates.lat] : null);
+        if (!coords) return null;
+        const [lng, lat] = coords;
         const addr = [place.address.street, place.address.ward, place.address.district].filter(Boolean).join(', ');
         const rating = place.rating?.average ? `${place.rating.average.toFixed(1)}★ (${place.rating.count})` : 'Chưa có đánh giá';
 

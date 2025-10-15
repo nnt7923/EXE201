@@ -11,11 +11,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from 'react';
 
 // Define types matching the backend schema
+export interface Place {
+  _id: string;
+  name: string;
+  address: {
+    street: string;
+    ward: string;
+    district: string;
+    city: string;
+  };
+  category: string;
+  subcategory: string;
+}
+
 export interface Activity {
   _id?: string; // Optional for new activities
   startTime: string;
   endTime?: string;
   activityType: 'EAT' | 'VISIT' | 'ENTERTAINMENT' | 'TRAVEL' | 'OTHER';
+  place?: Place | string; // Can be a populated Place object or ObjectId string
   customPlace: string;
   notes?: string;
 }
