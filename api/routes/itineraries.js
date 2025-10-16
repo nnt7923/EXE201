@@ -3,7 +3,7 @@ const router = express.Router();
 const Itinerary = require('../models/Itinerary');
 const User = require('../models/User');
 const { authenticateToken: auth } = require('../middleware/auth');
-const checkAiAccess = require('../middleware/checkaiaccess');
+const checkAiAccess = require('../middleware/checkAIAccess');
 const aiService = require('../services/ai');
 
 // @route   GET api/itineraries
