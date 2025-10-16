@@ -6,6 +6,20 @@ const { validatePlace, validatePagination, validateObjectId } = require('../midd
 
 const router = express.Router();
 
+// Helper function to map user-friendly sort values to database field names
+const mapSortValue = (sort) => {
+  const sortMap = {
+    'newest': '-createdAt',
+    'oldest': 'createdAt',
+    'highest-rated': '-rating',
+    'lowest-rated': 'rating',
+    'name-asc': 'name',
+    'name-desc': '-name'
+  };
+  
+  return sortMap[sort] || sort;
+};
+
 // @route   GET /api/places
 // @desc    Get all places with filtering and pagination
 // @access  Public
@@ -355,13 +369,16 @@ router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res
   try {
     const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Map user-friendly sort values to database field names
+    const mappedSort = mapSortValue(sort);
 
     const reviews = await Review.find({ 
       place: req.params.id, 
       isActive: true 
     })
       .populate('user', 'name avatar')
-      .sort(sort)
+      .sort(mappedSort)
       .skip(skip)
       .limit(parseInt(limit))
       .lean();

@@ -20,7 +20,7 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
-    const token = localStorage.getItem('token')
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
     
     const config: RequestInit = {
       headers: {
@@ -333,7 +333,9 @@ class ApiClient {
   }
 
   async getItinerary(id: string): Promise<ApiResponse<any>> {
-    return this.request<any>(`/itineraries/${id}`);
+    // Add cache busting parameter to ensure fresh data
+    const cacheBuster = Date.now();
+    return this.request<any>(`/itineraries/${id}?_t=${cacheBuster}`);
   }
 
   async createItinerary(itineraryData: any): Promise<ApiResponse<any>> {
@@ -362,9 +364,14 @@ class ApiClient {
     interests: string[];
     duration: number;
   }): Promise<ApiResponse<any>> {
-    return this.request<any>('/itineraries/ai-suggestion', {
+    return this.request<any>('/ai/itinerary-suggestions', {
       method: 'POST',
-      body: JSON.stringify(promptData),
+      body: JSON.stringify({
+        destination: promptData.location,
+        duration: promptData.duration,
+        budget: promptData.budget,
+        interests: promptData.interests
+      }),
     });
   }
 
@@ -399,6 +406,46 @@ class ApiClient {
     });
   }
 
+  // Admin Subscription Management
+  async getAdminSubscriptions(params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  } = {}): Promise<ApiResponse<any>> {
+    const queryParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        queryParams.append(key, value.toString());
+      }
+    });
+    const queryString = queryParams.toString();
+    return this.request<any>(`/subscriptions/admin/all${queryString ? `?${queryString}` : ''}`);
+  }
+
+  async getSubscriptionStats(): Promise<ApiResponse<any>> {
+    return this.request<any>('/subscriptions/admin/stats');
+  }
+
+  async updateSubscriptionStatus(subscriptionId: string, status: string, adminNotes?: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/subscriptions/${subscriptionId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status, adminNotes }),
+    });
+  }
+
+  async updateSubscriptionPaymentStatus(subscriptionId: string, paymentStatus: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/subscriptions/${subscriptionId}/payment-status`, {
+      method: 'PUT',
+      body: JSON.stringify({ paymentStatus }),
+    });
+  }
+
+  async deleteSubscription(subscriptionId: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/subscriptions/${subscriptionId}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Notifications
   async getNotifications(): Promise<ApiResponse<any>> {
     return this.request<any>('/notifications')
@@ -426,9 +473,102 @@ class ApiClient {
     })
   }
 
+  // Admin Payments
+  async getAllPayments(): Promise<ApiResponse<any>> {
+    return this.request<any>('/payments/admin/all')
+  }
+
+  async getPendingPayments(): Promise<ApiResponse<any>> {
+    return this.request<any>('/payments/admin/pending')
+  }
+
+  async confirmPayment(paymentId: string, notes?: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/payments/admin/confirm/${paymentId}`, {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
+    })
+  }
+
+  async rejectPayment(paymentId: string, notes?: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/payments/admin/reject/${paymentId}`, {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
+    })
+  }
+
   // Health check
   async healthCheck(): Promise<ApiResponse<any>> {
     return this.request<any>('/health')
+  }
+
+  // Booking methods
+  async createBooking(bookingData: {
+    place: string
+    checkInDate: string
+    checkOutDate: string
+    numberOfGuests: number
+    numberOfRooms: number
+    bookingType: 'hourly' | 'daily' | 'monthly'
+    paymentMethod: string
+    specialRequests?: string
+    customerInfo: {
+      name: string
+      email: string
+      phone: string
+    }
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/bookings', {
+      method: 'POST',
+      body: JSON.stringify(bookingData)
+    })
+  }
+
+  async getUserBookings(params: {
+    page?: number
+    limit?: number
+    status?: string
+    sort?: string
+  } = {}): Promise<ApiResponse<any>> {
+    const searchParams = new URLSearchParams()
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        searchParams.append(key, value.toString())
+      }
+    })
+    return this.request<any>(`/bookings/user?${searchParams.toString()}`)
+  }
+
+  async getBooking(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/bookings/${id}`)
+  }
+
+  async updateBooking(id: string, updateData: any): Promise<ApiResponse<any>> {
+    return this.request<any>(`/bookings/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updateData)
+    })
+  }
+
+  async cancelBooking(id: string): Promise<ApiResponse<any>> {
+    return this.request<any>(`/bookings/${id}/cancel`, {
+      method: 'PUT'
+    })
+  }
+
+  async getAllBookings(params: {
+    page?: number
+    limit?: number
+    status?: string
+    place?: string
+    sort?: string
+  } = {}): Promise<ApiResponse<any>> {
+    const searchParams = new URLSearchParams()
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        searchParams.append(key, value.toString())
+      }
+    })
+    return this.request<any>(`/bookings?${searchParams.toString()}`)
   }
 }
 
@@ -444,7 +584,7 @@ export const isAuthenticated = (): boolean => {
   return !!localStorage.getItem('token')
 }
 
-export const getCurrentUser = (): any => {
+export const getCurrentUserFromStorage = (): any => {
   if (typeof window === 'undefined') return null
   const userStr = localStorage.getItem('user')
   return userStr ? JSON.parse(userStr) : null

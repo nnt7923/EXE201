@@ -15,6 +15,14 @@ import Link from 'next/link'
 import { api } from '@/lib/api'
 import dynamic from 'next/dynamic'
 import { Place } from '@/types'
+import { DataPagination } from '@/components/ui/data-pagination'
+
+interface Pagination {
+  current: number
+  pages: number
+  total: number
+  limit?: number
+}
 
 // Dynamically import the map component
 const SimpleMap = dynamic(() => import('@/components/simple-map'), { 
@@ -82,6 +90,9 @@ export default function SearchPage() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('Tìm kiếm địa điểm hoặc áp dụng bộ lọc để bắt đầu')
+  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [limit, setLimit] = useState(12)
   
   // Map state
   const [mapCenter, setMapCenter] = useState<[number, number]>([21.0285, 105.8542]) // Default to Hanoi
@@ -102,7 +113,7 @@ export default function SearchPage() {
   })
 
   // --- API & SEARCH LOGIC ---
-  const searchInDB = useCallback(async (query: string) => {
+  const searchInDB = useCallback(async (query: string, page: number = currentPage, pageLimit: number = limit) => {
     try {
       const res = await api.getPlaces({
         search: query || undefined,
@@ -113,6 +124,8 @@ export default function SearchPage() {
         rating: filters.rating > 0 ? filters.rating : undefined,
         features: filters.features.length > 0 ? filters.features : undefined,
         sort: filters.sort,
+        page,
+        limit: pageLimit,
       })
       if (res?.success && (res as any).data?.places) {
         const dbPlacesRaw = ((res as any).data.places) as any[];
@@ -133,8 +146,20 @@ export default function SearchPage() {
         }) as Place[];
 
         setPlaces(dbPlaces)
+        
+        // Handle pagination data
+        if ((res as any).data?.pagination) {
+          setPagination({
+            current: (res as any).data.pagination.current,
+            pages: (res as any).data.pagination.pages,
+            total: (res as any).data.pagination.total,
+            limit: pageLimit
+          })
+        }
+        
         if (dbPlaces.length > 0) {
-          setMessage(`Tìm thấy ${dbPlaces.length} địa điểm trong database.`)
+          const totalResults = (res as any).data?.pagination?.total || dbPlaces.length
+          setMessage(`Tìm thấy ${totalResults} địa điểm trong database.`)
           const firstPlace = dbPlaces[0]
           if (firstPlace.address.coordinates) {
             setMapCenter([firstPlace.address.coordinates.lat, firstPlace.address.coordinates.lng])
@@ -148,7 +173,7 @@ export default function SearchPage() {
       console.error('DB Search error:', error)
       setMessage('Lỗi khi tìm kiếm trong database.')
     }
-  }, [filters])
+  }, [filters, currentPage, limit])
 
   const handleSearch = async () => {
     if (!searchQuery) return
@@ -240,6 +265,22 @@ export default function SearchPage() {
       setMapZoom(15);
     }
   };
+
+  // --- PAGINATION HANDLERS ---
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    if (searchQuery || Object.values(filters).some(v => v !== '' && v !== 0 && (!Array.isArray(v) || v.length > 0))) {
+      searchInDB(searchQuery, page, limit)
+    }
+  }
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit)
+    setCurrentPage(1)
+    if (searchQuery || Object.values(filters).some(v => v !== '' && v !== 0 && (!Array.isArray(v) || v.length > 0))) {
+      searchInDB(searchQuery, 1, newLimit)
+    }
+  }
 
   // --- RENDER ---
   return (
@@ -386,6 +427,17 @@ export default function SearchPage() {
               ))
             )}
           </div>
+
+          {/* Pagination */}
+          {pagination && places.length > 0 && (
+            <div className="mt-6">
+              <DataPagination
+                pagination={pagination}
+                onPageChange={handlePageChange}
+                onLimitChange={handleLimitChange}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right Column: Map */}

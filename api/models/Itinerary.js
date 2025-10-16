@@ -54,6 +54,14 @@ const itinerarySchema = new Schema({
         type: Boolean,
         default: true
     },
+    isAiGenerated: {
+        type: Boolean,
+        default: false
+    },
+    aiContent: {
+        type: String,
+        trim: true
+    },
     activities: [activitySchema]
 }, {
     timestamps: true

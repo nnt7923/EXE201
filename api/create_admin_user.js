@@ -25,7 +25,7 @@ async function createAdminUser() {
         email: 'admin@example.com',
         password: hashedPassword,
         role: 'admin',
-        subscriptionStatus: 'active',
+    
         isEmailVerified: true
       });
 

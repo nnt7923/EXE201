@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Itinerary = require('../models/Itinerary');
 
 // Verify JWT token and attach lightweight user payload to req.user
 const authenticateToken = (req, res, next) => {
@@ -46,31 +47,50 @@ const authenticateToken = (req, res, next) => {
 // Fetch full user object from DB after authentication
 const fetchFullUser = async (req, res, next) => {
   try {
-    // req.user should be attached by authenticateToken and contain the user's ID
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({ success: false, message: 'Authentication error: User ID not found in token.' });
-    }
+    const user = await User.findById(req.user.id);
 
-    const user = await User.findById(req.user.id)
-      .select('-password')
-      .populate('subscriptionPlan');
-    
     if (!user) {
-      return res.status(401).json({ success: false, message: 'User not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
     }
 
-    if (!user.isActive) {
-      return res.status(401).json({ success: false, message: 'Account is deactivated' });
-    }
+    // Get user's subscriptions using the Subscription model
+    const Subscription = require('../models/Subscription');
+    const subscriptions = await Subscription.find({ user: user._id })
+      .populate('plan')
+      .sort({ createdAt: -1 });
 
-    // Replace the lightweight user object with the full user object
-    req.user = user;
+    // Get active subscriptions and their plans
+    const activeSubscriptions = subscriptions.filter(sub => sub.status === 'active');
+    const subscriptionPlan = activeSubscriptions.length > 0 ? activeSubscriptions[0].plan : null;
+    const subscriptionEndDate = activeSubscriptions.length > 0 ? activeSubscriptions[0].endDate : null;
+
+    // Get AI suggestions used from active subscription
+    const aiSuggestionsUsed = activeSubscriptions.length > 0 ? (activeSubscriptions[0].aiUsageCount || 0) : 0;
+
+    // Construct user data with subscription info
+    const userData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      credits: user.credits,
+      subscriptionPlan,
+      subscriptionEndDate,
+      aiSuggestionsUsed,
+      createdAt: user.createdAt
+    };
+
+    req.user = userData;
     next();
   } catch (error) {
-     return res.status(500).json({
+    console.error('Error in fetchFullUser middleware:', error);
+    res.status(500).json({
       success: false,
-      message: 'Error fetching user data',
-      error: error.message
+      message: 'Server error'
     });
   }
 };

@@ -26,8 +26,8 @@ export default function ItinerariesPage() {
       try {
         setIsLoading(true);
         const response = await api.getItineraries();
-        if (response.success && response.data) {
-          setItineraries(response.data);
+        if (response.success && response.data && response.data.itineraries) {
+          setItineraries(response.data.itineraries);
         } else {
           setError(response.message || 'Failed to fetch itineraries');
         }
@@ -79,7 +79,9 @@ export default function ItinerariesPage() {
       {!isLoading && !error && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {itineraries.length > 0 ? (
-            itineraries.map((itinerary) => (
+            itineraries
+              .filter((itinerary) => itinerary._id) // Filter out items without valid _id
+              .map((itinerary) => (
               <Link href={`/itineraries/${itinerary._id}`} key={itinerary._id}>
                 <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer h-full flex flex-col">
                   <CardHeader>

@@ -9,6 +9,20 @@ const { validatePagination, validateObjectId } = require('../middleware/validati
 
 const router = express.Router();
 
+// Helper function to map user-friendly sort values to database field names
+const mapSortValue = (sort) => {
+  const sortMap = {
+    'newest': '-createdAt',
+    'oldest': 'createdAt',
+    'highest-rated': '-rating',
+    'lowest-rated': 'rating',
+    'name-asc': 'name',
+    'name-desc': '-name'
+  };
+  
+  return sortMap[sort] || sort;
+};
+
 // @route   GET /api/users
 // @desc    Get all users (admin only)
 // @access  Private (Admin)
@@ -125,10 +139,13 @@ router.get('/me/reviews', authenticateToken, validatePagination, async (req, res
   try {
     const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Map user-friendly sort values to database field names
+    const mappedSort = mapSortValue(sort);
 
     const reviews = await Review.find({ user: req.user.id })
       .populate('place', 'name category address')
-      .sort(sort)
+      .sort(mappedSort)
       .skip(skip)
       .limit(parseInt(limit))
       .lean();
@@ -231,11 +248,14 @@ router.get('/:id/reviews', validateObjectId, validatePagination, async (req, res
   try {
     const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Map user-friendly sort values to database field names
+    const mappedSort = mapSortValue(sort);
 
     const reviews = await Review.find({ user: req.params.id, isActive: true }) // Public view should only show active reviews
       .populate('place', 'name category address')
       .populate('user', 'name avatar') // Also populate user info for public view
-      .sort(sort)
+      .sort(mappedSort)
       .skip(skip)
       .limit(parseInt(limit))
       .lean();

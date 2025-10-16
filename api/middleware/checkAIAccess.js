@@ -1,137 +1,68 @@
-const User = require('../models/User');
+const Subscription = require('../models/Subscription');
 
-/**
- * Middleware to check if user has access to AI features
- * Requires user to have confirmed payment and active subscription
- */
-const checkAIAccess = async (req, res, next) => {
+const checkAiAccess = async (req, res, next) => {
   try {
-    // Get user with subscription details
-    const user = await User.findById(req.user.id)
-      .populate('subscriptionPlan')
-      .populate('currentPayment');
+    const userId = req.user.id;
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Người dùng không tồn tại'
-      });
-    }
+    // Tìm subscription active, đã thanh toán và chưa hết hạn
+    const subscription = await Subscription.findOne({
+      user: userId,
+      status: 'active',
+      paymentStatus: 'paid',
+      endDate: { $gt: new Date() }
+    }).populate('plan');
 
-    // Check subscription expiry first
-    await user.checkSubscriptionExpiry();
-
-    // Check if user can access AI features
-    if (!user.canAccessAI()) {
-      let message = 'Bạn cần đăng ký gói dịch vụ để sử dụng tính năng AI';
-      
-      if (user.subscriptionStatus === 'pending_payment') {
-        message = 'Thanh toán của bạn đang chờ xác nhận. Vui lòng chờ admin xác nhận để sử dụng tính năng AI.';
-      } else if (user.subscriptionStatus === 'expired') {
-        message = 'Gói đăng ký của bạn đã hết hạn. Vui lòng gia hạn để tiếp tục sử dụng tính năng AI.';
-      } else if (user.paymentStatus === 'rejected') {
-        message = 'Thanh toán của bạn đã bị từ chối. Vui lòng thực hiện thanh toán lại.';
-      }
-
+    // Kiểm tra có subscription không
+    if (!subscription) {
       return res.status(403).json({
         success: false,
-        message,
-        data: {
-          subscriptionStatus: user.subscriptionStatus,
-          paymentStatus: user.paymentStatus,
-          subscriptionEndDate: user.subscriptionEndDate,
-          currentPayment: user.currentPayment
-        }
+        message: 'Bạn cần có gói đăng ký để sử dụng tính năng AI.',
+        code: 'NO_SUBSCRIPTION'
       });
     }
 
-    // Check if user has remaining AI suggestions
-    if (!user.hasAISuggestionsLeft()) {
+    // Kiểm tra có plan không
+    if (!subscription.plan) {
       return res.status(403).json({
         success: false,
-        message: 'Bạn đã sử dụng hết số lượt gợi ý AI trong tháng này',
-        data: {
-          aiSuggestionsUsed: user.aiSuggestionsUsed,
-          aiSuggestionsLimit: user.aiSuggestionsLimit,
-          subscriptionPlan: user.subscriptionPlan
-        }
+        message: 'Gói đăng ký của bạn không hợp lệ.',
+        code: 'INVALID_PLAN'
       });
     }
 
-    // Add user info to request for use in route handlers
-    req.userWithSubscription = user;
+    // Kiểm tra plan có hỗ trợ AI không
+    if (!subscription.plan.aiSuggestionLimit || subscription.plan.aiSuggestionLimit <= 0) {
+      return res.status(403).json({
+        success: false,
+        message: 'Gói đăng ký của bạn không hỗ trợ tính năng AI.',
+        code: 'AI_NOT_SUPPORTED'
+      });
+    }
+
+    // Kiểm tra số lượt AI còn lại
+    const remainingUsage = subscription.plan.aiSuggestionLimit - (subscription.aiUsageCount || 0);
+    if (remainingUsage <= 0) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn đã sử dụng hết lượt gợi ý AI trong gói đăng ký hiện tại.',
+        code: 'AI_LIMIT_EXCEEDED'
+      });
+    }
+
+    // Gắn thông tin subscription vào request
+    req.subscription = subscription;
+    req.aiLimit = subscription.plan.aiSuggestionLimit;
+    req.remainingAiUsage = remainingUsage;
+
     next();
-
   } catch (error) {
-    console.error('AI access check error:', error);
+    console.error('Lỗi kiểm tra quyền truy cập AI:', error);
     res.status(500).json({
       success: false,
-      message: 'Lỗi server khi kiểm tra quyền truy cập AI'
+      message: 'Lỗi hệ thống.',
+      code: 'INTERNAL_ERROR'
     });
   }
 };
 
-/**
- * Middleware to check if user has basic subscription (any confirmed payment)
- * Less strict than checkAIAccess - just checks if payment is confirmed
- */
-const checkSubscriptionAccess = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id)
-      .populate('subscriptionPlan');
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Người dùng không tồn tại'
-      });
-    }
-
-    // Check subscription expiry
-    await user.checkSubscriptionExpiry();
-
-    // Check if user has any active subscription
-    if (user.subscriptionStatus !== 'active' || user.paymentStatus !== 'confirmed') {
-      return res.status(403).json({
-        success: false,
-        message: 'Bạn cần có gói đăng ký đã được xác nhận để truy cập tính năng này',
-        data: {
-          subscriptionStatus: user.subscriptionStatus,
-          paymentStatus: user.paymentStatus
-        }
-      });
-    }
-
-    req.userWithSubscription = user;
-    next();
-
-  } catch (error) {
-    console.error('Subscription access check error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Lỗi server khi kiểm tra quyền truy cập'
-    });
-  }
-};
-
-/**
- * Middleware to increment AI usage counter after successful AI request
- */
-const incrementAIUsage = async (req, res, next) => {
-  try {
-    if (req.userWithSubscription) {
-      await req.userWithSubscription.useAISuggestion();
-    }
-    next();
-  } catch (error) {
-    console.error('AI usage increment error:', error);
-    // Don't fail the request if usage increment fails
-    next();
-  }
-};
-
-module.exports = {
-  checkAIAccess,
-  checkSubscriptionAccess,
-  incrementAIUsage
-};
+module.exports = checkAiAccess;

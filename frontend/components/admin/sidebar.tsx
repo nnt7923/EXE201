@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Shield, Users, MapPin, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Shield, Users, MapPin, ShoppingCart, CreditCard, ArrowLeft } from 'lucide-react';
 
 const navItems = [
   { href: '/admin/places', label: 'Quản lý Địa điểm', icon: MapPin },
   { href: '/admin/users', label: 'Quản lý Người dùng', icon: Users },
   { href: '/admin/orders', label: 'Quản lý Đơn hàng', icon: ShoppingCart },
+  { href: '/admin/subscriptions', label: 'Quản lý Đăng ký', icon: CreditCard },
 ];
 
 export function AdminSidebar() {

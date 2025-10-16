@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { MapPin, Star, Clock, Phone, Globe, Facebook, Instagram, DollarSign, Wifi, Car, Wind, Sun, Heart, MessageCircle, Share2 } from 'lucide-react'
+import { MapPin, Star, Clock, Phone, Globe, Facebook, Instagram, DollarSign, Wifi, Car, Wind, Sun, Heart, MessageCircle, Share2, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import Image from 'next/image'
 import Link from 'next/link'
 import { api } from '@/lib/api'
+import { ReviewList } from '@/components/reviews/review-list'
 
 interface Place {
   _id: string
@@ -381,50 +382,7 @@ export default function PlaceDetailPage() {
                 </TabsContent>
 
                 <TabsContent value="reviews" className="space-y-4">
-                  {place.recentReviews.length > 0 ? (
-                    place.recentReviews.map((review) => (
-                      <Card key={review._id}>
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <Avatar>
-                              <AvatarImage src={review.user.avatar} />
-                              <AvatarFallback>{review.user.name[0]}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="font-medium">{review.user.name}</span>
-                                <div className="flex items-center gap-1">
-                                  {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={`w-4 h-4 ${
-                                        i < review.rating
-                                          ? 'fill-yellow-400 text-yellow-400'
-                                          : 'text-muted-foreground'
-                                      }`}
-                                    />
-                                  ))}
-                                </div>
-                                <span className="text-sm text-muted-foreground">
-                                  {new Date(review.createdAt).toLocaleDateString('vi-VN')}
-                                </span>
-                              </div>
-                              <h4 className="font-medium mb-2">{review.title}</h4>
-                              <p className="text-muted-foreground text-sm">{review.content}</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))
-                  ) : (
-                    <Card>
-                      <CardContent className="p-8 text-center">
-                        <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-medium mb-2">Chưa có đánh giá nào</h3>
-                        <p className="text-muted-foreground">Hãy là người đầu tiên đánh giá địa điểm này!</p>
-                      </CardContent>
-                    </Card>
-                  )}
+                  <ReviewList placeId={place._id} />
                 </TabsContent>
 
                 <TabsContent value="photos" className="space-y-4">
@@ -543,10 +501,18 @@ export default function PlaceDetailPage() {
 
               {/* Actions */}
               <div className="space-y-2">
-                <Button className="w-full">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Viết đánh giá
-                </Button>
+                <Link href={`/booking/${place._id}`}>
+                  <Button className="w-full bg-primary hover:bg-primary/90">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Đặt phòng ngay
+                  </Button>
+                </Link>
+                <Link href={`/reviews/write/${place._id}`}>
+                  <Button variant="outline" className="w-full">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Viết đánh giá
+                  </Button>
+                </Link>
                 <Button variant="outline" className="w-full">
                   <Heart className="w-4 h-4 mr-2" />
                   Thêm vào yêu thích

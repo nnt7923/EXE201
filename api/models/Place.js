@@ -86,8 +86,7 @@ const placeSchema = new mongoose.Schema({
     outdoor: { type: Boolean, default: false },
     petFriendly: { type: Boolean, default: false },
     delivery: { type: Boolean, default: false },
-    takeaway: { type: Boolean, default: false },
-    cardPayment: { type: Boolean, default: false }
+    takeaway: { type: Boolean, default: false }
   },
   images: [{
     url: {

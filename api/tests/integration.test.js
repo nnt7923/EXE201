@@ -3,7 +3,7 @@ const User = require('../models/User');
 const Place = require('../models/Place');
 const Review = require('../models/Review');
 const Itinerary = require('../models/Itinerary');
-const SubscriptionPlan = require('../models/SubscriptionPlan');
+const SubscriptionPlan = require('../models/Plan');
 
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/an-gi-o-dau-test';
 

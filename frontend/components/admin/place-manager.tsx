@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTr
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, PlusCircle, Trash2, Pencil, Settings } from 'lucide-react';
+import { DataPagination } from '@/components/ui/data-pagination';
 
 // --- INTERFACES ---
 interface PlaceImage {
@@ -26,6 +27,12 @@ interface Place {
   name: string;
   images: PlaceImage[];
   // Add other fields as needed for the edit form
+}
+
+interface Pagination {
+  current: number;
+  pages: number;
+  total: number;
 }
 
 // --- DETAIL SHEET COMPONENTS ---
@@ -248,32 +255,50 @@ function TableSkeleton() {
 
 export default function AdminPlaceManager() {
   const [places, setPlaces] = useState<Place[]>([]);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      setIsLoading(true);
-      try {
-        const response = await api.getPlaces({ limit: 100, sort: '-updatedAt' });
-        if (response.success && response.data) {
-          setPlaces(response.data.places);
-        } else {
-          throw new Error(response.message || 'Failed to fetch places');
-        }
-      } catch (error: any) {
-        toast({ title: 'Lỗi', description: `Không thể tải danh sách địa điểm: ${error.message}`, variant: 'destructive' });
-      } finally {
-        setIsLoading(false);
+  const fetchPlaces = async (page: number = currentPage, pageLimit: number = limit) => {
+    setIsLoading(true);
+    try {
+      const response = await api.getPlaces({ 
+        page, 
+        limit: pageLimit, 
+        sort: '-updatedAt' 
+      });
+      if (response.success && response.data) {
+        setPlaces(response.data.places);
+        setPagination(response.data.pagination);
+      } else {
+        throw new Error(response.message || 'Failed to fetch places');
       }
-    };
+    } catch (error: any) {
+      toast({ title: 'Lỗi', description: `Không thể tải danh sách địa điểm: ${error.message}`, variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchPlaces();
-  }, [toast]);
+  }, [currentPage, limit]);
 
   const handlePlaceUpdate = (updatedPlace: Place) => {
     setPlaces(currentPlaces =>
       currentPlaces.map(p => (p._id === updatedPlace._id ? updatedPlace : p))
     );
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setCurrentPage(1); // Reset to first page when changing limit
   };
 
   return (
@@ -318,6 +343,15 @@ export default function AdminPlaceManager() {
               )}
             </TableBody>
           </Table>
+        )}
+        {pagination && (
+          <div className="mt-4">
+            <DataPagination
+              pagination={pagination}
+              onPageChange={handlePageChange}
+              onLimitChange={handleLimitChange}
+            />
+          </div>
         )}
       </CardContent>
     </Card>

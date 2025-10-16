@@ -11,6 +11,11 @@ const reviewSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Người dùng là bắt buộc']
   },
+  booking: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking',
+    required: false // Không bắt buộc để hỗ trợ review không từ booking
+  },
   rating: {
     type: Number,
     required: [true, 'Đánh giá là bắt buộc'],
@@ -125,8 +130,16 @@ const reviewSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Compound index to prevent duplicate reviews
-reviewSchema.index({ place: 1, user: 1 }, { unique: true });
+// Index để đảm bảo mỗi user chỉ có thể review một lần cho mỗi booking (nếu có booking)
+// Hoặc một lần cho mỗi place (nếu không có booking)
+reviewSchema.index({ place: 1, user: 1, booking: 1 }, { 
+  unique: true,
+  partialFilterExpression: { booking: { $exists: true } }
+});
+reviewSchema.index({ place: 1, user: 1 }, { 
+  unique: true,
+  partialFilterExpression: { booking: { $exists: false } }
+});
 
 // Index for place reviews
 reviewSchema.index({ place: 1, createdAt: -1 });

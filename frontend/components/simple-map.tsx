@@ -43,7 +43,13 @@ interface SimpleMapProps {
 function ChangeView({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom);
+    if (map && center && center.length === 2 && typeof center[0] === 'number' && typeof center[1] === 'number') {
+      try {
+        map.setView(center, zoom);
+      } catch (error) {
+        console.warn('Error setting map view:', error);
+      }
+    }
   }, [center, zoom, map]);
   return null;
 }
@@ -152,26 +158,38 @@ function MapControls({ searchQuery, setSearchQuery, onSearch, onMyLocationClick 
 }
 
 export default function SimpleMap({ places, selectedPlace, onMarkerClick, mapCenter, zoomLevel = 13, userPosition, searchQuery, setSearchQuery, onSearch, onMyLocationClick }: SimpleMapProps) {
-  const mapIsReady = mapCenter && typeof mapCenter[0] === 'number' && typeof mapCenter[1] === 'number';
+  const mapIsReady = mapCenter && Array.isArray(mapCenter) && mapCenter.length === 2 && 
+                     typeof mapCenter[0] === 'number' && typeof mapCenter[1] === 'number' &&
+                     !isNaN(mapCenter[0]) && !isNaN(mapCenter[1]);
   
   // Default center if not ready, to prevent MapContainer from crashing.
   const initialCenter: [number, number] = mapIsReady ? mapCenter : [21.0278, 105.8342];
 
+  if (!mapIsReady) {
+    return (
+      <div className="relative h-full w-full rounded-lg overflow-hidden shadow-lg">
+        <div className="absolute inset-0 h-full w-full flex items-center justify-center bg-gray-100 text-gray-500 z-[1001]">
+          Đang tải bản đồ...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-full w-full rounded-lg overflow-hidden shadow-lg">
-        {!mapIsReady && (
-          <div className="absolute inset-0 h-full w-full flex items-center justify-center bg-gray-100 text-gray-500 z-[1001]">
-            Đang tải bản đồ...
-          </div>
-        )}
-        <MapContainer center={initialCenter} zoom={zoomLevel} style={{ height: '100%', width: '100%', visibility: mapIsReady ? 'visible' : 'hidden' }}>
+        <MapContainer 
+          center={initialCenter} 
+          zoom={zoomLevel} 
+          style={{ height: '100%', width: '100%' }}
+          key={`${initialCenter[0]}-${initialCenter[1]}`} // Force re-render when center changes
+        >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            {mapIsReady && <ChangeView center={mapCenter} zoom={zoomLevel} />}
-            {places && <PlaceMarkers places={places} onMarkerClick={onMarkerClick} selectedPlace={selectedPlace} />}
-            {userPosition && <UserLocationMarker position={userPosition} />}
+            <ChangeView center={mapCenter} zoom={zoomLevel} />
+            {places && Array.isArray(places) && <PlaceMarkers places={places} onMarkerClick={onMarkerClick} selectedPlace={selectedPlace} />}
+            {userPosition && Array.isArray(userPosition) && userPosition.length === 2 && <UserLocationMarker position={userPosition} />}
         </MapContainer>
         <MapControls 
             searchQuery={searchQuery} 

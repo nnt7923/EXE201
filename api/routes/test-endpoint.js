@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAiSuggestion } = require('../services/ai');
+const aiService = require('../services/ai');
 
 // Test basic connection
 router.get('/', (req, res) => {
@@ -44,7 +44,13 @@ router.post('/test-ai', async (req, res) => {
     for (const test of testCases) {
       console.log(`Running test: ${test.name}`);
       try {
-        const result = await getAiSuggestion(test.prompt);
+        const result = await aiService.generateItinerarySuggestions(
+          test.prompt.location, 
+          test.prompt.duration, 
+          test.prompt.budget, 
+          test.prompt.interests.join(', '),
+          'test-user-id'
+        );
         results.push({
           name: test.name,
           success: true,

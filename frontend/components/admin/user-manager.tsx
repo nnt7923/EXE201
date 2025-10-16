@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { MoreHorizontal, UserPlus, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DataPagination } from '@/components/ui/data-pagination';
 
 // --- INTERFACES ---
 interface User {
@@ -126,27 +127,34 @@ export default function UserManager() {
   const [users, setUsers] = useState<User[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await api.getUsers({ limit: 50, sort: '-createdAt' });
-        if (response.success && response.data) {
-          setUsers(response.data.users);
-          setPagination(response.data.pagination);
-        } else {
-          throw new Error(response.message || 'Failed to fetch users');
-        }
-      } catch (error: any) {
-        toast({ title: 'Lỗi', description: `Không thể tải danh sách người dùng: ${error.message}`, variant: 'destructive' });
-      } finally {
-        setIsLoading(false);
+  const fetchUsers = async (page: number = currentPage, pageLimit: number = limit) => {
+    setIsLoading(true);
+    try {
+      const response = await api.getUsers({ 
+        page, 
+        limit: pageLimit, 
+        sort: '-createdAt' 
+      });
+      if (response.success && response.data) {
+        setUsers(response.data.users);
+        setPagination(response.data.pagination);
+      } else {
+        throw new Error(response.message || 'Failed to fetch users');
       }
-    };
+    } catch (error: any) {
+      toast({ title: 'Lỗi', description: `Không thể tải danh sách người dùng: ${error.message}`, variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
-  }, [toast]);
+  }, [currentPage, limit]);
 
   const handleUserUpdate = (updatedUser: User) => {
     setUsers(currentUsers => 
@@ -156,6 +164,15 @@ export default function UserManager() {
 
   const handleUserDelete = (deletedUserId: string) => {
     setUsers(currentUsers => currentUsers.filter(u => u._id !== deletedUserId));
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setCurrentPage(1); // Reset to first page when changing limit
   };
 
   return (
@@ -270,6 +287,15 @@ export default function UserManager() {
               )}
             </TableBody>
           </Table>
+        )}
+        {pagination && (
+          <div className="mt-4">
+            <DataPagination
+              pagination={pagination}
+              onPageChange={handlePageChange}
+              onLimitChange={handleLimitChange}
+            />
+          </div>
         )}
       </CardContent>
     </Card>

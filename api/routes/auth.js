@@ -73,8 +73,11 @@ router.post(
 router.post(
   '/login',  [    check('email', 'Please include a valid email').isEmail(),    check('password', 'Password is required').exists(),  ],
   async (req, res, next) => {
+    console.log('🔐 Login attempt:', { email: req.body.email, hasPassword: !!req.body.password });
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -82,14 +85,24 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
+      console.log('👤 User found:', !!user);
 
       if (!user) {
+        console.log('❌ User not found for email:', email);
         return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
+      console.log('🔍 Debug password comparison:');
+      console.log('  - Input password:', password);
+      console.log('  - Input password length:', password.length);
+      console.log('  - Stored hash:', user.password);
+      console.log('  - Stored hash length:', user.password.length);
+      
       const isMatch = await bcrypt.compare(password, user.password);
+      console.log('🔑 Password match:', isMatch);
 
       if (!isMatch) {
+        console.log('❌ Password mismatch for user:', email);
         return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 

@@ -4,6 +4,8 @@ const { body, param, query, validationResult } = require('express-validator');
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', JSON.stringify(errors.array(), null, 2));
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -135,6 +137,53 @@ const validateReview = [
     .optional()
     .isInt({ min: 1, max: 20 })
     .withMessage('Số lượng người phải từ 1-20'),
+  // Validate aspects object
+  body('aspects')
+    .optional()
+    .isObject()
+    .withMessage('Aspects phải là object'),
+  body('aspects.food.rating')
+    .optional()
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Đánh giá đồ ăn phải từ 1-5 sao'),
+  body('aspects.food.comment')
+    .optional()
+    .isString()
+    .withMessage('Bình luận đồ ăn phải là chuỗi'),
+  body('aspects.service.rating')
+    .optional()
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Đánh giá dịch vụ phải từ 1-5 sao'),
+  body('aspects.service.comment')
+    .optional()
+    .isString()
+    .withMessage('Bình luận dịch vụ phải là chuỗi'),
+  body('aspects.atmosphere.rating')
+    .optional()
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Đánh giá không khí phải từ 1-5 sao'),
+  body('aspects.atmosphere.comment')
+    .optional()
+    .isString()
+    .withMessage('Bình luận không khí phải là chuỗi'),
+  body('aspects.value.rating')
+    .optional()
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Đánh giá giá trị phải từ 1-5 sao'),
+  body('aspects.value.comment')
+    .optional()
+    .isString()
+    .withMessage('Bình luận giá trị phải là chuỗi'),
+  // Validate tags array
+  body('tags')
+    .optional()
+    .isArray()
+    .withMessage('Tags phải là mảng'),
+  body('tags.*')
+    .optional()
+    .isString()
+    .trim()
+    .withMessage('Mỗi tag phải là chuỗi'),
   handleValidationErrors
 ];
 
@@ -150,7 +199,13 @@ const validatePagination = [
     .withMessage('Giới hạn phải từ 1-100'),
   query('sort')
     .optional()
-    .isIn(['createdAt', '-createdAt', 'updatedAt', '-updatedAt', 'rating', '-rating', 'rating.average', '-rating.average', 'name', '-name'])
+    .isIn([
+      // Database field names
+      'createdAt', '-createdAt', 'updatedAt', '-updatedAt', 'rating', '-rating', 
+      'rating.average', '-rating.average', 'name', '-name',
+      // User-friendly sort values
+      'newest', 'oldest', 'highest-rated', 'lowest-rated', 'name-asc', 'name-desc'
+    ])
     .withMessage('Sắp xếp không hợp lệ'),
   query('category')
     .optional()

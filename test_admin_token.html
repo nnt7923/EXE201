@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Token</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .success {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .code {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Admin Token Test Tool</h1>
+        <p>Công cụ này giúp bạn test admin token để truy cập trang quản lý payments.</p>
+        
+        <div class="info">
+            <strong>Hướng dẫn:</strong><br>
+            1. Click "Set Admin Token" để lưu token vào localStorage<br>
+            2. Click "Open Admin Payments" để mở trang admin<br>
+            3. Kiểm tra xem có thấy danh sách payments không
+        </div>
+
+        <button class="button" onclick="setAdminToken()">🔑 Set Admin Token</button>
+        <button class="button" onclick="openAdminPayments()">📊 Open Admin Payments</button>
+        <button class="button" onclick="checkToken()">🔍 Check Current Token</button>
+        <button class="button" onclick="clearToken()">🗑️ Clear Token</button>
+
+        <div id="result"></div>
+
+        <div class="code">
+            <strong>Admin Token:</strong><br>
+            <span id="tokenDisplay">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhlZjU1NTI5ODg2OTM0OWIxMDU2MzQ0Iiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTc2MDU2OTcyMywiZXhwIjoxNzYwOTI5NzIzfQ.lzWdmNh0WejIPauR4loVuh6YViRFr-4kyL8_xaKFlmw</span>
+        </div>
+    </div>
+
+    <script>
+        const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhlZjU1NTI5ODg2OTM0OWIxMDU2MzQ0Iiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTc2MDU2OTcyMywiZXhwIjoxNzYwOTI5NzIzfQ.lzWdmNh0WejIPauR4loVuh6YViRFr-4kyL8_xaKFlmw';
+
+        function setAdminToken() {
+            localStorage.setItem('token', adminToken);
+            showResult('✅ Admin token đã được lưu vào localStorage!', 'success');
+        }
+
+        function openAdminPayments() {
+            window.open('http://localhost:3000/admin/payments', '_blank');
+            showResult('🌐 Đã mở trang admin payments trong tab mới', 'info');
+        }
+
+        function checkToken() {
+            const currentToken = localStorage.getItem('token');
+            if (currentToken) {
+                const isAdminToken = currentToken === adminToken;
+                showResult(`🔍 Token hiện tại: ${currentToken.substring(0, 50)}...<br>
+                           ✅ Admin token: ${isAdminToken ? 'Đúng' : 'Sai'}`, 'info');
+            } else {
+                showResult('❌ Không có token nào trong localStorage', 'info');
+            }
+        }
+
+        function clearToken() {
+            localStorage.removeItem('token');
+            showResult('🗑️ Đã xóa token khỏi localStorage', 'info');
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="${type}">${message}</div>`;
+        }
+
+        // Auto check token on load
+        window.onload = function() {
+            checkToken();
+        }
+    </script>
+</body>
+</html>

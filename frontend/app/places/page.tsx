@@ -11,6 +11,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import Image from 'next/image'
 import Link from 'next/link'
 import { api } from '@/lib/api'
+import { DataPagination } from '@/components/ui/data-pagination'
+
+interface Pagination {
+  current: number
+  pages: number
+  total: number
+  limit?: number
+}
 
 interface Place {
   _id: string
@@ -46,8 +54,11 @@ export default function PlacesPage() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('-createdAt')
+  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [limit, setLimit] = useState(12)
 
   const categories = {
     restaurant: 'Nhà hàng',
@@ -57,28 +68,37 @@ export default function PlacesPage() {
     study: 'Học tập'
   }
 
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      setLoading(true)
-      try {
-        const res = await api.getPlaces({
-          search: searchQuery || undefined,
-          category: selectedCategory || undefined,
-          sort: sortBy,
-          limit: 12,
-        })
-        if (res?.success && (res as any).data?.places) {
-          setPlaces(((res as any).data.places) as Place[])
+  const fetchPlaces = async (page: number = currentPage, pageLimit: number = limit) => {
+    setLoading(true)
+    try {
+      const res = await api.getPlaces({
+        search: searchQuery || undefined,
+        category: selectedCategory === 'all' ? undefined : selectedCategory,
+        sort: sortBy,
+        page,
+        limit: pageLimit,
+      })
+      if (res?.success && (res as any).data?.places) {
+        setPlaces(((res as any).data.places) as Place[])
+        if ((res as any).data?.pagination) {
+          setPagination({
+            current: (res as any).data.pagination.current,
+            pages: (res as any).data.pagination.pages,
+            total: (res as any).data.pagination.total,
+            limit: pageLimit
+          })
         }
-      } catch (error) {
-        console.error('Fetch places error:', error)
-      } finally {
-        setLoading(false)
       }
+    } catch (error) {
+      console.error('Fetch places error:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchPlaces()
-  }, [searchQuery, selectedCategory, sortBy])
+  }, [searchQuery, selectedCategory, sortBy, currentPage, limit])
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -96,6 +116,15 @@ export default function PlacesPage() {
       case 'study': return '📚'
       default: return '📍'
     }
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit)
+    setCurrentPage(1) // Reset to first page when changing limit
   }
 
   return (
@@ -145,7 +174,7 @@ export default function PlacesPage() {
                     <SelectValue placeholder="Chọn danh mục" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tất cả</SelectItem>
+                    <SelectItem value="all">Tất cả</SelectItem>
                     {Object.entries(categories).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
                     ))}
@@ -271,6 +300,17 @@ export default function PlacesPage() {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {pagination && (
+              <div className="mt-8">
+                <DataPagination
+                  pagination={pagination}
+                  onPageChange={handlePageChange}
+                  onLimitChange={handleLimitChange}
+                />
               </div>
             )}
           </section>

@@ -7,9 +7,14 @@ import 'leaflet/dist/leaflet.css'
 import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'An Gi O Dau - Khám phá Hòa Lạc',
+  description: 'Nền tảng khám phá và lập kế hoạch hành trình thông minh cho khu vực Hòa Lạc với AI',
+  generator: 'Next.js',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({

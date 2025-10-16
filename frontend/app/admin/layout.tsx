@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/sidebar';
-import { getCurrentUser } from '@/lib/api';
+import { getCurrentUserFromStorage } from '@/lib/api';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -18,14 +18,42 @@ export default function AdminLayout({
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = getCurrentUser();
-        if (!user || user.role !== 'admin') {
+        // Check if token exists
+        const token = localStorage.getItem('token');
+        const user = getCurrentUserFromStorage();
+        
+        if (!token || !user) {
           router.push('/auth/login');
           return;
         }
+
+        // Verify token with server by making a test API call
+        const response = await fetch('http://localhost:5000/api/subscriptions', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          // Token is invalid, clear auth data and redirect
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          router.push('/auth/login');
+          return;
+        }
+
+        // Check if user has admin role
+        if (user.role !== 'admin') {
+          router.push('/auth/login');
+          return;
+        }
+
         setIsAuthenticated(true);
       } catch (error) {
         console.error('Auth check failed:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         router.push('/auth/login');
       } finally {
         setIsLoading(false);

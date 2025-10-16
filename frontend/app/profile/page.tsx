@@ -15,6 +15,7 @@ import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import NotificationCenter from '@/components/notification-center'
+import UserSubscriptions from '@/components/user/UserSubscriptions'
 import { SubscriptionPlan } from '@/types'
 
 interface UserProfile {
@@ -38,21 +39,7 @@ interface UserProfile {
   subscriptionEndDate?: string;
 }
 
-interface UserPlace {
-  _id: string
-  name: string
-  category: string
-  subcategory: string
-  rating: {
-    average: number
-    count: number
-  }
-  images: Array<{
-    url: string
-    alt: string
-  }>
-  createdAt: string
-}
+
 
 interface UserReview {
   _id: string
@@ -97,7 +84,6 @@ const getAISuggestionDisplay = (user: UserProfile | null) => {
 export default function ProfilePage() {
   const router = useRouter()
   const [user, setUser] = useState<UserProfile | null>(null)
-  const [userPlaces, setUserPlaces] = useState<UserPlace[]>([])
   const [userReviews, setUserReviews] = useState<UserReview[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -126,7 +112,6 @@ export default function ProfilePage() {
     }
 
     fetchUserProfile()
-    fetchUserPlaces()
     fetchUserReviews()
   }, [router])
 
@@ -148,16 +133,7 @@ export default function ProfilePage() {
     }
   }
 
-  const fetchUserPlaces = async () => {
-    try {
-      const response = await api.getUserPlaces('me');
-      if (response.data) {
-        setUserPlaces(response.data.places)
-      }
-    } catch (error) {
-      console.error('Fetch user places error:', error)
-    }
-  }
+
 
   const fetchUserReviews = async () => {
     try {
@@ -384,7 +360,7 @@ export default function ProfilePage() {
             <Tabs defaultValue="profile" className="w-full">
               <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="profile">Thông tin</TabsTrigger>
-                <TabsTrigger value="places">Địa điểm của tôi</TabsTrigger>
+                <TabsTrigger value="subscriptions">Đăng ký</TabsTrigger>
                 <TabsTrigger value="reviews">Đánh giá của tôi</TabsTrigger>
                 <TabsTrigger value="notifications">Thông báo</TabsTrigger>
                 <TabsTrigger value="security">Bảo mật</TabsTrigger>
@@ -485,64 +461,10 @@ export default function ProfilePage() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="places" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Địa điểm của tôi</CardTitle>
-                    <CardDescription>
-                      Quản lý các địa điểm bạn đã tạo
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {userPlaces.length === 0 ? (
-                      <div className="text-center py-8">
-                        <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-medium mb-2">Chưa có địa điểm nào</h3>
-                        <p className="text-muted-foreground mb-4">Bắt đầu tạo địa điểm đầu tiên của bạn</p>
-                        <Link href="/places/new">
-                          <Button>Tạo địa điểm mới</Button>
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {userPlaces.map((place) => (
-                          <div key={place._id} className="flex items-center gap-4 p-4 border rounded-lg">
-                            <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center text-2xl">
-                              {getCategoryIcon(place.category)}
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="font-semibold">{place.name}</h3>
-                              <p className="text-sm text-muted-foreground">{place.subcategory}</p>
-                              <div className="flex items-center gap-4 mt-1">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                  <span className="text-sm">{place.rating.average.toFixed(1)}</span>
-                                  <span className="text-xs text-muted-foreground">({place.rating.count})</span>
-                                </div>
-                                <span className="text-xs text-muted-foreground">
-                                  {formatDate(place.createdAt)}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex gap-2">
-                              <Link href={`/places/${place._id}`}>
-                                <Button variant="outline" size="sm">
-                                  <Eye className="w-4 h-4 mr-2" />
-                                  Xem
-                                </Button>
-                              </Link>
-                              <Button variant="outline" size="sm">
-                                <Edit className="w-4 h-4 mr-2" />
-                                Sửa
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+              <TabsContent value="subscriptions" className="space-y-4">
+                <UserSubscriptions />
               </TabsContent>
+
 
               <TabsContent value="reviews" className="space-y-4">
                 <Card>

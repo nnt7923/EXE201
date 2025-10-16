@@ -1,17 +1,22 @@
 const { getAiSuggestion } = require('./ai');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Mock the @google/generative-ai library
-jest.mock('@google/generative-ai');
+jest.mock('@google/generative-ai', () => {
+  const mockGenerateContent = jest.fn();
+  const mockGetGenerativeModel = jest.fn(() => ({
+    generateContent: mockGenerateContent,
+  }));
+  
+  return {
+    GoogleGenerativeAI: jest.fn(() => ({
+      getGenerativeModel: mockGetGenerativeModel,
+    })),
+    mockGenerateContent,
+    mockGetGenerativeModel,
+  };
+});
 
-const mockGenerateContent = jest.fn();
-const mockGetGenerativeModel = jest.fn(() => ({
-  generateContent: mockGenerateContent,
-}));
-
-GoogleGenerativeAI.mockImplementation(() => ({
-  getGenerativeModel: mockGetGenerativeModel,
-}));
+const { GoogleGenerativeAI, mockGenerateContent, mockGetGenerativeModel } = require('@google/generative-ai');
 
 describe('getAiSuggestion', () => {
   const originalApiKey = process.env.GEMINI_API_KEY;

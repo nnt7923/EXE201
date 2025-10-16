@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .subscription-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f9f9f9;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-inactive { background: #f8d7da; color: #721c24; }
+        .status-expired { background: #fff3cd; color: #856404; }
+        .payment-pending { background: #fff3cd; color: #856404; }
+        .payment-paid { background: #d4edda; color: #155724; }
+        .payment-failed { background: #f8d7da; color: #721c24; }
+        .payment-refunded { background: #e2e3e5; color: #383d41; }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .form-group {
+            margin: 10px 0;
+        }
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Status Test</h1>
+    
+    <div>
+        <button onclick="loadSubscriptions()">Load Test Subscriptions</button>
+        <button onclick="loginAdmin()">Login as Admin</button>
+    </div>
+    
+    <div id="authStatus"></div>
+    <div id="subscriptions"></div>
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let authToken = '';
+        
+        async function loginAdmin() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'admin@test.com',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    authToken = data.data.token;
+                    localStorage.setItem('token', authToken);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    
+                    document.getElementById('authStatus').innerHTML = `
+                        <div class="success">
+                            <h3>Logged in as: ${data.data.user.name} (${data.data.user.role})</h3>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Login failed');
+                }
+            } catch (error) {
+                document.getElementById('authStatus').innerHTML = `
+                    <div class="error">Login failed: ${error.message}</div>
+                `;
+            }
+        }
+        
+        async function loadSubscriptions() {
+            if (!authToken) {
+                await loginAdmin();
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/subscriptions/admin/all`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displaySubscriptions(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to load subscriptions');
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="error">Error loading subscriptions: ${error.message}</div>
+                `;
+            }
+        }
+        
+        function displaySubscriptions(subscriptions) {
+            const container = document.getElementById('subscriptions');
+            
+            if (!subscriptions || subscriptions.length === 0) {
+                container.innerHTML = '<p>No subscriptions found</p>';
+                return;
+            }
+            
+            container.innerHTML = subscriptions.map(sub => `
+                <div class="subscription-card">
+                    <h3>Subscription #${sub.subscriptionNumber}</h3>
+                    <p><strong>User:</strong> ${sub.customerInfo.name} (${sub.customerInfo.email})</p>
+                    <p><strong>Plan:</strong> ${sub.plan?.name || 'Unknown'}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="status-badge status-${sub.status}">${sub.status}</span>
+                    </p>
+                    <p><strong>Payment Status:</strong> 
+                        <span class="status-badge payment-${sub.paymentStatus}">${sub.paymentStatus}</span>
+                    </p>
+                    <p><strong>Amount:</strong> ${sub.pricing.totalAmount.toLocaleString()} VND</p>
+                    <p><strong>Start Date:</strong> ${new Date(sub.startDate).toLocaleDateString()}</p>
+                    <p><strong>End Date:</strong> ${new Date(sub.endDate).toLocaleDateString()}</p>
+                    
+                    <div>
+                        <label>Update Payment Status:</label>
+                        <select id="paymentStatus_${sub._id}">
+                            <option value="pending" ${sub.paymentStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="paid" ${sub.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
+                            <option value="failed" ${sub.paymentStatus === 'failed' ? 'selected' : ''}>Failed</option>
+                            <option value="refunded" ${sub.paymentStatus === 'refunded' ? 'selected' : ''}>Refunded</option>
+                        </select>
+                        <button onclick="updatePaymentStatus('${sub._id}')">Update Payment Status</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function updatePaymentStatus(subscriptionId) {
+            const newStatus = document.getElementById(`paymentStatus_${subscriptionId}`).value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/subscriptions/${subscriptionId}/payment-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paymentStatus: newStatus })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result').innerHTML = `
+                        <div class="success">
+                            Payment status updated successfully! 
+                            ${data.data.subscription.status !== data.data.previousStatus ? 
+                                `Subscription status also changed from ${data.data.previousStatus} to ${data.data.subscription.status}` : 
+                                ''}
+                        </div>
+                    `;
+                    
+                    // Reload subscriptions to show updated data
+                    loadSubscriptions();
+                } else {
+                    throw new Error(data.message || 'Update failed');
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="error">Error updating payment status: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // Auto-login on page load
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                authToken = token;
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                document.getElementById('authStatus').innerHTML = `
+                    <div class="success">
+                        <h3>Already logged in as: ${user.name} (${user.role})</h3>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

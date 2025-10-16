@@ -7,7 +7,7 @@ const { authenticateToken: auth } = require('../middleware/auth');
 router.get('/', auth, async (req, res) => {
   try {
     const notifications = await Notification.find({ user: req.user.id })
-      .populate('data.paymentId', 'amount status')
+      .populate('data.orderId', 'orderNumber totalAmount status')
       .sort({ createdAt: -1 })
       .limit(50); // Limit to 50 most recent notifications
 
