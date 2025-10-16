@@ -391,6 +391,23 @@ class ApiClient {
     });
   }
 
+  async createSubscription(subscriptionData: {
+    planId: string;
+    customerInfo: {
+      name: string;
+      email: string;
+      phone: string;
+      address?: string;
+    };
+    paymentMethod: string;
+    customerNotes?: string;
+  }): Promise<ApiResponse<any>> {
+    return this.request<any>('/subscriptions', {
+      method: 'POST',
+      body: JSON.stringify(subscriptionData),
+    });
+  }
+
   async getAllSubscriptions(): Promise<ApiResponse<any>> {
     return this.request<any>('/subscriptions');
   }

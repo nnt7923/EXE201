@@ -127,24 +127,18 @@ export default function BookingForm({ place, onBookingSuccess }: BookingFormProp
     try {
       const bookingData = {
         place: place._id,
+        checkInDate: checkInDate.toISOString(),
+        checkOutDate: checkOutDate.toISOString(),
+        numberOfGuests: formData.guests,
+        numberOfRooms: formData.rooms,
+        bookingType: 'daily' as const,
+        paymentMethod: formData.paymentMethod,
+        specialRequests: formData.specialRequests,
         customerInfo: {
           name: formData.customerName,
           email: formData.customerEmail,
           phone: formData.customerPhone
-        },
-        bookingDetails: {
-          checkInDate: checkInDate.toISOString(),
-          checkOutDate: checkOutDate.toISOString(),
-          numberOfGuests: formData.guests,
-          numberOfRooms: formData.rooms,
-          specialRequests: formData.specialRequests
-        },
-        pricing: {
-          roomPrice: pricing.basePrice || 0,
-          totalAmount: pricing.totalPrice || 0,
-          currency: place.pricing?.currency || 'VND'
-        },
-        paymentMethod: formData.paymentMethod
+        }
       }
 
       const response = await api.createBooking(bookingData)

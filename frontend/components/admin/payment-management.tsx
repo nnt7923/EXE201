@@ -398,8 +398,7 @@ export default function PaymentManagement() {
       {/* Pagination */}
       {pagination.pages > 1 && (
         <DataPagination
-          currentPage={pagination.current}
-          totalPages={pagination.pages}
+          pagination={pagination}
           onPageChange={(page) => setPagination(prev => ({ ...prev, current: page }))}
         />
       )}

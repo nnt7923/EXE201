@@ -40,31 +40,49 @@ interface TimelineDay {
 const createSampleTimeline = (): TimelineDay[] => {
   return [
     {
-      day: 1,
+      day: '1',
       activities: [
         {
           time: '08:00 - 09:00',
-          description: 'Khởi hành và di chuyển đến điểm đầu tiên'
+          startTime: '08:00',
+          endTime: '09:00',
+          description: 'Khởi hành và di chuyển đến điểm đầu tiên',
+          type: 'transport'
         },
         {
           time: '09:00 - 11:30',
-          description: 'Tham quan và khám phá địa điểm chính'
+          startTime: '09:00',
+          endTime: '11:30',
+          description: 'Tham quan và khám phá địa điểm chính',
+          type: 'sightseeing'
         },
         {
           time: '11:30 - 13:00',
-          description: 'Nghỉ trưa và thưởng thức ẩm thực địa phương'
+          startTime: '11:30',
+          endTime: '13:00',
+          description: 'Nghỉ trưa và thưởng thức ẩm thực địa phương',
+          type: 'dining'
         },
         {
           time: '13:00 - 16:00',
-          description: 'Tiếp tục tham quan các điểm thú vị'
+          startTime: '13:00',
+          endTime: '16:00',
+          description: 'Tiếp tục tham quan các điểm thú vị',
+          type: 'sightseeing'
         },
         {
           time: '16:00 - 18:00',
-          description: 'Mua sắm và khám phá khu vực xung quanh'
+          startTime: '16:00',
+          endTime: '18:00',
+          description: 'Mua sắm và khám phá khu vực xung quanh',
+          type: 'shopping'
         },
         {
           time: '18:00 - 20:00',
-          description: 'Ăn tối và nghỉ ngơi'
+          startTime: '18:00',
+          endTime: '20:00',
+          description: 'Ăn tối và nghỉ ngơi',
+          type: 'dining'
         }
       ]
     }
@@ -209,7 +227,7 @@ const parseAiContentToTimeline = (content: string): TimelineDay[] => {
       }
       
       // Clean up description
-      description = description
+      description = (description || '')
         .replace(/\\n/g, ' ')
         .replace(/\s+/g, ' ')
         .replace(/\*\s*/g, '• ')
@@ -221,9 +239,9 @@ const parseAiContentToTimeline = (content: string): TimelineDay[] => {
       const details = sentences.slice(1).join('. ');
       
       currentDay.activities.push({
-        time: `${startTime} - ${endTime}`,
-        startTime: startTime,
-        endTime: endTime,
+        time: `${startTime || ''} - ${endTime || ''}`,
+        startTime: startTime || '',
+        endTime: endTime || '',
         description: mainDescription,
         details: details || undefined,
         type: getActivityTypeFromDescription(description)
@@ -687,7 +705,7 @@ export default function ItineraryDetailPage() {
                           </span>
                         </div>
                         <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                          {activity.activityType === 'FOOD' ? 'Ẩm thực' :
+                          {activity.activityType === 'EAT' ? 'Ẩm thực' :
                            activity.activityType === 'VISIT' ? 'Tham quan' :
                            activity.activityType === 'ENTERTAINMENT' ? 'Giải trí' :
                            activity.activityType === 'TRAVEL' ? 'Di chuyển' : 'Khác'}
@@ -697,17 +715,18 @@ export default function ItineraryDetailPage() {
                       {/* Activity content */}
                       <div>
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 leading-tight">
-                          {activity.place?.name || activity.customPlace}
+                          {(typeof activity.place === 'object' && activity.place?.name) || activity.customPlace}
                         </h4>
                         {activity.notes && (
                           <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                             {activity.notes}
                           </p>
                         )}
-                        {activity.place?.address && (
+                        {(typeof activity.place === 'object' && activity.place?.address) && (
                           <p className="text-xs text-gray-500 mt-2 flex items-center">
                             <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
-                            {activity.place.address}
+                            {typeof activity.place === 'object' && activity.place.address && 
+                              `${activity.place.address.street}, ${activity.place.address.ward}, ${activity.place.address.district}, ${activity.place.address.city}`}
                           </p>
                         )}
                       </div>

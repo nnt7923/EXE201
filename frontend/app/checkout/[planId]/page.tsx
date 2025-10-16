@@ -170,10 +170,7 @@ export default function CheckoutPage() {
         customerNotes: `Đăng ký gói ${plan.name} - Thanh toán chuyển khoản. ${formData.transferNote || ''}`
       };
 
-      const response = await api.request('/subscriptions', {
-        method: 'POST',
-        body: JSON.stringify(subscriptionData)
-      });
+      const response = await api.createSubscription(subscriptionData);
 
       if (response.success) {
         toast({

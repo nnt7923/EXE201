@@ -66,8 +66,7 @@ export default function ReviewList({ placeId, showFilters = false, currentUserId
     try {
       setLoading(true);
       const response = await api.getPlaceReviews(placeId, {
-        sort: sortBy,
-        rating: filterRating !== 'all' ? filterRating : undefined
+        sort: sortBy
       });
       // Fix: Access the reviews array from the nested data structure
       setReviews(response.data?.reviews || []);

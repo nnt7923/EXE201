@@ -80,11 +80,6 @@ export default function ReviewForm({ placeId, bookingId, placeName, onSuccess, o
             className={`${sizeClasses[size]} transition-colors`}
             aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
           >
-            key={star}
-            type="button"
-            onClick={() => onRatingChange(star)}
-            className={`${sizeClasses[size]} transition-colors`}
-          >
             <Star
               className={`${sizeClasses[size]} ${
                 star <= rating 

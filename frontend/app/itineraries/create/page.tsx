@@ -75,7 +75,7 @@ export default function CreateItineraryPage() {
 
   // Memoized subscription calculations để tránh re-calculate mỗi render
   const subscriptionData = useMemo(() => {
-    const actualUser = user?.user || user;
+    const actualUser = user;
     const plan = actualUser?.subscriptionPlan;
     const usage = actualUser?.aiSuggestionsUsed ?? 0;
     const limit = plan?.aiSuggestionLimit ?? 0;
@@ -333,7 +333,7 @@ export default function CreateItineraryPage() {
   // Parse AI content thành activities với format backend
   const parseAiContentToActivities = (content: string) => {
     const timeline = parseAiContentToTimeline(content);
-    const activities = [];
+    const activities: any[] = [];
     
     timeline.forEach((dayData, dayIndex) => {
       dayData.activities.forEach((activity, actIndex) => {
