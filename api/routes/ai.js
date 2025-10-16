@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
-const checkAiAccess = require('../middleware/checkAiAccess');
+const checkAiAccess = require('../middleware/checkaiaccess');
 const aiService = require('../services/ai');
 
 // Route tạo gợi ý lịch trình
