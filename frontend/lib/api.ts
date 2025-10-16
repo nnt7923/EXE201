@@ -1,6 +1,6 @@
 // API utility functions for frontend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://an-gi-o-dau-api-64eh.onrender.com/'
 
 interface ApiResponse<T = any> {
   success: boolean

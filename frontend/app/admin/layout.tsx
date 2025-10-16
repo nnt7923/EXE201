@@ -28,7 +28,7 @@ export default function AdminLayout({
         }
 
         // Verify token with server by making a test API call
-        const response = await fetch('http://localhost:5000/api/subscriptions', {
+        const response = await fetch('https://an-gi-o-dau-api-64eh.onrender.com/api/subscriptions', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

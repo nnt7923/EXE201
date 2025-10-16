@@ -57,7 +57,7 @@ export default function OrderTracking() {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://an-gi-o-dau-api-64eh.onrender.com/';
       const response = await fetch(`${API_BASE_URL}/api/payments/my-payments`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
