@@ -11,7 +11,7 @@ const aiService = require('../services/ai');
 // @access  Private
 router.get('/', auth, async (req, res) => {
     try {
-        const itineraries = await Itinerary.find({ user: req.user.id, isActive: true }).sort({ date: -1 });
+        const itineraries = await Itinerary.find({ user: req.user._id, isActive: true }).sort({ date: -1 });
         res.json({ success: true, data: { itineraries } });
     } catch (err) {
         console.error(err.message);
@@ -32,7 +32,7 @@ router.post('/', auth, async (req, res) => {
     
     try {
         const newItinerary = new Itinerary({
-            user: req.user.id,
+            user: req.user._id,
             title,
             date,
             description,
@@ -79,7 +79,7 @@ router.put('/:id', auth, async (req, res) => {
         }
 
         // Check if user owns the itinerary
-        if (itinerary.user.toString() !== req.user.id) {
+        if (itinerary.user.toString() !== req.user._id) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
@@ -108,7 +108,7 @@ router.delete('/:id', auth, async (req, res) => {
         }
 
         // Check if user owns the itinerary
-        if (itinerary.user.toString() !== req.user.id) {
+        if (itinerary.user.toString() !== req.user._id) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
@@ -128,7 +128,7 @@ router.delete('/:id', auth, async (req, res) => {
 router.post('/ai-suggestion', auth, checkAiAccess, async (req, res) => {
     try {
         // 1. Get user
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user._id);
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'Không tìm thấy người dùng.' });
@@ -145,7 +145,7 @@ router.post('/ai-suggestion', auth, checkAiAccess, async (req, res) => {
 
         // 5. If checks pass, proceed with AI suggestion logic
         console.log('Đang tạo gợi ý AI cho:', req.body);
-        const suggestion = await aiService.generateItinerarySuggestions(location, duration, budget, interests.join(', '), req.user.id);
+        const suggestion = await aiService.generateItinerarySuggestions(location, duration, budget, interests.join(', '), req.user._id);
 
         // Validate suggestion format from AI
         if (!suggestion || !suggestion.title || !suggestion.content) {

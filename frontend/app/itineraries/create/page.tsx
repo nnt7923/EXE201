@@ -35,7 +35,10 @@ const allInterests = ['Ẩm thực', 'Lịch sử', 'Nghệ thuật', 'Về đê
 
 // --- Main Page Component ---
 export default function CreateItineraryPage() {
+  console.log('🎯 CreateItineraryPage component rendering');
   const router = useRouter();
+  
+  console.log('🔧 About to declare state variables');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -56,18 +59,22 @@ export default function CreateItineraryPage() {
     const fetchUser = async () => {
       try {
         setIsLoadingUser(true);
-        // Use the API method to get fresh user data from server
+        console.log('🔍 Fetching user data...');
         const response = await api.getCurrentUser();
-        if (response.success && response.data) {
-          setUser(response.data);
+        console.log('📊 API Response:', response);
+        if (response.success && response.data && response.data.user) {
+          console.log('✅ User data received:', response.data.user);
+          setUser(response.data.user);
         } else {
+          console.log('❌ No user data or failed response:', response);
           setError(response.message || 'Vui lòng đăng nhập để sử dụng tính năng này.');
         }
       } catch (err: any) {
-        console.error(err);
+        console.error('❌ Error fetching user:', err);
         setError(err.message || 'Không thể tải dữ liệu người dùng.');
       } finally {
         setIsLoadingUser(false);
+        console.log('🏁 Finished fetching user data');
       }
     };
     fetchUser();

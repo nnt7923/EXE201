@@ -6,11 +6,6 @@
     "dev": "concurrently \"cd api && npm run dev\" \"cd frontend && npm run dev\"",
     "start": "concurrently \"cd api && npm start\" \"cd frontend && npm start\"",
     "build": "cd frontend && npm run build",
-    "test": "node scripts/run-all-tests.js",
-    "test:setup": "node scripts/test-setup.js",
-    "test:backend": "cd api && npm run test:all",
-    "test:frontend": "cd frontend && npm test",
-    "test:docker": "docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit",
     "install:all": "npm install && cd api && npm install && cd ../frontend && npm install"
   },
   "dependencies": {

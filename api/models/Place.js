@@ -68,15 +68,31 @@ const placeSchema = new mongoose.Schema({
   pricing: {
     minPrice: {
       type: Number,
-      min: [0, 'Giá tối thiểu không được âm']
+      required: [true, 'Giá tối thiểu là bắt buộc'],
+      min: [0, 'Giá tối thiểu không được âm'],
+      validate: {
+        validator: function(value) {
+          return !isNaN(value) && isFinite(value);
+        },
+        message: 'Giá tối thiểu phải là số hợp lệ'
+      }
     },
     maxPrice: {
       type: Number,
-      min: [0, 'Giá tối đa không được âm']
+      required: [true, 'Giá tối đa là bắt buộc'],
+      min: [0, 'Giá tối đa không được âm'],
+      validate: {
+        validator: function(value) {
+          return !isNaN(value) && isFinite(value);
+        },
+        message: 'Giá tối đa phải là số hợp lệ'
+      }
     },
     currency: {
       type: String,
-      default: 'VND'
+      default: 'VND',
+      enum: ['VND', 'USD', 'EUR'],
+      required: [true, 'Đơn vị tiền tệ là bắt buộc']
     }
   },
   features: {
@@ -167,6 +183,86 @@ placeSchema.virtual('fullAddress').get(function() {
   return `${this.address.street}, ${this.address.ward}, ${this.address.district}, ${this.address.city}`;
 });
 
+// Middleware để validate giá trước khi lưu
+placeSchema.pre('save', function(next) {
+  // Đảm bảo pricing tồn tại
+  if (!this.pricing) {
+    this.pricing = {};
+  }
 
+  // Đặt giá mặc định nếu không có hoặc không hợp lệ
+  if (!this.pricing.minPrice || isNaN(this.pricing.minPrice) || !isFinite(this.pricing.minPrice)) {
+    // Đặt giá mặc định dựa trên category
+    switch(this.category) {
+      case 'accommodation':
+        this.pricing.minPrice = 300000; // 300k/đêm cho khách sạn
+        break;
+      case 'restaurant':
+        this.pricing.minPrice = 30000; // 30k/món
+        break;
+      case 'cafe':
+        this.pricing.minPrice = 25000; // 25k/đồ uống
+        break;
+      default:
+        this.pricing.minPrice = 0;
+    }
+  }
+
+  if (!this.pricing.maxPrice || isNaN(this.pricing.maxPrice) || !isFinite(this.pricing.maxPrice)) {
+    // Đặt giá mặc định dựa trên category
+    switch(this.category) {
+      case 'accommodation':
+        this.pricing.maxPrice = 1000000; // 1 triệu/đêm
+        break;
+      case 'restaurant':
+        this.pricing.maxPrice = 200000; // 200k/món
+        break;
+      case 'cafe':
+        this.pricing.maxPrice = 80000; // 80k/đồ uống
+        break;
+      default:
+        this.pricing.maxPrice = 100000;
+    }
+  }
+
+  // Đảm bảo minPrice <= maxPrice
+  if (this.pricing.minPrice > this.pricing.maxPrice) {
+    const temp = this.pricing.minPrice;
+    this.pricing.minPrice = this.pricing.maxPrice;
+    this.pricing.maxPrice = temp;
+  }
+
+  // Đảm bảo currency tồn tại
+  if (!this.pricing.currency) {
+    this.pricing.currency = 'VND';
+  }
+
+  next();
+});
+
+// Middleware để validate khi update
+placeSchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate();
+  
+  if (update.pricing) {
+    // Kiểm tra và sửa giá nếu cần
+    if (update.pricing.minPrice !== undefined && (isNaN(update.pricing.minPrice) || !isFinite(update.pricing.minPrice))) {
+      return next(new Error('Giá tối thiểu phải là số hợp lệ'));
+    }
+    
+    if (update.pricing.maxPrice !== undefined && (isNaN(update.pricing.maxPrice) || !isFinite(update.pricing.maxPrice))) {
+      return next(new Error('Giá tối đa phải là số hợp lệ'));
+    }
+
+    // Kiểm tra minPrice <= maxPrice nếu cả hai đều được cập nhật
+    if (update.pricing.minPrice !== undefined && update.pricing.maxPrice !== undefined) {
+      if (update.pricing.minPrice > update.pricing.maxPrice) {
+        return next(new Error('Giá tối thiểu không được lớn hơn giá tối đa'));
+      }
+    }
+  }
+  
+  next();
+});
 
 module.exports = mongoose.model('Place', placeSchema);

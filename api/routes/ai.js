@@ -29,11 +29,11 @@ router.post('/itinerary-suggestions', authenticateToken, checkAiAccess, async (r
       preferences.duration,
       preferences.budget,
       preferences.interests,
-      req.user.id
+      req.user._id
     );
 
     // Increment AI usage count after successful generation
-    console.log('🔢 Incrementing AI usage count for user:', req.user.id);
+    console.log('🔢 Incrementing AI usage count for user:', req.user._id);
     await req.subscription.updateOne({ $inc: { aiUsageCount: 1 } });
     console.log('✅ AI usage count incremented successfully');
     
@@ -72,7 +72,7 @@ router.post('/place-suggestions', authenticateToken, checkAiAccess, async (req, 
       });
     }
 
-    const suggestions = await aiService.generatePlaceSuggestions(query, req.user.id);
+    const suggestions = await aiService.generatePlaceSuggestions(query, req.user._id);
 
     // Increment AI usage count after successful generation
     await req.subscription.updateOne({ $inc: { aiUsageCount: 1 } });

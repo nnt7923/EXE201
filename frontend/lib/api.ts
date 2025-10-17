@@ -1,6 +1,6 @@
 // API utility functions for frontend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://an-gi-o-dau-api-64eh.onrender.com/'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? '/api' : 'http://localhost:5000/api')
 
 interface ApiResponse<T = any> {
   success: boolean
@@ -21,6 +21,7 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+    console.log('🔑 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'null');
     
     const config: RequestInit = {
       headers: {
@@ -410,6 +411,10 @@ class ApiClient {
 
   async getAllSubscriptions(): Promise<ApiResponse<any>> {
     return this.request<any>('/subscriptions');
+  }
+
+  async getUserSubscriptions(): Promise<ApiResponse<any>> {
+    return this.request<any>('/subscriptions/user');
   }
 
   async updateSubscription(userId: string, updateData: {

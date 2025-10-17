@@ -41,7 +41,7 @@ const corsOptions = {
     
     const allowedOrigins = [
       'http://localhost:3000',
-      'http://localhost:3001',
+      
       'https://an-gi-o-dau-frontend-64eh.onrender.com',
       process.env.FRONTEND_URL
     ].filter(Boolean); // Remove any undefined values

@@ -1,6 +1,7 @@
 const axios = require('axios');
+require('dotenv').config();
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = process.env.API_BASE_URL || 'https://an-gi-o-dau-api-64eh.onrender.com/';
 
 const TEST_USER = {
   email: 'test@example.com',

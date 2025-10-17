@@ -169,7 +169,7 @@ export default function UserSubscriptions() {
     try {
       setLoading(true)
       setError(null)
-      const response = await api.getAllSubscriptions()
+      const response = await api.getUserSubscriptions()
       
       if (response.success) {
         setSubscriptions(response.data || [])
