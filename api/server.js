@@ -19,7 +19,6 @@ const bookingRoutes = require('./routes/bookings');
 
 const notificationRoutes = require('./routes/notifications');
 const orderRoutes = require('./routes/orders');
-const testRoutes = require('./routes/test-endpoint');
 const uploadRoutes = require('./routes/uploads');
 const aiRoutes = require('./routes/ai');
 
@@ -108,7 +107,6 @@ app.use('/api/bookings', bookingRoutes);
 
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/test', testRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 
