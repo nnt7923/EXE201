@@ -2,7 +2,7 @@ const Subscription = require('../models/Subscription');
 
 const checkAiAccess = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id || req.user.id;
 
     // Tìm subscription active, đã thanh toán và chưa hết hạn
     const subscription = await Subscription.findOne({

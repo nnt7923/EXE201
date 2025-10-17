@@ -40,7 +40,7 @@ router.post(
 
       const payload = {
         user: {
-          id: user.id,
+          _id: user._id,
           role: user.role // Include role in JWT payload
         },
       };
@@ -108,7 +108,7 @@ router.post(
 
       const payload = {
         user: {
-          id: user.id,
+          _id: user._id,
           role: user.role // Include role in JWT payload
         },
       };

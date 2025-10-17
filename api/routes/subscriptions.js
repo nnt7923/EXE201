@@ -7,13 +7,36 @@ const Notification = require('../models/Notification');
 const { authenticateToken: auth } = require('../middleware/auth');
 const authorize = require('../middleware/authorize');
 
-// @route   GET api/subscriptions
+// @route   GET /api/subscriptions
 // @desc    Get user's subscriptions
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const subscriptions = await Subscription.getUserSubscriptions(req.user.id);
+    const subscriptions = await Subscription.getUserSubscriptions(req.user._id || req.user.id);
     
+    res.json({
+      success: true,
+      data: subscriptions
+    });
+  } catch (err) {
+    console.error('Error fetching user subscriptions:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Không thể lấy danh sách đăng ký'
+    });
+  }
+});
+
+// @route   GET /api/subscriptions/user
+// @desc    Get user's subscriptions (alias for root route)
+// @access  Private
+router.get('/user', auth, async (req, res) => {
+  console.log('🔍 /user route called, req.user:', req.user);
+  try {
+    const subscriptions = await Subscription.find({ user: req.user._id })
+      .populate('plan', 'name price features description aiSuggestionLimit')
+      .sort({ createdAt: -1 });
+
     res.json({
       success: true,
       data: subscriptions
@@ -109,6 +132,65 @@ router.get('/admin/stats', auth, authorize('admin'), async (req, res) => {
   }
 });
 
+// @route   GET /api/subscriptions/analytics
+// @desc    Get subscription analytics (admin only)
+// @access  Private (Admin)
+router.get('/analytics', auth, authorize('admin'), async (req, res) => {
+  try {
+    // Get total subscriptions count
+    const totalSubscriptions = await Subscription.countDocuments();
+    
+    // Get active subscriptions count
+    const activeSubscriptions = await Subscription.countDocuments({
+      status: 'active',
+      endDate: { $gt: new Date() }
+    });
+    
+    // Calculate total revenue from paid subscriptions
+    const revenueAggregation = await Subscription.aggregate([
+      {
+        $match: {
+          paymentStatus: 'paid'
+        }
+      },
+      {
+        $lookup: {
+          from: 'plans',
+          localField: 'plan',
+          foreignField: '_id',
+          as: 'planDetails'
+        }
+      },
+      {
+        $unwind: '$planDetails'
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$planDetails.price' }
+        }
+      }
+    ]);
+    
+    const totalRevenue = revenueAggregation.length > 0 ? revenueAggregation[0].totalRevenue : 0;
+    
+    res.json({
+      success: true,
+      data: {
+        totalSubscriptions,
+        activeSubscriptions,
+        totalRevenue
+      }
+    });
+  } catch (err) {
+    console.error('Error fetching subscription analytics:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Không thể lấy thông tin phân tích đăng ký'
+    });
+  }
+});
+
 // @route   GET api/subscriptions/:id
 // @desc    Get subscription by ID
 // @access  Private
@@ -177,7 +259,7 @@ router.post('/', auth, async (req, res) => {
 
     // Check if user already has an active subscription for this plan
     const existingSubscription = await Subscription.findOne({
-      user: req.user.id,
+      user: req.user._id || req.user.id,
       plan: planId,
       status: { $in: ['active', 'pending'] },
       endDate: { $gt: new Date() } // Not expired
@@ -215,7 +297,7 @@ router.post('/', auth, async (req, res) => {
     // Create subscription
     const subscription = new Subscription({
       subscriptionNumber,
-      user: req.user.id,
+      user: req.user._id || req.user.id,
       plan: planId,
       customerInfo,
       pricing: {
@@ -240,7 +322,7 @@ router.post('/', auth, async (req, res) => {
     // Create notification for subscription creation
     try {
       await Notification.create({
-        user: req.user.id,
+        user: req.user._id || req.user.id,
         type: 'subscription_created',
         title: 'Đăng ký gói dịch vụ thành công',
         message: `Bạn đã đăng ký gói ${plan.name}. Chúng tôi sẽ xác nhận thanh toán trong vòng 24 giờ.`,

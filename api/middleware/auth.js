@@ -4,11 +4,14 @@ const Itinerary = require('../models/Itinerary');
 
 // Verify JWT token and attach lightweight user payload to req.user
 const authenticateToken = (req, res, next) => {
+  console.log('🔍 authenticateToken middleware called for:', req.method, req.path);
   try {
     const authHeader = req.headers['authorization'];
+    console.log('🔍 Auth header:', authHeader);
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
+      console.log('❌ No token provided');
       return res.status(401).json({
         success: false,
         message: 'Access token is required'
@@ -16,6 +19,9 @@ const authenticateToken = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Debug: Log the decoded payload
+    console.log('🔍 JWT Decoded payload:', JSON.stringify(decoded, null, 2));
     
     // The decoded payload (which includes id and role) is attached to the request.
     req.user = decoded.user;
@@ -47,7 +53,7 @@ const authenticateToken = (req, res, next) => {
 // Fetch full user object from DB after authentication
 const fetchFullUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).json({

@@ -30,6 +30,23 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  // Subscription fields
+  subscriptionPlan: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Plan'
+  },
+  subscriptionStatus: {
+    type: String,
+    enum: ['active', 'inactive', 'expired', 'cancelled'],
+    default: 'inactive'
+  },
+  subscriptionEndDate: {
+    type: Date
+  },
+  aiSuggestionsUsed: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now,
