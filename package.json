@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "leaflet": "^1.9.4"
+    "axios": "^1.13.1",
+    "leaflet": "^1.9.4",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

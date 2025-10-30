@@ -243,19 +243,49 @@ export default function SearchPage() {
   }
 
   const handleMyLocationClick = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
+    if (!navigator.geolocation) {
+      setMessage('Trình duyệt không hỗ trợ định vị.');
+      return;
+    }
+
+    setMessage('Đang lấy vị trí của bạn...');
+    
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000, // 10 seconds
+      maximumAge: 300000 // 5 minutes
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
         const { latitude, longitude } = position.coords;
         setMapCenter([latitude, longitude]);
         setMapZoom(16);
         setMessage('Đã định vị vị trí của bạn.');
-      }, (error) => {
+      }, 
+      (error) => {
         console.error("Geolocation error:", error);
-        setMessage('Không thể lấy được vị trí của bạn.');
-      });
-    } else {
-      setMessage('Trình duyệt không hỗ trợ định vị.');
-    }
+        let errorMessage = 'Không thể lấy được vị trí của bạn.';
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Bạn đã từ chối quyền truy cập vị trí. Vui lòng cho phép truy cập vị trí trong cài đặt trình duyệt.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Thông tin vị trí không khả dụng. Vui lòng kiểm tra kết nối mạng.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = 'Hết thời gian chờ lấy vị trí. Vui lòng thử lại.';
+            break;
+          default:
+            errorMessage = 'Có lỗi xảy ra khi lấy vị trí. Vui lòng thử lại.';
+            break;
+        }
+        
+        setMessage(errorMessage);
+      },
+      options
+    );
   };
 
   const handleMarkerClick = (place: Place) => {

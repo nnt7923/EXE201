@@ -1,93 +1,128 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
-
 const Subscription = require('./models/Subscription');
 const Plan = require('./models/Plan');
+require('dotenv').config();
 
 async function fixSubscriptionPlans() {
   try {
-    // Kết nối MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/an-gi-o-dau');
-    console.log('✅ Đã kết nối MongoDB');
+    console.log('🔗 Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ Connected to MongoDB');
 
-    // Lấy tất cả các gói có sẵn
-    const plans = await Plan.find().sort({ price: 1 });
-    console.log('📋 Các gói có sẵn:');
-    plans.forEach(plan => {
-      console.log(`  - ${plan.name}: ${plan.price} VND (ID: ${plan._id})`);
+    // Get all available plans
+    const plans = await Plan.find({}).sort({ price: 1 });
+    console.log(`📋 Found ${plans.length} plans:`);
+    plans.forEach((plan, index) => {
+      console.log(`  ${index + 1}. ${plan.name} (${plan.price}đ) - ID: ${plan._id}`);
     });
 
-    // Lấy tất cả subscription
-    const subscriptions = await Subscription.find();
-    console.log(`\n🔍 Kiểm tra ${subscriptions.length} subscription...`);
+    if (plans.length === 0) {
+      console.log('❌ No plans found! Cannot fix subscriptions.');
+      return;
+    }
 
+    // Get plans by price for easy reference
+    const basicPlan = plans.find(p => p.price === 0);           // 0đ
+    const professionalPlan = plans.find(p => p.price === 99000); // 99,000đ  
+    const unlimitedPlan = plans.find(p => p.price === 299000);   // 299,000đ
+
+    // Get all subscriptions
+    const subscriptions = await Subscription.find({})
+      .populate('plan', 'name price');
+    
+    console.log(`\n📊 Found ${subscriptions.length} subscriptions`);
+    
     let fixedCount = 0;
-
+    
     for (const subscription of subscriptions) {
-      if (subscription.plan) {
-        // Kiểm tra xem plan có tồn tại không
-        const planExists = await Plan.findById(subscription.plan);
-        
-        if (!planExists) {
-          console.log(`❌ Subscription ${subscription.subscriptionNumber} có plan ID không hợp lệ: ${subscription.plan}`);
-          
-          // Tìm plan phù hợp dựa trên giá trong pricing
-          const planPrice = subscription.pricing?.planPrice;
-          let newPlan = null;
-          
-          if (planPrice) {
-            // Tìm plan có giá chính xác
-            newPlan = plans.find(plan => plan.price === planPrice);
-            
-            if (!newPlan) {
-              // Nếu không tìm thấy, chọn plan gần nhất
-              newPlan = plans.reduce((prev, curr) => 
-                Math.abs(curr.price - planPrice) < Math.abs(prev.price - planPrice) ? curr : prev
-              );
-            }
-          } else {
-            // Nếu không có thông tin giá, gán plan cơ bản
-            newPlan = plans.find(plan => plan.name === 'Cơ bản') || plans[0];
-          }
-          
-          if (newPlan) {
-            subscription.plan = newPlan._id;
-            await subscription.save();
-            console.log(`✅ Đã gán plan "${newPlan.name}" cho subscription ${subscription.subscriptionNumber}`);
-            fixedCount++;
-          }
-        }
+      let assignedPlan;
+      const totalAmount = subscription.pricing?.totalAmount || 0;
+      
+      console.log(`\n🔍 Processing ${subscription.subscriptionNumber || subscription._id}:`);
+      console.log(`   - Total Amount: ${totalAmount}đ`);
+      
+      // Assign plan based on actual pricing logic
+      if (totalAmount === 0) {
+        // Free plan
+        assignedPlan = basicPlan;
+        console.log(`   → Assigning: Basic Plan (Free)`);
+      } else if (totalAmount > 0 && totalAmount <= 150000) {
+        // Professional plan (for amounts up to 150,000đ)
+        assignedPlan = professionalPlan;
+        console.log(`   → Assigning: Professional Plan (99,000đ)`);
       } else {
-        console.log(`⚠️  Subscription ${subscription.subscriptionNumber} không có plan`);
-        
-        // Gán plan cơ bản cho subscription không có plan
-        const basicPlan = plans.find(plan => plan.name === 'Cơ bản') || plans[0];
-        if (basicPlan) {
-          subscription.plan = basicPlan._id;
-          await subscription.save();
-          console.log(`✅ Đã gán plan cơ bản cho subscription ${subscription.subscriptionNumber}`);
-          fixedCount++;
-        }
+        // Unlimited plan (for amounts > 150,000đ)
+        assignedPlan = unlimitedPlan;
+        console.log(`   → Assigning: Unlimited Plan (299,000đ)`);
+      }
+      
+      // If no suitable plan found, assign basic plan
+      if (!assignedPlan) {
+        assignedPlan = basicPlan || plans[0];
+        console.log(`   → Fallback: Assigning Basic Plan`);
+      }
+
+      // Update subscription only if plan is different
+      const currentPlanId = subscription.plan?._id?.toString();
+      const newPlanId = assignedPlan._id.toString();
+      
+      if (currentPlanId !== newPlanId) {
+        await Subscription.updateOne(
+          { _id: subscription._id },
+          { 
+            $set: { 
+              plan: assignedPlan._id,
+              'pricing.planPrice': assignedPlan.price
+            }
+          }
+        );
+
+        console.log(`   ✅ Updated: ${assignedPlan.name}`);
+        fixedCount++;
+      } else {
+        console.log(`   ⏭️  Already correct: ${assignedPlan.name}`);
       }
     }
 
-    console.log(`\n✅ Hoàn thành! Đã sửa ${fixedCount} subscription`);
+    console.log(`\n🎉 Successfully updated ${fixedCount} subscriptions!`);
 
-    // Kiểm tra lại với populate
-    console.log('\n📋 Kiểm tra lại với populate:');
-    const populatedSubs = await Subscription.find()
+    // Verify the fix with detailed breakdown
+    console.log('\n🔍 Final verification...');
+    const verifySubscriptions = await Subscription.find({})
       .populate('plan', 'name price')
-      .limit(5);
+      .sort({ createdAt: -1 });
+    
+    const planDistribution = {
+      basic: 0,
+      professional: 0,
+      unlimited: 0
+    };
+    
+    console.log('📋 Final subscription distribution:');
+    verifySubscriptions.forEach((sub, index) => {
+      const planName = sub.plan ? sub.plan.name : 'No plan';
+      const totalAmount = sub.pricing?.totalAmount || 0;
+      
+      console.log(`  ${index + 1}. ${sub.subscriptionNumber || sub._id}`);
+      console.log(`     - Plan: ${planName} (${sub.plan ? sub.plan.price : 'N/A'}đ)`);
+      console.log(`     - Total Amount: ${totalAmount}đ`);
+      
+      // Count distribution
+      if (planName === 'Cơ bản') planDistribution.basic++;
+      else if (planName === 'Chuyên nghiệp') planDistribution.professional++;
+      else if (planName === 'Không giới hạn') planDistribution.unlimited++;
+    });
 
-    for (const sub of populatedSubs) {
-      console.log(`   ${sub.subscriptionNumber}: ${sub.plan ? sub.plan.name : 'NULL'}`);
-    }
+    console.log('\n📊 Plan Distribution Summary:');
+    console.log(`   - Cơ bản (0đ): ${planDistribution.basic} subscriptions`);
+    console.log(`   - Chuyên nghiệp (99,000đ): ${planDistribution.professional} subscriptions`);
+    console.log(`   - Không giới hạn (299,000đ): ${planDistribution.unlimited} subscriptions`);
 
   } catch (error) {
-    console.error('❌ Lỗi khi sửa chữa dữ liệu:', error);
+    console.error('❌ Error:', error.message);
   } finally {
-    await mongoose.disconnect();
-    console.log('\nĐã ngắt kết nối MongoDB');
+    await mongoose.connection.close();
+    console.log('\n🔌 Database connection closed');
   }
 }
 

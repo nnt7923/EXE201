@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Star, ThumbsUp, Calendar, Users, DollarSign, MessageSquare } from 'lucide-react';
+import { Star, ThumbsUp, Calendar, MessageSquare } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,17 +19,6 @@ interface Review {
   rating: number;
   title: string;
   content: string;
-  aspects: {
-    food: { rating: number; comment: string };
-    service: { rating: number; comment: string };
-    atmosphere: { rating: number; comment: string };
-    value: { rating: number; comment: string };
-  };
-  visitDate: string;
-  visitType: string;
-  pricePaid: number;
-  groupSize: number;
-  tags: string[];
   helpful: {
     count: number;
     users: string[];
@@ -144,20 +133,6 @@ export default function ReviewList({ placeId, showFilters = false, currentUserId
     });
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
-
-  const visitTypeLabels = {
-    'dine-in': 'Ăn tại chỗ',
-    'takeaway': 'Mang về',
-    'delivery': 'Giao hàng',
-    'drive-through': 'Drive-through'
-  };
-
   if (loading) {
     return (
       <div className="space-y-4">
@@ -254,69 +229,6 @@ export default function ReviewList({ placeId, showFilters = false, currentUserId
                   <h5 className="font-semibold text-lg mb-2">{review.title}</h5>
                   <p className="text-gray-700 leading-relaxed">{review.content}</p>
                 </div>
-
-                {/* Detailed Aspects */}
-                {Object.values(review.aspects).some(aspect => aspect.rating > 0) && (
-                  <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-                    <h6 className="font-medium mb-3">Đánh giá chi tiết:</h6>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {Object.entries(review.aspects).map(([key, aspect]) => {
-                        if (aspect.rating === 0) return null;
-                        const labels = {
-                          food: 'Đồ ăn',
-                          service: 'Dịch vụ',
-                          atmosphere: 'Không gian',
-                          value: 'Giá trị'
-                        };
-                        return (
-                          <div key={key} className="text-center">
-                            <div className="text-sm text-gray-600 mb-1">
-                              {labels[key as keyof typeof labels]}
-                            </div>
-                            <StarRating rating={aspect.rating} showNumber={false} />
-                            <div className="text-xs text-gray-500 mt-1">{aspect.rating}/5</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Visit Details */}
-                <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    Ghé thăm: {formatDate(review.visitDate)}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Badge variant="outline" className="text-xs">
-                      {visitTypeLabels[review.visitType as keyof typeof visitTypeLabels]}
-                    </Badge>
-                  </div>
-                  {review.groupSize > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
-                      {review.groupSize} người
-                    </div>
-                  )}
-                  {review.pricePaid > 0 && (
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-3 w-3" />
-                      {formatPrice(review.pricePaid)}
-                    </div>
-                  )}
-                </div>
-
-                {/* Tags */}
-                {review.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {review.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
 
                 {/* Owner Response */}
                 {review.response && (

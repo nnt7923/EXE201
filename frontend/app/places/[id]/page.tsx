@@ -501,12 +501,14 @@ export default function PlaceDetailPage() {
 
               {/* Actions */}
               <div className="space-y-2">
+                {/* Booking functionality has been temporarily disabled
                 <Link href={`/booking/${place._id}`}>
                   <Button className="w-full bg-primary hover:bg-primary/90">
                     <Calendar className="w-4 h-4 mr-2" />
                     Đặt phòng ngay
                   </Button>
                 </Link>
+                */}
                 <Link href={`/reviews/write/${place._id}`}>
                   <Button variant="outline" className="w-full">
                     <MessageCircle className="w-4 h-4 mr-2" />

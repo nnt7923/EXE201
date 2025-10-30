@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Menu, User, Bell, LogOut, Calendar, Shield, ShoppingBag, Bed } from "lucide-react";
+import { Search, Menu, User, Bell, LogOut, Calendar, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -99,16 +99,6 @@ export function Header() {
                 <Link href="/itineraries">
                   <Button variant="ghost" size="icon" title="My Itineraries">
                     <Calendar className="w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/profile/bookings">
-                  <Button variant="ghost" size="icon" title="Đặt phòng của tôi">
-                    <Bed className="w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/orders">
-                  <Button variant="ghost" size="icon" title="Theo dõi đơn hàng">
-                    <ShoppingBag className="w-5 h-5" />
                   </Button>
                 </Link>
                 <Link href="/profile">

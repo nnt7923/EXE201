@@ -12,7 +12,12 @@ import { useToast } from '@/hooks/use-toast';
 interface Place {
   _id: string;
   name: string;
-  address: string;
+  address: {
+    street: string;
+    ward: string;
+    district: string;
+    city: string;
+  };
   images: Array<{ url: string; alt: string }>;
   category?: {
     name: string;
@@ -36,7 +41,7 @@ export default function WriteReviewPage({ params }: { params: { placeId: string 
     try {
       setLoading(true);
       const response = await api.getPlace(params.placeId);
-      setPlace(response.data);
+      setPlace(response.data.place);
     } catch (error) {
       console.error('Error fetching place:', error);
       toast({
@@ -134,7 +139,11 @@ export default function WriteReviewPage({ params }: { params: { placeId: string 
                     </h1>
                     <div className="flex items-center gap-2 text-gray-600 mb-2">
                       <MapPin className="h-4 w-4" />
-                      <span>{place.address}</span>
+                      <span>
+                        {[place.address.street, place.address.ward, place.address.district, place.address.city]
+                          .filter(part => part && part !== 'Không rõ tên đường' && part !== 'Không rõ phường/xã')
+                          .join(', ')}
+                      </span>
                     </div>
                     <div className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                       {place.category?.name || 'Chưa phân loại'}

@@ -94,7 +94,7 @@ router.get('/user/me', authenticateToken, validatePagination, async (req, res) =
     // Map user-friendly sort values to database field names
     const mappedSort = mapSortValue(sort);
 
-    const filter = { user: req.user.id };
+    const filter = { user: req.user._id };
 
     const reviews = await Review.find(filter)
       .populate('place', 'name category address')
@@ -193,11 +193,9 @@ router.get('/:id', validateObjectId, optionalAuth, async (req, res) => {
 });
 
 // @route   POST /api/reviews
-// @desc    Create new review
-// @access  Private
+// @desc   // POST /api/reviews - Create new review
 router.post('/', authenticateToken, validateReview, async (req, res) => {
   try {
-    console.log('Received review data:', JSON.stringify(req.body, null, 2));
     const { place, rating, title, content, visitDate, visitType, pricePaid, groupSize, tags, aspects, images, booking } = req.body;
 
     // Check if place exists
@@ -213,7 +211,7 @@ router.post('/', authenticateToken, validateReview, async (req, res) => {
     if (booking) {
       const bookingExists = await Booking.findOne({ 
         _id: booking, 
-        user: req.user.id,
+        user: req.user._id,
         place: place,
         status: 'completed'
       });
@@ -237,7 +235,7 @@ router.post('/', authenticateToken, validateReview, async (req, res) => {
       // Check if user already reviewed this place (for non-booking reviews)
       const existingReview = await Review.findOne({ 
         place, 
-        user: req.user.id,
+        user: req.user._id,
         booking: { $exists: false }
       });
       if (existingReview) {
@@ -251,7 +249,7 @@ router.post('/', authenticateToken, validateReview, async (req, res) => {
     // Create new review
     const reviewData = {
       place,
-      user: req.user.id,
+      user: req.user._id,
       rating,
       title,
       content,
@@ -261,10 +259,9 @@ router.post('/', authenticateToken, validateReview, async (req, res) => {
       groupSize,
       tags,
       aspects,
-      images
+      photos: photos || []
     };
 
-    // Add booking if provided
     if (booking) {
       reviewData.booking = booking;
     }
@@ -316,7 +313,7 @@ router.put('/:id', validateObjectId, authenticateToken, async (req, res) => {
     }
 
     // Check if user owns the review or is admin
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user._id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Không có quyền chỉnh sửa đánh giá này'
@@ -366,7 +363,7 @@ router.delete('/:id', validateObjectId, authenticateToken, async (req, res) => {
     }
 
     // Check if user owns the review or is admin
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user._id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Không có quyền xóa đánh giá này'
@@ -409,14 +406,14 @@ router.post('/:id/helpful', validateObjectId, authenticateToken, async (req, res
     }
 
     // Toggle helpful status
-    await review.toggleHelpful(req.user.id);
+    await review.toggleHelpful(req.user._id);
 
     res.json({
       success: true,
       message: 'Cập nhật trạng thái hữu ích thành công',
       data: {
-        helpfulCount: review.helpful.count,
-        isHelpful: review.isHelpfulByUser(req.user.id)
+        helpful: review.helpful.count,
+        isHelpful: review.isHelpfulByUser(req.user._id)
       }
     });
   } catch (error) {

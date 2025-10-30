@@ -24,7 +24,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: FRONTEND_URL
-        value: https://an-gi-o-dau-frontend.onrender.com
+        value: https://an-gi-o-dau-frontend-64eh.onrender.com
 
   # Frontend Service
   - type: web
@@ -35,4 +35,4 @@ services:
     startCommand: cd frontend && npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://an-gi-o-dau-api.onrender.com/api
+        value: https://an-gi-o-dau-api-64eh.onrender.com/api

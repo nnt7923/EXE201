@@ -148,21 +148,63 @@ export default function MapPage() {
   };
 
   const handleMyLocationClick = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setMapCenter([latitude, longitude]);
-          setMapZoom(15);
-        },
-        (error) => {
-          console.error("Error getting user location:", error);
-          toast({ title: "Lỗi", description: "Không thể lấy vị trí của bạn. Vui lòng kiểm tra cài đặt trình duyệt.", variant: "destructive" });
-        }
-      );
-    } else {
-      toast({ title: "Lỗi", description: "Trình duyệt của bạn không hỗ trợ định vị.", variant: "destructive" });
+    if (!navigator.geolocation) {
+      toast({ 
+        title: "Lỗi", 
+        description: "Trình duyệt của bạn không hỗ trợ định vị.", 
+        variant: "destructive" 
+      });
+      return;
     }
+
+    toast({ 
+      title: "Đang lấy vị trí", 
+      description: "Đang xác định vị trí của bạn...", 
+    });
+    
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000, // 10 seconds
+      maximumAge: 300000 // 5 minutes
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setMapCenter([latitude, longitude]);
+        setMapZoom(15);
+        toast({ 
+          title: "Thành công", 
+          description: "Đã định vị vị trí của bạn.", 
+        });
+      },
+      (error) => {
+        console.error("Error getting user location:", error);
+        let errorMessage = "Không thể lấy vị trí của bạn.";
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Bạn đã từ chối quyền truy cập vị trí. Vui lòng cho phép truy cập vị trí trong cài đặt trình duyệt.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Thông tin vị trí không khả dụng. Vui lòng kiểm tra kết nối mạng.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Hết thời gian chờ lấy vị trí. Vui lòng thử lại.";
+            break;
+          default:
+            errorMessage = "Có lỗi xảy ra khi lấy vị trí. Vui lòng thử lại.";
+            break;
+        }
+        
+        toast({ 
+          title: "Lỗi", 
+          description: errorMessage, 
+          variant: "destructive" 
+        });
+      },
+      options
+    );
   };
 
   const formatPrice = (price: number) => {
