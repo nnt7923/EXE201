@@ -259,7 +259,7 @@ router.post('/', authenticateToken, validateReview, async (req, res) => {
       groupSize,
       tags,
       aspects,
-      photos: photos || []
+      images: images || []
     };
 
     if (booking) {

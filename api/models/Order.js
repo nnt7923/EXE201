@@ -154,6 +154,6 @@ orderSchema.statics.getUserOrders = function(userId) {
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ place: 1, createdAt: -1 });
 orderSchema.index({ status: 1, createdAt: -1 });
-orderSchema.index({ orderNumber: 1 });
+// orderNumber index is already created by unique: true
 
 module.exports = mongoose.model('Order', orderSchema);

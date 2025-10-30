@@ -178,6 +178,6 @@ bookingSchema.virtual('numberOfNights').get(function() {
 bookingSchema.index({ user: 1, createdAt: -1 });
 bookingSchema.index({ place: 1, 'bookingDetails.checkInDate': 1 });
 bookingSchema.index({ status: 1 });
-bookingSchema.index({ bookingNumber: 1 });
+// bookingNumber index is already created by unique: true
 
 module.exports = mongoose.model('Booking', bookingSchema);

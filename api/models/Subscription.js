@@ -134,6 +134,6 @@ subscriptionSchema.statics.getUserSubscriptions = function(userId) {
 subscriptionSchema.index({ user: 1, createdAt: -1 });
 subscriptionSchema.index({ plan: 1, createdAt: -1 });
 subscriptionSchema.index({ status: 1, createdAt: -1 });
-subscriptionSchema.index({ subscriptionNumber: 1 });
+// subscriptionNumber index is already created by unique: true
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);
